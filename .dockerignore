@@ -1,0 +1,9 @@
+.pre-commit-config.yaml
+local
+.direnv
+.env
+.git
+*.md
+Dockerfile
+.dockerignore
+docker-compose.yml

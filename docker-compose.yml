@@ -1,0 +1,48 @@
+# Development env
+
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    env_file: ".env"
+    ports:
+      - "8080:8080"
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    env_file: ".env"
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 1s
+      retries: 30
+
+  minio:
+    image: minio/minio:latest
+    command: server /data
+    restart: always
+    env_file: ".env"
+    ports:
+      - "9000:9000"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 1s
+      retries: 30
+
+volumes:
+  db_data:
+  minio_data:
