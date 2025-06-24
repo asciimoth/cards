@@ -1,8 +1,9 @@
 <!doctype html>
 <html>
-    <header>{{ template "header.html" . }}</header>
+    <head>{{ template "header.html" . }}</head>
     <body hx-ext="response-targets">
-        {{ template "nav.html" . }} <br />
+        <header>{{ template "nav.html" . }}</header>
+         <br />
         <!--  -->
         {{range .Cards}} {{ template "cardInfo.html" . }} {{end}}
         <a href="/editor"> Create new card </a>

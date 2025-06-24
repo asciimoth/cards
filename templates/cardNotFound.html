@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
-    <header>{{ template "header.html" . }}</header>
+    <head>{{ template "header.html" . }}</head>
     <body>
+        <header>{{ template "nav.html" . }}</header>
         Card is hidden or not exist <br />
         {{if .User}}
         <a href="/editor">Create a card</a>

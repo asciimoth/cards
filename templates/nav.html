@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  {{ template "header.html" . }}
-</head>
 <style>
     @media (max-width: 768px) {
     .burger {
@@ -42,63 +36,58 @@
     }
 }
 </style>
-<body>
-  <header id="main-nav">
-    <div class="nav-container">
-      <a href="/" class="logo">CardApp</a>
-      {{if .User}}
-        <span class="user-info">Logged as {{.User.ID}} {{.User.Name}}</span>
-      {{end}}
-      <input type="checkbox" id="burger-toggle" />
-      <label for="burger-toggle" class="burger">&#9776;</label>
-      <nav class="menu">
-        <a href="/">Main</a>
-        <a href="/tutorial">How to use</a>
-        <a href="/faq">FAQ</a>
-        {{if .User}}
-          <a href="/cards">Cards</a>
-          <a href="/logout">Logout</a>
-          <button
-            hx-post="/userdel"
-            hx-confirm="Are you sure you wish to delete your account?"
-            hx-swap="none">
-            Delete user
-          </button>
-        {{else}}
-          <a href="/editor">Create Business Card</a>
-          <a href="/login">Login</a>
-        {{end}}
-      </nav>
-    </div>
-  </header>
+<div class="nav-container">
+    <a href="/" class="logo">CardApp</a>
+    {{if .User}}
+    <span class="user-info">Logged as {{.User.ID}} {{.User.Name}}</span>
+    {{end}}
+    <input type="checkbox" id="burger-toggle" />
+    <label for="burger-toggle" class="burger">&#9776;</label>
+    <nav class="menu">
+    <a href="/">Main</a>
+    <a href="/tutorial">How to use</a>
+    <a href="/faq">FAQ</a>
+    {{if .User}}
+        <a href="/cards">Cards</a>
+        <a href="/logout">Logout</a>
+        <button
+        hx-post="/userdel"
+        hx-confirm="Are you sure you wish to delete your account?"
+        hx-swap="none">
+        Delete user
+        </button>
+    {{else}}
+        <a href="/login">Login</a>
+    {{end}}
+    </nav>
+</div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const burgerToggle = document.getElementById('burger-toggle');
-      const navContainer = document.querySelector('.nav-container');
-      const menu = document.querySelector('.menu');
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const burgerToggle = document.getElementById('burger-toggle');
+    const navContainer = document.querySelector('.nav-container');
+    const menu = document.querySelector('.menu');
 
-      navContainer.addEventListener('click', e => e.stopPropagation());
+    navContainer.addEventListener('click', e => e.stopPropagation());
 
-      document.addEventListener('click', () => {
-        if (burgerToggle.checked) burgerToggle.checked = false;
-      });
-
-      let startX = null;
-      menu.addEventListener('touchstart', e => {
-        if (!burgerToggle.checked) return;
-        startX = e.touches[0].clientX;
-      }, { passive: true });
-
-      menu.addEventListener('touchend', e => {
-        if (startX === null) return;
-        const deltaX = e.changedTouches[0].clientX - startX;
-        if (deltaX > 50) {
-          burgerToggle.checked = false;
-        }
-        startX = null;
-      });
+    document.addEventListener('click', () => {
+    if (burgerToggle.checked) burgerToggle.checked = false;
     });
-  </script>
-</body>
+
+    let startX = null;
+    menu.addEventListener('touchstart', e => {
+    if (!burgerToggle.checked) return;
+    startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    menu.addEventListener('touchend', e => {
+    if (startX === null) return;
+    const deltaX = e.changedTouches[0].clientX - startX;
+    if (deltaX > 50) {
+        burgerToggle.checked = false;
+    }
+    startX = null;
+    });
+});
+</script>
 </html>

@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
-    <header>{{ template "header.html" . }}</header>
+    <head>{{ template "header.html" . }}</head>
     <body>
+        <header>{{ template "nav.html" . }}</header>
         {{if .Avatar}}
         <img src="{{ .Avatar }}" width="200px" height="200px" />
         {{end}} {{if .Logo}}

@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
-    <header>
-        {{ template "header.html" . }}
+    <head>{{ template "header.html" . }}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    </header>
+    </head>
     <body>
-        {{ template "nav.html" . }}
+        <header>{{ template "nav.html" . }}</header>
+        <br />
         <form action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
             <label for="input-name">Name</label> <br />
             <input
