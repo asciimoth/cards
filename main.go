@@ -12,16 +12,16 @@ func getStopCtx() (context.Context, context.CancelFunc) {
 }
 
 func main() {
+	ctx, stop := getStopCtx()
+	defer stop()
+
 	log := SetupLogger()
 
 	storage := SetupBlobStorage(log)
 	db := SetupDB(storage, log)
 	g, srv := SetupServer(log)
-
-	ctx, stop := getStopCtx()
-	defer stop()
-
-	SetupRoutes(g, ctx, storage, db, log)
+	names := SetupProviders(log)
+	SetupRoutes(g, ctx, storage, db, log, names)
 
 	var wg sync.WaitGroup
 	RunServer(srv, &wg, ctx, log)
