@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -130,6 +131,44 @@ func uploader(log *logrus.Logger, storage *BlobStorage, ctx context.Context, max
 	}
 }
 
+func mediaFetcher(log *logrus.Logger, storage *BlobStorage, ctx context.Context) func(c *gin.Context, key string) {
+	return func(c *gin.Context, key string) {
+		changed, size, reader, mime, etag, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
+		if reader != nil {
+			defer reader.Close()
+		}
+		if err != nil {
+			log.WithFields(logrus.Fields{
+				"err": err,
+			}).Error("Error while fetching media")
+			errorPage(c, http.StatusNotFound, "")
+			return
+		}
+		if !changed {
+			c.Status(http.StatusNotModified)
+			return
+		}
+		c.Header("ETag", etag)
+		c.Header("Content-Length", fmt.Sprintf("%d", size))
+		if mime != "" {
+			c.Header("Content-Type", mime)
+		} else {
+			log.WithFields(logrus.Fields{
+				"key": key,
+			}).Error("Unknown content-type of media")
+			errorPage(c, http.StatusInternalServerError, "failed to load")
+			return
+		}
+		if _, err := io.Copy(c.Writer, reader); err != nil {
+			log.WithFields(logrus.Fields{
+				"key": key,
+				"err": err,
+			}).Error("Error streaming media")
+			errorPage(c, http.StatusInternalServerError, "failed to load")
+		}
+	}
+}
+
 func SetupRoutes(
 	g *gin.Engine,
 	ctx context.Context,
@@ -145,6 +184,7 @@ func SetupRoutes(
 	}
 
 	uploadFormFile := uploader(log, storage, ctx, mus)
+	fetchMedia := mediaFetcher(log, storage, ctx)
 
 	g.Use(sessionMiddleware(log, db))
 
@@ -198,10 +238,31 @@ func SetupRoutes(
 			"Card":    card,
 			"User":    user,
 			"Owner":   is_owner,
-			"EditUrl": fmt.Sprintf("/edit/%d", cid),
+			"EditUrl": fmt.Sprintf("/editor/%d", cid),
 			"Avatar":  fmt.Sprintf("/media/avatar/%d", cid),
 			"Logo":    fmt.Sprintf("/media/logo/%d", cid),
 		})
+	})
+
+	g.GET("/media/:kind/:id", func(c *gin.Context) {
+		kind := c.Params.ByName("kind")
+
+		allowed := map[string]bool{
+			"logo":   true,
+			"avatar": true,
+		}
+
+		if _, ok := allowed[kind]; !ok {
+			errorPage(c, http.StatusNotFound, kind+" not found")
+			return
+		}
+
+		cid, err := getUintParam(c, "id")
+		if err != nil {
+			errorPage(c, http.StatusNotFound, kind+" not found")
+			return
+		}
+		fetchMedia(c, fmt.Sprintf("media/%s/%d", kind, cid))
 	})
 
 	// OAuth related handlers
