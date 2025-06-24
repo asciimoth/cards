@@ -1,0 +1,12 @@
+<!doctype html>
+<html>
+    <header>{{ template "header.html" . }}</header>
+    <body>
+        Card is hidden or not exist <br />
+        {{if .User}}
+        <a href="/editor">Create a card</a>
+        {{else}}
+        <a href="/login">Login to create a card</a>
+        {{end}}
+    </body>
+</html>

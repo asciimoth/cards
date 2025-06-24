@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -78,6 +79,12 @@ func authMiddleware() gin.HandlerFunc {
 	}
 }
 
+func getUintParam(c *gin.Context, name string) (uint, error) {
+	sv := c.Params.ByName(name)
+	iv, err := strconv.ParseUint(sv, 10, 64)
+	return uint(iv), err
+}
+
 func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *PGDB, log *logrus.Logger, providers []string) {
 	g.Use(sessionMiddleware(log, db))
 
@@ -87,7 +94,7 @@ func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *P
 
 	g.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
-			"Title": "Main page",
+			"Title": "Cards",
 			"User":  getUser(c),
 		})
 	})
@@ -101,6 +108,39 @@ func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *P
 		c.HTML(http.StatusOK, "tutorial.html", gin.H{
 			"Title": "Tutorial",
 			"User":  getUser(c),
+		})
+	})
+
+	g.GET("/c/:id", func(c *gin.Context) {
+		cid, err := getUintParam(c, "id")
+		if err != nil {
+			errorPage(c, http.StatusBadRequest, "Invalid card id")
+			return
+		}
+
+		user := getUser(c)
+
+		card, err := db.GetCard(cid)
+		if err != nil {
+			c.HTML(http.StatusNotFound, "cardNotFound.html", gin.H{"User": user})
+			return
+		}
+
+		is_owner := false
+		if user != nil {
+			is_owner = card.Owner == user.ID
+		}
+		if !is_owner && card.Fields.IsHidden {
+			c.HTML(http.StatusNotFound, "cardNotFound.html", gin.H{"User": user})
+		}
+		c.HTML(http.StatusOK, "card.html", gin.H{
+			"Title":   card.Fields.Name,
+			"Card":    card,
+			"User":    user,
+			"Owner":   is_owner,
+			"EditUrl": fmt.Sprintf("/edit/%d", cid),
+			"Avatar":  fmt.Sprintf("/media/avatar/%d", cid),
+			"Logo":    fmt.Sprintf("/media/logo/%d", cid),
 		})
 	})
 

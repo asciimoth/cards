@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+    <header>{{ template "header.html" . }}</header>
+    <body>
+        {{if .Avatar}}
+        <img src="{{ .Avatar }}" width="200px" height="200px" />
+        {{end}} {{if .Logo}}
+        <img src="{{ .Logo }}" width="200px" height="200px" />
+        {{end}}
+        <br />
+        {{if .Card.Fields.IsHidden}}
+        <span color="red"> This card is hidden </span> {{end}} <br />
+        Name: {{.Card.Fields.Name}} <br />
+        Company: {{.Card.Fields.Company}} <br />
+        Position: {{.Card.Fields.Position}} <br />
+        Description: {{.Card.Fields.Description}} <br />
+        Phone: {{.Card.Fields.Phone}} <br />
+        Email: {{.Card.Fields.Email}} <br />
+        Telegram: {{.Card.Fields.Telegram}} <br />
+        Whatsapp: {{.Card.Fields.Whatsapp}} <br />
+        VK: {{.Card.Fields.VK}} <br />
+        {{if .Owner}}
+        <a href="{{ .EditUrl }}">Edit this card</a>
+        {{end}}
+    </body>
+</html>
