@@ -31,6 +31,18 @@ func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *P
 			//"User":  getUser(c),
 		})
 	})
+	g.GET("/faq", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "faq.html", gin.H{
+			"Title": "Faq",
+			//"User":  getUser(c),
+		})
+	})
+	g.GET("/tutorial", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "tutorial.html", gin.H{
+			"Title": "Tutorial",
+			//"User":  getUser(c),
+		})
+	})
 
 	// OAuth related headers
 	{
