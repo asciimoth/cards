@@ -16,10 +16,12 @@ func main() {
 
 	storage := SetupBlobStorage(log)
 	db := SetupDB(storage, log)
-	r, srv := SetupServer(log)
+	g, srv := SetupServer(log)
 
 	ctx, stop := getStopCtx()
 	defer stop()
+
+	SetupRoutes(g, ctx, storage, db, log)
 
 	var wg sync.WaitGroup
 	RunServer(srv, &wg, ctx, log)
@@ -29,7 +31,4 @@ func main() {
 	wg.Wait()
 
 	log.Info("All groutines are finished")
-
-	_ = db
-	_ = r
 }
