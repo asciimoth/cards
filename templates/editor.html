@@ -1,6 +1,14 @@
 <!doctype html>
 <html>
-    <header>{{ template "header.html" . }}</header>
+    <header>
+        {{ template "header.html" . }}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            #preview-container { max-width: 100%; max-height: 400px; margin-top: 1rem; }
+            #preview-container img { max-width: 100%; }
+            #crop-btn { margin-top: 0.5rem; }
+        </style>
+    </header>
     <body>
         {{ template "nav.html" . }}
         <form action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
@@ -46,7 +54,13 @@
             <h4>Avatar & Crop</h4>
             <br />
 
-            <label for="input-avatar">Avatar Image</label> <br />
+            <label for="input-avatar-precrop">Avatar Image</label> <br />
+            <input
+                name="avatar-precrop"
+                id="input-avatar-precrop"
+                type="file"
+                accept="image/*"
+            />
             <input
                 name="avatar"
                 id="input-avatar"
@@ -54,6 +68,11 @@
                 accept="image/*"
             />
             <br />
+            <!-- Preview & Crop -->
+            <div id="preview-container">
+                <img id="image-preview" style="display:none;" />
+            </div>
+            <button id="crop-btn" type="button" style="display:none;">Crop Image</button>
 
             <hr />
             <h4>Contacts</h4>
@@ -106,5 +125,42 @@
 
             <button type="submit">{{.SubmitButton}}</button>
         </form>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script>
+            const fileInput = document.getElementById('input-avatar-precrop');
+            const croppedInput = document.getElementById('input-avatar');
+            const image = document.getElementById('image-preview');
+            let cropper;
+
+            // Helper to update cropped file field
+            function updateCroppedFile() {
+            if (!cropper) return;
+            cropper.getCroppedCanvas().toBlob((blob) => {
+                const fileName = fileInput.files[0]?.name || 'cropped.png';
+                const croppedFile = new File([blob], fileName, { type: blob.type });
+                const dt = new DataTransfer();
+                dt.items.add(croppedFile);
+                croppedInput.files = dt.files;
+            });
+            }
+
+            fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+
+            image.src = url;
+            image.style.display = 'block';
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCrop: true,
+                autoCropArea: 0.8,
+                cropend: updateCroppedFile
+            });
+            });
+        </script>
     </body>
 </html>
