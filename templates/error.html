@@ -1,3 +1,11 @@
-{{.Code}} <br />
-{{.Text}} <br />
-<a href="/">Go to main page</a>
+<!doctype html>
+<html>
+    <head>{{ template "header.html" . }}
+    <div class="error-container">
+      <div class="error-box">
+        <span class="err-code">{{ .Code }}</span>
+        <span class="err-text">{{ .Text }}</span>
+      </div>
+      <a href="/">Go to main page</a>
+    </div>
+</html>

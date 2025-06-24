@@ -121,6 +121,56 @@ a:hover {
   display: none;
 }
 
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* по умолчанию центрируем */
+  align-items: center;
+  min-height: 100vh;       /* минимум во всю высоту экрана */
+  padding: 2rem;
+  box-sizing: border-box;
+  background: var(--bg-dark);
+}
+
+/* Красная рамка */
+.error-box {
+  border: 3px solid red;
+  padding: 3rem;
+  text-align: center;
+  color: red;
+  max-width: 600px;        /* не шире 600px */
+  width: 100%;             /* но растягивается до контейнера */
+  box-sizing: border-box;
+  word-wrap: break-word;   /* перенос слов */
+  hyphens: auto;           /* перенос по слогам, если поддерживается */
+}
+
+/* Код ошибки */
+.error-box .err-code {
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+}
+
+/* Текст ошибки */
+.error-box .err-text {
+  font-size: 2.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Ссылка под контейнером */
+.error-container > a {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  color: var(--text-light);
+  text-decoration: underline;
+  transition: color var(--transition-speed);
+}
+.error-container > a:hover {
+  color: var(--btn-hover-bg);
+}
+
 /* Мобильные стили */
 @media (max-width: 768px) {
   .burger {
