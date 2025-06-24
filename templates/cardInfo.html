@@ -1,7 +1,15 @@
 <div id="card-{{.ID}}">
     - {{ .Fields.Name }} {{ .Fields.Email }}
     <a href="/editor/{{.ID}}"> Edit </a> - <a href="/c/{{.ID}}"> View </a> -
-    <a href="/delcard/{{.ID}}"> Delete </a>
+    <button
+        hx-post="/delcard/{{.ID}}"
+        hx-confirm="Are you sure you wish to delete this card"
+        hx-swap="outerHTML"
+        hx-target="#card-{{.ID}}"
+        hx-target-error="#global-error-block"
+    >
+        Delete
+    </button>
     {{ if .Fields.IsHidden }} hidden
     <button
         hx-post="/visibility/{{.ID}}?visible=true"

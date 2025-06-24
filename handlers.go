@@ -179,6 +179,15 @@ func mediaFetcher(log *logrus.Logger, storage *BlobStorage, ctx context.Context)
 	}
 }
 
+func redirect(c *gin.Context, target string) {
+	if c.GetHeader("HX-Request") == "true" {
+		c.Header("HX-Redirect", target)
+		c.Status(http.StatusOK)
+	} else {
+		c.Redirect(http.StatusFound, target)
+	}
+}
+
 func SetupRoutes(
 	g *gin.Engine,
 	ctx context.Context,
@@ -322,7 +331,7 @@ func SetupRoutes(
 			sess.Set("user_id", id)
 			sess.Save()
 
-			c.Redirect(http.StatusTemporaryRedirect, "/cards")
+			redirect(c, "/cards")
 		})
 	}
 
@@ -336,11 +345,17 @@ func SetupRoutes(
 				"User":      getUser(c),
 			})
 		})
+		us.POST("/logout", func(c *gin.Context) {
+			sess := sessions.Default(c)
+			sess.Clear()
+			sess.Save()
+			redirect(c, "/")
+		})
 		us.GET("/logout", func(c *gin.Context) {
 			sess := sessions.Default(c)
 			sess.Clear()
 			sess.Save()
-			c.Redirect(http.StatusTemporaryRedirect, "/")
+			redirect(c, "/")
 		})
 	}
 
@@ -348,7 +363,7 @@ func SetupRoutes(
 	{
 		authorized := g.Group("/")
 		authorized.Use(authMiddleware())
-		authorized.GET("/userdel", func(c *gin.Context) {
+		authorized.POST("/userdel", func(c *gin.Context) {
 			user := getUser(c)
 
 			if user != nil {
@@ -358,7 +373,7 @@ func SetupRoutes(
 			sess := sessions.Default(c)
 			sess.Clear()
 			sess.Save()
-			c.Redirect(http.StatusTemporaryRedirect, "/")
+			redirect(c, "/")
 		})
 		authorized.GET("/cards", func(c *gin.Context) {
 			user := getUser(c)
@@ -379,13 +394,13 @@ func SetupRoutes(
 				"Cards": cards,
 			})
 		})
-		authorized.GET("/delcard/:id", func(c *gin.Context) {
+		authorized.POST("/delcard/:id", func(c *gin.Context) {
 			user := getUser(c)
 
 			cid, err := getUintParam(c, "id")
 
 			if err != nil {
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
@@ -396,7 +411,7 @@ func SetupRoutes(
 					"cid": cid,
 					"err": err,
 				}).Error("Failed to find a card")
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
@@ -414,7 +429,7 @@ func SetupRoutes(
 				}).Error("Failed to delete a card")
 			}
 
-			c.Redirect(http.StatusTemporaryRedirect, "/cards")
+			redirect(c, "/cards")
 		})
 		authorized.GET("/editor", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "editor.html", gin.H{
@@ -430,13 +445,13 @@ func SetupRoutes(
 			cid, err := getUintParam(c, "id")
 
 			if err != nil {
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
 			card, err := db.GetCard(cid)
 			if err != nil {
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
@@ -480,7 +495,7 @@ func SetupRoutes(
 				return
 			}
 
-			c.Redirect(http.StatusFound, "/cards")
+			redirect(c, "/cards")
 		})
 		authorized.POST("/update/:id", func(c *gin.Context) {
 			user := getUser(c)
@@ -488,18 +503,18 @@ func SetupRoutes(
 			cid, err := getUintParam(c, "id")
 
 			if err != nil {
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
 			card, err := db.GetCard(cid)
 			if err != nil {
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
 			if card.Owner != user.ID {
-				c.Redirect(http.StatusTemporaryRedirect, "/cards")
+				redirect(c, "/cards")
 				return
 			}
 
@@ -541,7 +556,7 @@ func SetupRoutes(
 				return
 			}
 
-			c.Redirect(http.StatusFound, "/cards")
+			redirect(c, "/cards")
 		})
 		authorized.POST("/visibility/:id", func(c *gin.Context) {
 
