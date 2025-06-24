@@ -55,6 +55,31 @@ func getUser(c *gin.Context) *User {
 	return user.(*User)
 }
 
+func authMiddleware(db *PGDB, log *logrus.Logger) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user := getUser(c)
+		if user == nil {
+			c.Redirect(http.StatusTemporaryRedirect, "/")
+			return
+		}
+
+		err := db.GetUser(user)
+		if err != nil {
+			log.WithFields(logrus.Fields{
+				"uid": user.ID,
+			}).Error("Broken user session")
+			sess := sessions.Default(c)
+			sess.Clear()
+			sess.Save()
+			c.Redirect(http.StatusTemporaryRedirect, "/")
+			return
+		}
+
+		c.Set("User", user)
+		c.Next()
+	}
+}
+
 func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *PGDB, log *logrus.Logger, providers []string) {
 	g.Use(sessionMiddleware(log))
 
@@ -143,6 +168,24 @@ func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *P
 			})
 		})
 		us.GET("/logout", func(c *gin.Context) {
+			sess := sessions.Default(c)
+			sess.Clear()
+			sess.Save()
+			c.Redirect(http.StatusTemporaryRedirect, "/")
+		})
+	}
+
+	// Handlers that requires authorisation
+	{
+		authorized := g.Group("/")
+		authorized.Use(authMiddleware(db, log))
+		authorized.GET("/userdel", func(c *gin.Context) {
+			user := getUser(c)
+
+			if user != nil {
+				db.DeleteUser(user.ID)
+			}
+
 			sess := sessions.Default(c)
 			sess.Clear()
 			sess.Save()
