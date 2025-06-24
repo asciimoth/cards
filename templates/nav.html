@@ -1,22 +1,104 @@
-<div>
-    {{if .User}} Logged as {{.User.ID}} {{.User.Name}} <br />
-    {{end}} Menu: <br />
-    <a href="/">Main</a> <br />
-    <!-- <a href="/create">Create card</a> <br /> -->
-    <a href="/tutorial">How to use</a> <br />
-    <a href="/faq">FAQ</a> <br />
-    {{if .User}}
-    <a href="/cards">Cards</a> <br />
-    <a href="/logout">Log out</a> <br />
-    <button
-        hx-post="/userdel"
-        hx-confirm="Are you sure you wish to delete your account?"
-        hx-swap="none"
-    >
-        Delete user
-    </button>
-    {{else}}
-    <a href="/login">Log in to create a card</a> <br />
-    {{end}}
-</div>
-{{ template "errorBlock.html" . }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  {{ template "header.html" . }}
+</head>
+<style>
+    @media (max-width: 768px) {
+    .burger {
+    display: block;
+    }
+
+    .menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100%;
+    width: 250px;
+    background-color: var(--nav-bg);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    gap: 1rem;
+    transition: right var(--transition-speed) ease-out;
+    z-index: 99;
+    }
+
+    /* Открытие меню по клику на бургер */
+    #burger-toggle:checked ~ .menu {
+    right: 0;
+    }
+
+    /* Добавим вертикальный отступ между пунктами, чтобы они не слипались */
+    .menu a,
+    .menu button {
+    margin-bottom: 1rem;
+    }
+    /* Уберём последний отступ */
+    .menu a:last-of-type,
+    .menu button:last-of-type {
+    margin-bottom: 0;
+    }
+}
+</style>
+<body>
+  <header id="main-nav">
+    <div class="nav-container">
+      <a href="/" class="logo">CardApp</a>
+      {{if .User}}
+        <span class="user-info">Logged as {{.User.ID}} {{.User.Name}}</span>
+      {{end}}
+      <input type="checkbox" id="burger-toggle" />
+      <label for="burger-toggle" class="burger">&#9776;</label>
+      <nav class="menu">
+        <a href="/">Main</a>
+        <a href="/tutorial">How to use</a>
+        <a href="/faq">FAQ</a>
+        {{if .User}}
+          <a href="/cards">Cards</a>
+          <a href="/logout">Logout</a>
+          <button
+            hx-post="/userdel"
+            hx-confirm="Are you sure you wish to delete your account?"
+            hx-swap="none">
+            Delete user
+          </button>
+        {{else}}
+          <a href="/editor">Create Business Card</a>
+          <a href="/login">Login</a>
+        {{end}}
+      </nav>
+    </div>
+  </header>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const burgerToggle = document.getElementById('burger-toggle');
+      const navContainer = document.querySelector('.nav-container');
+      const menu = document.querySelector('.menu');
+
+      navContainer.addEventListener('click', e => e.stopPropagation());
+
+      document.addEventListener('click', () => {
+        if (burgerToggle.checked) burgerToggle.checked = false;
+      });
+
+      let startX = null;
+      menu.addEventListener('touchstart', e => {
+        if (!burgerToggle.checked) return;
+        startX = e.touches[0].clientX;
+      }, { passive: true });
+
+      menu.addEventListener('touchend', e => {
+        if (startX === null) return;
+        const deltaX = e.changedTouches[0].clientX - startX;
+        if (deltaX > 50) {
+          burgerToggle.checked = false;
+        }
+        startX = null;
+      });
+    });
+  </script>
+</body>
+</html>

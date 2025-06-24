@@ -3,11 +3,6 @@
     <header>
         {{ template "header.html" . }}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <style>
-            #preview-container { max-width: 100%; max-height: 400px; margin-top: 1rem; }
-            #preview-container img { max-width: 100%; }
-            #crop-btn { margin-top: 0.5rem; }
-        </style>
     </header>
     <body>
         {{ template "nav.html" . }}
@@ -66,6 +61,7 @@
                 id="input-avatar"
                 type="file"
                 accept="image/*"
+                hidden
             />
             <br />
             <!-- Preview & Crop -->
@@ -125,23 +121,29 @@
 
             <button type="submit">{{.SubmitButton}}</button>
         </form>
+        <aside id="card-preview">
+            <img id="card-image-preview" src="" alt="Your avatar preview">
+        </aside>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script>
             const fileInput = document.getElementById('input-avatar-precrop');
             const croppedInput = document.getElementById('input-avatar');
             const image = document.getElementById('image-preview');
+            const resultPreview = document.getElementById('card-image-preview');
             let cropper;
 
             // Helper to update cropped file field
             function updateCroppedFile() {
-            if (!cropper) return;
-            cropper.getCroppedCanvas().toBlob((blob) => {
-                const fileName = fileInput.files[0]?.name || 'cropped.png';
-                const croppedFile = new File([blob], fileName, { type: blob.type });
-                const dt = new DataTransfer();
-                dt.items.add(croppedFile);
-                croppedInput.files = dt.files;
-            });
+                if (!cropper) return;
+                let canvas = cropper.getCroppedCanvas()
+                resultPreview.src = canvas.toDataURL();
+                canvas.toBlob((blob) => {
+                    const fileName = fileInput.files[0]?.name || 'cropped.png';
+                    const croppedFile = new File([blob], fileName, { type: blob.type });
+                    const dt = new DataTransfer();
+                    dt.items.add(croppedFile);
+                    croppedInput.files = dt.files;
+                });
             }
 
             fileInput.addEventListener('change', (e) => {
