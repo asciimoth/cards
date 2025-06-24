@@ -25,6 +25,13 @@ func SetupRoutes(g *gin.Engine, ctx context.Context, storage *BlobStorage, db *P
 		errorPage(c, http.StatusNotFound, "")
 	})
 
+	g.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"Title": "Main page",
+			//"User":  getUser(c),
+		})
+	})
+
 	// OAuth related headers
 	{
 		oauth := g.Group("/")

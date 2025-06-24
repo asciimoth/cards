@@ -1,0 +1,15 @@
+<div color="red">
+    {{if .User}} Logged as {{.User.ID}} {{.User.Name}} <br />
+    {{end}} Menu: <br />
+    <a href="/">Main</a> <br />
+    <!-- <a href="/create">Create card</a> <br /> -->
+    <a href="/tutorial">How to use</a> <br />
+    <a href="/faq">FAQ</a> <br />
+    {{if .User}}
+    <a href="/cards">Cards</a> <br />
+    <a href="/logout">Log out</a> <br />
+    <a href="/userdel">Delete user</a> <br />
+    {{else}}
+    <a href="/login">Log in to create a card</a> <br />
+    {{end}}
+</div>
