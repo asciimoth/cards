@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+    <header>{{ template "header.html" . }}</header>
+    <body>
+        {{ template "nav.html" . }} <br />
+        {{range .Providers}}
+        <a href="/auth/{{.}}"> Sign in with {{.}} </a> <br />
+        {{end}}
+    </body>
+</html>
