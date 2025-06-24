@@ -1,0 +1,8 @@
+{{if .ErrorCode}}
+<div id="global-error-block">
+    {{.ErrorCode}} <br />
+    {{.ErrorText}} <br />
+</div>
+{{else}}
+<div id="global-error-block" style="visibility: collapse"></div>
+{{end}}

@@ -1,0 +1,7 @@
+#global-error-block {
+    color: red;
+    border: solid;
+    border-color: red;
+    border-width: 2px;
+    width: 100%;
+}

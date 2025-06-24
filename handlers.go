@@ -25,6 +25,16 @@ func errorPage(c *gin.Context, status int, text string) {
 	})
 }
 
+func errorBlock(c *gin.Context, status int, text string) {
+	if text == "" {
+		text = http.StatusText(status)
+	}
+	c.HTML(status, "errorBlock.html", gin.H{
+		"ErrorCode": status,
+		"ErrorText": text,
+	})
+}
+
 func sessionMiddleware(log *logrus.Logger, db *PGDB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("User", nil)
@@ -532,6 +542,45 @@ func SetupRoutes(
 			}
 
 			c.Redirect(http.StatusFound, "/cards")
+		})
+		authorized.POST("/visibility/:id", func(c *gin.Context) {
+
+			user := getUser(c)
+
+			cid, err := getUintParam(c, "id")
+
+			if err != nil {
+				errorBlock(c, http.StatusBadRequest, "")
+				return
+			}
+
+			card, err := db.GetCard(cid)
+			if err != nil {
+				errorBlock(c, http.StatusInternalServerError, "Card not found")
+				return
+			}
+
+			if card.Owner != user.ID {
+				errorBlock(c, http.StatusForbidden, "You are not owner of this card")
+				return
+			}
+
+			switch c.Query("visible") {
+			case "true":
+				card.Fields.IsHidden = false
+				err = db.UpdateCard(card)
+			case "false":
+				card.Fields.IsHidden = true
+				err = db.UpdateCard(card)
+			}
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to update card visibility")
+			}
+
+			c.HTML(http.StatusOK, "cardInfo.html", card)
 		})
 	}
 }
