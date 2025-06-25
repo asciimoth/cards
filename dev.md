@@ -13,20 +13,20 @@ docker compose up --build
 
 # TODO
 ## Fronend
-- [ ] Place name of logged in user somewhere
-- [ ] Nav
-  - [ ] Same paddings for buttons in side nav
-  - [ ] Same buttons length in side nav
-  - [ ] Move buttons under the burger in side nav
-  - [ ] Remove main page button
-  - [ ] Use SVG logo instead of just text
+- [X] Place name of logged in user somewhere
+- [X] Nav
+  - [X] Same paddings for buttons in side nav
+  - [X] Same buttons length in side nav
+  - [X] Move buttons under the burger in side nav
+  - [X] Remove main page button
+  - [X] Use SVG logo instead of just text
 - [ ] Style cards page
   - [ ] If there is no cards, add text block about it
   - [ ] Add cards grid
   - [ ] Replace "create new card" link button with `+` sign
 - [ ] Style editor page
-  - [ ] Add live preview
-  - [ ] Make crop widget not so fucking big
+  - [X] Add live preview
+  - [X] Make crop widget not so fucking big
   - [ ] Style inputs (file inputs including)
 - [ ] Style card page
 - [ ] Style card not found page
