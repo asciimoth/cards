@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+    <head>
+        {{ template "comp_header.html" . }}
+    </head>
+    <body>
+        <header>{{ template "comp_nav.html" . }}</header>
+        <br />
+        {{range .Providers}}
+        <a href="/auth/{{.}}"> Sign in with {{.}} </a> <br />
+        {{end}}
+    </body>
+</html>
