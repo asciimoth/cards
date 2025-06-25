@@ -4,7 +4,6 @@
         {{ template "comp_header.html" . }}
     </head>
     <body>
-        <header>{{ template "comp_nav.html" . }}</header>
         {{if .Avatar}}
         <img src="{{ .Avatar }}" width="200px" height="200px" />
         {{end}} {{if .Logo}}
