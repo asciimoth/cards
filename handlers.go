@@ -19,7 +19,7 @@ func errorPage(c *gin.Context, status int, text string) {
 	if text == "" {
 		text = http.StatusText(status)
 	}
-	c.HTML(status, "error.html", gin.H{
+	c.HTML(status, "page_error.html", gin.H{
 		"Code": status,
 		"Text": text,
 	})
@@ -29,7 +29,7 @@ func errorBlock(c *gin.Context, status int, text string) {
 	if text == "" {
 		text = http.StatusText(status)
 	}
-	c.HTML(status, "errorBlock.html", gin.H{
+	c.HTML(status, "comp_error.html", gin.H{
 		"ErrorCode": status,
 		"ErrorText": text,
 	})
@@ -212,19 +212,19 @@ func SetupRoutes(
 	})
 
 	g.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
+		c.HTML(http.StatusOK, "page_index.html", gin.H{
 			"Title": "Cards",
 			"User":  getUser(c),
 		})
 	})
 	g.GET("/faq", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "faq.html", gin.H{
+		c.HTML(http.StatusOK, "page_faq.html", gin.H{
 			"Title": "Faq",
 			"User":  getUser(c),
 		})
 	})
 	g.GET("/tutorial", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "tutorial.html", gin.H{
+		c.HTML(http.StatusOK, "page_tutorial.html", gin.H{
 			"Title": "Tutorial",
 			"User":  getUser(c),
 		})
@@ -241,7 +241,7 @@ func SetupRoutes(
 
 		card, err := db.GetCard(cid)
 		if err != nil {
-			c.HTML(http.StatusNotFound, "cardNotFound.html", gin.H{"User": user})
+			c.HTML(http.StatusNotFound, "page_cardNotFound.html", gin.H{"User": user})
 			return
 		}
 
@@ -250,9 +250,9 @@ func SetupRoutes(
 			is_owner = card.Owner == user.ID
 		}
 		if !is_owner && card.Fields.IsHidden {
-			c.HTML(http.StatusNotFound, "cardNotFound.html", gin.H{"User": user})
+			c.HTML(http.StatusNotFound, "page_cardNotFound.html", gin.H{"User": user})
 		}
-		c.HTML(http.StatusOK, "card.html", gin.H{
+		c.HTML(http.StatusOK, "page_card.html", gin.H{
 			"Title":   card.Fields.Name,
 			"Card":    card,
 			"User":    user,
@@ -339,7 +339,7 @@ func SetupRoutes(
 	{
 		us := g.Group("/")
 		us.GET("/login", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "login.html", gin.H{
+			c.HTML(http.StatusOK, "page_login.html", gin.H{
 				"Title":     "Login",
 				"Providers": providers,
 				"User":      getUser(c),
@@ -388,7 +388,7 @@ func SetupRoutes(
 				return
 			}
 
-			c.HTML(http.StatusOK, "cards.html", gin.H{
+			c.HTML(http.StatusOK, "page_cards.html", gin.H{
 				"Title": "Your cards",
 				"User":  user,
 				"Cards": cards,
@@ -432,7 +432,7 @@ func SetupRoutes(
 			redirect(c, "/cards")
 		})
 		authorized.GET("/editor", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "editor.html", gin.H{
+			c.HTML(http.StatusOK, "page_editor.html", gin.H{
 				"Title":        "Create new card",
 				"User":         getUser(c),
 				"EditUrl":      "/new",
@@ -455,7 +455,7 @@ func SetupRoutes(
 				return
 			}
 
-			c.HTML(http.StatusOK, "editor.html", gin.H{
+			c.HTML(http.StatusOK, "page_editor.html", gin.H{
 				"Title":        "Edit card",
 				"EditUrl":      fmt.Sprintf("/update/%d", cid),
 				"User":         user,
@@ -595,7 +595,7 @@ func SetupRoutes(
 				}).Error("Failed to update card visibility")
 			}
 
-			c.HTML(http.StatusOK, "cardInfo.html", card)
+			c.HTML(http.StatusOK, "comp_card.html", card)
 		})
 	}
 }

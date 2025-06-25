@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+    <head>
+        {{ template "comp_header.html" . }}
+    </head>
+    <body hx-ext="response-targets">
+        <header>{{ template "comp_nav.html" . }}</header>
+        <br />
+        <!--  -->
+        {{range .Cards}} {{ template "comp_card.html" . }} {{end}}
+        <a href="/editor"> Create new card </a>
+    </body>
+</html>

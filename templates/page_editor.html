@@ -1,10 +1,16 @@
 <!doctype html>
 <html>
-    <head>{{ template "header.html" . }}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <head>
+        {{ template "comp_header.html" . }}
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
     </head>
     <body>
-        <header>{{ template "nav.html" . }}</header>
+        <header>{{ template "comp_nav.html" . }}</header>
         <br />
         <form action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
             <label for="input-name">Name</label> <br />
@@ -66,9 +72,11 @@
             <br />
             <!-- Preview & Crop -->
             <div id="preview-container">
-                <img id="image-preview" style="display:none;" />
+                <img id="image-preview" style="display: none" />
             </div>
-            <button id="crop-btn" type="button" style="display:none;">Crop Image</button>
+            <button id="crop-btn" type="button" style="display: none">
+                Crop Image
+            </button>
 
             <hr />
             <h4>Contacts</h4>
@@ -122,46 +130,52 @@
             <button type="submit">{{.SubmitButton}}</button>
         </form>
         <aside id="card-preview">
-            <img id="card-image-preview" src="" alt="Your avatar preview">
+            <img id="card-image-preview" src="" alt="Your avatar preview" />
         </aside>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
         <script>
-            const fileInput = document.getElementById('input-avatar-precrop');
-            const croppedInput = document.getElementById('input-avatar');
-            const image = document.getElementById('image-preview');
-            const resultPreview = document.getElementById('card-image-preview');
+            const fileInput = document.getElementById("input-avatar-precrop");
+            const croppedInput = document.getElementById("input-avatar");
+            const image = document.getElementById("image-preview");
+            const resultPreview = document.getElementById("card-image-preview");
             let cropper;
 
             // Helper to update cropped file field
             function updateCroppedFile() {
                 if (!cropper) return;
-                let canvas = cropper.getCroppedCanvas()
+                let canvas = cropper.getCroppedCanvas();
                 resultPreview.src = canvas.toDataURL();
                 canvas.toBlob((blob) => {
-                    const fileName = fileInput.files[0]?.name || 'cropped.png';
-                    const croppedFile = new File([blob], fileName, { type: blob.type });
+                    const fileName = fileInput.files[0]?.name || "cropped.png";
+                    const croppedFile = new File([blob], fileName, {
+                        type: blob.type,
+                    });
                     const dt = new DataTransfer();
                     dt.items.add(croppedFile);
                     croppedInput.files = dt.files;
                 });
             }
 
-            fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const url = URL.createObjectURL(file);
+            fileInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const url = URL.createObjectURL(file);
 
-            image.src = url;
-            image.style.display = 'block';
+                image.src = url;
+                image.style.display = "block";
 
-            if (cropper) cropper.destroy();
-            cropper = new Cropper(image, {
-                aspectRatio: 1,
-                viewMode: 1,
-                autoCrop: true,
-                autoCropArea: 0.8,
-                cropend: updateCroppedFile
-            });
+                if (cropper) cropper.destroy();
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    autoCrop: true,
+                    autoCropArea: 0.8,
+                    cropend: updateCroppedFile,
+                });
             });
         </script>
     </body>

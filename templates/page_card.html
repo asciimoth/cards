@@ -1,8 +1,10 @@
 <!doctype html>
 <html>
-    <head>{{ template "header.html" . }}</head>
+    <head>
+        {{ template "comp_header.html" . }}
+    </head>
     <body>
-        <header>{{ template "nav.html" . }}</header>
+        <header>{{ template "comp_nav.html" . }}</header>
         {{if .Avatar}}
         <img src="{{ .Avatar }}" width="200px" height="200px" />
         {{end}} {{if .Logo}}
