@@ -2,207 +2,208 @@
 
 /* Глобальный блок ошибок */
 #global-error-block {
-  color: red;
-  border: 2px solid red;
-  width: 100%;
+    color: red;
+    border: 2px solid red;
 }
 
 /* Переменные */
 :root {
-  --bg-dark: #2b2b2b;
-  --nav-bg: #000000;
-  --btn-bg: #444444;
-  --btn-hover-bg: #777777;
-  --text-light: #ffffff;
-  --transition-speed: 0.3s;
+    --bg-dark: #2b2b2b;
+    --nav-bg: #000000;
+    --btn-bg: #444444;
+    --btn-hover-bg: #777777;
+    --text-light: #ffffff;
+    --transition-speed: 0.3s;
 }
 
 /* Шрифты и общий сброс */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
 
 body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background-color: var(--bg-dark);
-  color: var(--text-light);
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
 }
 
 /* Навигация */
 .nav-container {
-  background-color: var(--nav-bg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-  position: relative;
+    background-color: var(--nav-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    position: relative;
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-decoration: none;
-  color: var(--text-light);
-  transition: color var(--transition-speed);
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-light);
+    transition: color var(--transition-speed);
 }
 .logo:hover {
-  color: var(--btn-hover-bg);
+    color: var(--btn-hover-bg);
 }
 
 .user-info {
-  margin-left: 1rem;
-  font-size: 0.9rem;
+    margin-left: 1rem;
+    font-size: 0.9rem;
 }
 
 .burger {
-  display: none;
-  font-size: 2rem;
-  cursor: pointer;
-  color: var(--text-light);
-  z-index: 100; /* чтобы иконка была над меню */
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-light);
+    z-index: 100; /* чтобы иконка была над меню */
 }
 
 /* Меню по умолчанию — горизонтальное */
 .menu {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: nowrap; /* ссылки не ломают свою ширину */
+    display: flex;
+    gap: 1rem;
+    flex-wrap: nowrap; /* ссылки не ломают свою ширину */
 }
 
 .menu a,
 .menu button {
-  background-color: var(--btn-bg);
-  color: var(--text-light);
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-  white-space: nowrap; /* не переносить текст */
-  flex: none;           /* не растягиваться */
+    background-color: var(--btn-bg);
+    color: var(--text-light);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        background-color var(--transition-speed),
+        color var(--transition-speed);
+    white-space: nowrap; /* не переносить текст */
+    flex: none; /* не растягиваться */
 }
 .menu a:hover,
 .menu button:hover {
-  background-color: var(--btn-hover-bg);
+    background-color: var(--btn-hover-bg);
 }
 
 /* Стили для кнопок вне меню */
 button,
 .btn {
-  background-color: var(--btn-bg);
-  color: var(--text-light);
-  border: none;
-  border-radius: 0;
-  padding: 0.5rem 1rem;
-  font-family: inherit;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background var(--transition-speed);
+    background-color: var(--btn-bg);
+    color: var(--text-light);
+    border: none;
+    border-radius: 0;
+    padding: 0.5rem 1rem;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background var(--transition-speed);
 }
 button:hover,
 .btn:hover {
-  background-color: var(--btn-hover-bg);
+    background-color: var(--btn-hover-bg);
 }
 button:focus,
 .btn:focus {
-  outline: none;
+    outline: none;
 }
 
 a {
-  color: var(--text-light);
-  text-decoration: none;
-  transition: color var(--transition-speed);
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color var(--transition-speed);
 }
 a:hover {
-  color: var(--btn-hover-bg);
+    color: var(--btn-hover-bg);
 }
 
 /* Скрываем чекбокс */
 #burger-toggle {
-  display: none;
+    display: none;
 }
 
 .error-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* по умолчанию центрируем */
-  align-items: center;
-  min-height: 100vh;       /* минимум во всю высоту экрана */
-  padding: 2rem;
-  box-sizing: border-box;
-  background: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* по умолчанию центрируем */
+    align-items: center;
+    min-height: 100vh; /* минимум во всю высоту экрана */
+    padding: 2rem;
+    box-sizing: border-box;
+    background: var(--bg-dark);
 }
 
 /* Красная рамка */
 .error-box {
-  border: 3px solid red;
-  padding: 3rem;
-  text-align: center;
-  color: red;
-  max-width: 600px;        /* не шире 600px */
-  width: 100%;             /* но растягивается до контейнера */
-  box-sizing: border-box;
-  word-wrap: break-word;   /* перенос слов */
-  hyphens: auto;           /* перенос по слогам, если поддерживается */
+    border: 3px solid red;
+    padding: 3rem;
+    text-align: center;
+    color: red;
+    max-width: 600px; /* не шире 600px */
+    width: 100%; /* но растягивается до контейнера */
+    box-sizing: border-box;
+    word-wrap: break-word; /* перенос слов */
+    hyphens: auto; /* перенос по слогам, если поддерживается */
 }
 
 /* Код ошибки */
 .error-box .err-code {
-  font-size: 8rem;
-  font-weight: 700;
-  line-height: 1;
-  margin: 0;
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0;
 }
 
 /* Текст ошибки */
 .error-box .err-text {
-  font-size: 2.5rem;
-  margin-top: 1.5rem;
+    font-size: 2.5rem;
+    margin-top: 1.5rem;
 }
 
 /* Ссылка под контейнером */
 .error-container > a {
-  margin-top: 2rem;
-  font-size: 1.5rem;
-  color: var(--text-light);
-  text-decoration: underline;
-  transition: color var(--transition-speed);
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    text-decoration: underline;
+    transition: color var(--transition-speed);
 }
 .error-container > a:hover {
-  color: var(--btn-hover-bg);
+    color: var(--btn-hover-bg);
 }
 
 /* Мобильные стили */
 @media (max-width: 768px) {
-  .burger {
-    display: block;
-  }
+    .burger {
+        display: block;
+    }
 
-  .menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 250px;
-    background-color: var(--nav-bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;       /* по центру по горизонтали */
-    justify-content: flex-start;/* пункты ближе к верху */
-    padding-top: 2rem;
-    gap: 1rem;
-    transform: translateX(100%); /* прячем за правой границей */
-    transition: transform var(--transition-speed) ease-out;
-    z-index: 99;
-  }
+    .menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 250px;
+        background-color: var(--nav-bg);
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* по центру по горизонтали */
+        justify-content: flex-start; /* пункты ближе к верху */
+        padding-top: 2rem;
+        gap: 1rem;
+        transform: translateX(100%); /* прячем за правой границей */
+        transition: transform var(--transition-speed) ease-out;
+        z-index: 99;
+    }
 
-  /* Показываем меню при чекнутом бургерe */
-  #burger-toggle:checked ~ .menu {
-    transform: translateX(0);
-  }
+    /* Показываем меню при чекнутом бургерe */
+    #burger-toggle:checked ~ .menu {
+        transform: translateX(0);
+    }
 
-  /* Отступы между пунктами */
-  .menu a,
-  .menu button {
-    margin: 0;
-  }
+    /* Отступы между пунктами */
+    .menu a,
+    .menu button {
+        margin: 0;
+    }
 }

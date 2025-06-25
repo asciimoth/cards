@@ -4,7 +4,9 @@
         {{ template "comp_header.html" . }}
     </head>
     <body hx-ext="response-targets">
-        <header>{{ template "comp_nav.html" . }}</header>
+        <header>
+            {{ template "comp_nav.html" . }} {{ template "comp_error.html" . }}
+        </header>
         <br />
         <!--  -->
         {{range .Cards}} {{ template "comp_card.html" . }} {{end}}
