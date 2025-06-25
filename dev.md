@@ -10,6 +10,7 @@ Dev environment is defined in `flake.nix`.
 ```sh
 docker compose up --build
 ```
+
 # TODO
 ## Fronend
 - [ ] Place name of logged in user somewhere
