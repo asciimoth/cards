@@ -1,28 +1,74 @@
 <!doctype html>
-<html>
-    <head>
-        {{ template "comp_header.html" . }}
+<html lang="en">
+<head>
+    {{ template "comp_header.html" . }}
+    <link rel="manifest" href="static/manifest.json">
+    <meta name="theme-color" content="#007BFF">
+    {{ if .Card.AvatarExist }}
+        <link rel="icon"          href="/media/avatar/{{.Card.ID}}" sizes="any">
+        <link rel="apple-touch-icon" href="/media/avatar/{{.Card.ID}}">
+    {{ else }}
+        <!-- fallback to a default icon -->
+        <link rel="icon"          href="/static/default-avatar.png" sizes="any">
+        <link rel="apple-touch-icon" href="/static/default-avatar.png">
+    {{ end }}
     </head>
-    <body>
-        {{if .Card.AvatarExist}}
-        <img src="/media/avatar/{{.Card.ID}}" width="200px" height="200px" />
-        {{end}} {{if .Card.LogoExist}}
-        <img src="/media/logo/{{.Card.ID}}" width="200px" height="200px" />
-        {{end}}
-        <br />
-        {{if .Card.Fields.IsHidden}}
-        <span color="red"> This card is hidden </span> {{end}} <br />
-        Name: {{.Card.Fields.Name}} <br />
-        Company: {{.Card.Fields.Company}} <br />
-        Position: {{.Card.Fields.Position}} <br />
-        Description: {{.Card.Fields.Description}} <br />
-        Phone: {{.Card.Fields.Phone}} <br />
-        Email: {{.Card.Fields.Email}} <br />
-        Telegram: {{.Card.Fields.Telegram}} <br />
-        Whatsapp: {{.Card.Fields.Whatsapp}} <br />
-        VK: {{.Card.Fields.VK}} <br />
-        {{if .Owner}}
-        <a href="{{ .EditUrl }}">Edit this card</a>
-        {{end}}
-    </body>
+
+<body>
+    <div class="card">
+        <div id="card-container">
+            {{ if .Card.LogoExist }}
+            <div class="logo-container">
+                <img src="/media/logo/{{.Card.ID}}" alt="Company logo">
+            </div>
+            {{ end }}
+
+            {{ if .Card.AvatarExist }}
+            <div class="avatar">
+                <img src="/media/avatar/{{.Card.ID}}" alt="Avatar">
+            </div>
+            {{ end }}
+
+            {{ if .Card.Fields.IsHidden }}
+            <span class="hidden-flag">This card is hidden</span>
+            {{ end }}
+
+            <h2>{{ .Card.Fields.Company }}</h2>
+            <h3>{{ .Card.Fields.Name }}</h3>
+            <h4>{{ .Card.Fields.Position }}</h4>
+            <p>{{ .Card.Fields.Description }}</p>
+
+            <div class="contacts">
+            {{ if .Card.Fields.Phone }}
+                <a href="tel:{{ .Card.Fields.Phone }}" title="Phone">📞</a>
+            {{ end }}
+            {{ if .Card.Fields.Email }}
+                <a href="mailto:{{ .Card.Fields.Email }}" title="Email">✉️</a>
+            {{ end }}
+            {{ if .Card.Fields.Telegram }}
+                <a href="{{ .Card.Fields.Telegram }}" title="Telegram" target="_blank">📨</a>
+            {{ end }}
+            {{ if .Card.Fields.Whatsapp }}
+                <a href="{{ .Card.Fields.Whatsapp }}" title="WhatsApp" target="_blank">💬</a>
+            {{ end }}
+            {{ if .Card.Fields.VK }}
+                <a href="{{ .Card.Fields.VK }}" title="VK" target="_blank">🖼️</a>
+            {{ end }}
+            </div>
+
+            {{ if .Owner }}
+            <a class="edit-link" href="{{ .EditUrl }}">Edit this card</a>
+            {{ end }}
+        </div>
+    </div>
+</body>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('SW registered'))
+      .catch(err => console.error('SW failed', err));
+  });
+}
+</script>
 </html>
