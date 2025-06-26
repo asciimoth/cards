@@ -11,6 +11,20 @@ Dev environment is defined in `flake.nix`.
 docker compose up --build
 ```
 
+# Creating admin user
+To promote user to admin, connect to DB after service start:
+```sh
+psql -h localhost -U devuser -d devdb
+```
+Find your user
+```sql
+SELECT * FROM users;
+```
+And change selected user type to 1
+```sql
+UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
+```
+
 # TODO
 ## Fronend
 - [X] Place name of logged in user somewhere

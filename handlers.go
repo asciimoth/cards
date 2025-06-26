@@ -256,12 +256,15 @@ func SetupRoutes(
 		}
 
 		is_owner := false
+
 		if user != nil {
-			is_owner = card.Owner == user.ID
+			is_owner = card.Owner == user.ID || user.Type == UserTypeAdmin
 		}
 		if !is_owner && card.Fields.IsHidden {
 			c.HTML(http.StatusNotFound, "page_cardNotFound.html", gin.H{"User": user})
+			return
 		}
+
 		c.HTML(http.StatusOK, "page_card.html", gin.H{
 			"Title":   card.Fields.Name,
 			"Card":    card,
@@ -374,19 +377,62 @@ func SetupRoutes(
 		authorized.POST("/userdel", func(c *gin.Context) {
 			user := getUser(c)
 
-			if user != nil {
-				db.DeleteUser(user.ID)
-			}
+			db.DeleteUser(user.ID)
 
 			sess := sessions.Default(c)
 			sess.Clear()
 			sess.Save()
 			redirect(c, "/")
 		})
-		authorized.GET("/cards", func(c *gin.Context) {
+		authorized.POST("/userdel/:id", func(c *gin.Context) {
 			user := getUser(c)
 
-			cards, err := db.ListCards(user.ID)
+			if user.Type != UserTypeAdmin {
+				errorPage(c, http.StatusNotFound, "")
+				return
+			}
+
+			uid, err := getUintParam(c, "id")
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Wrong user id")
+				errorPage(c, http.StatusInternalServerError, "Wrong user id")
+				return
+			}
+
+			err = db.DeleteUser(uid)
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to delete user")
+				errorPage(c, http.StatusInternalServerError, "Failed to delete user")
+				return
+			}
+
+			redirect(c, "/users")
+		})
+		authorized.GET("/cards", func(c *gin.Context) {
+			user := getUser(c)
+			redirect(c, fmt.Sprintf("/cards/%d", user.ID))
+		})
+		authorized.GET("/cards/:id", func(c *gin.Context) {
+			user := getUser(c)
+
+			uid, err := getUintParam(c, "id")
+
+			if err != nil {
+				redirect(c, fmt.Sprintf("/cards/%d", user.ID))
+				return
+			}
+
+			if user.Type != UserTypeAdmin && uid != user.ID {
+				redirect(c, fmt.Sprintf("/cards/%d", user.ID))
+			}
+
+			cards, err := db.ListCards(uid)
 
 			if err != nil {
 				log.WithFields(logrus.Fields{
@@ -423,7 +469,7 @@ func SetupRoutes(
 				return
 			}
 
-			if card.Owner != user.ID {
+			if card.Owner != user.ID && user.Type != UserTypeAdmin {
 				errorPage(c, http.StatusForbidden, "Card is owned by another user")
 				return
 			}
@@ -437,7 +483,7 @@ func SetupRoutes(
 				}).Error("Failed to delete a card")
 			}
 
-			redirect(c, "/cards")
+			redirect(c, fmt.Sprintf("/cards/%d", card.Owner))
 		})
 		authorized.GET("/editor", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "page_editor.html", gin.H{
@@ -459,6 +505,11 @@ func SetupRoutes(
 
 			card, err := db.GetCard(cid)
 			if err != nil {
+				redirect(c, "/cards")
+				return
+			}
+
+			if card.Owner != user.ID && user.Type != UserTypeAdmin {
 				redirect(c, "/cards")
 				return
 			}
@@ -552,7 +603,7 @@ func SetupRoutes(
 				return
 			}
 
-			if card.Owner != user.ID {
+			if card.Owner != user.ID && user.Type != UserTypeAdmin {
 				redirect(c, "/cards")
 				return
 			}
@@ -621,7 +672,7 @@ func SetupRoutes(
 				}
 			}
 
-			redirect(c, "/cards")
+			redirect(c, fmt.Sprintf("/cards/%d", card.Owner))
 		})
 		authorized.POST("/visibility/:id", func(c *gin.Context) {
 
@@ -640,7 +691,7 @@ func SetupRoutes(
 				return
 			}
 
-			if card.Owner != user.ID {
+			if card.Owner != user.ID && user.Type != UserTypeAdmin {
 				errorBlock(c, http.StatusForbidden, "You are not owner of this card")
 				return
 			}
@@ -661,6 +712,30 @@ func SetupRoutes(
 			}
 
 			c.HTML(http.StatusOK, "comp_card.html", card)
+		})
+		authorized.GET("/users", func(c *gin.Context) {
+			user := getUser(c)
+
+			if user.Type != UserTypeAdmin {
+				errorPage(c, http.StatusNotFound, "")
+				return
+			}
+
+			users, err := db.ListUsers()
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to list users")
+				errorPage(c, http.StatusInternalServerError, "Failed to list users")
+				return
+			}
+
+			c.HTML(http.StatusOK, "page_users.html", gin.H{
+				"Title": "Your cards",
+				"User":  user,
+				"Users": users,
+			})
 		})
 	}
 }

@@ -14,6 +14,11 @@ import (
 	glog "gorm.io/gorm/logger"
 )
 
+const (
+	UserTypeUsual uint = 0
+	UserTypeAdmin uint = 1
+)
+
 // Custom logrus based logger for gorm
 type gormlog struct {
 	log *logrus.Logger
@@ -63,6 +68,7 @@ type User struct {
 	ID         uint `gorm:"primaryKey"`
 	ProviderID string
 	Name       string
+	Type       uint
 }
 
 type PGDB struct {
@@ -149,6 +155,13 @@ func (db *PGDB) ListCards(uid uint) ([]Card, error) {
 
 	result := db.DB.Where(&Card{Owner: uid}).Find(&cards)
 	return cards, result.Error
+}
+
+func (db *PGDB) ListUsers() ([]User, error) {
+	users := []User{}
+
+	result := db.DB.Find(&users)
+	return users, result.Error
 }
 
 func SetupDB(store *BlobStorage, log *logrus.Logger) *PGDB {

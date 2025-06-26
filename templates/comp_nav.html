@@ -4,6 +4,9 @@
     </a>
 
     {{if .User}}
+    {{if eq .User.Type 1}}
+    <b style="color: red;">ADMIN USER</b>
+    {{end}}
     <span class="user-info">Logged as {{.User.ID}} {{.User.Name}}</span>
     {{end}}
     <input type="checkbox" id="burger-toggle" />
@@ -12,6 +15,9 @@
     <a href="/tutorial">How to use</a>
     <a href="/faq">FAQ</a>
     {{if .User}}
+        {{if eq .User.Type 1}}
+            <a href="/users" style="background-color: red;">Users</a>
+        {{end}}
         <a href="/cards">Cards</a>
         <a href="/logout">Logout</a>
         <button
