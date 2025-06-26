@@ -149,7 +149,15 @@
                 </form>
             </section>
             <aside id="card-preview">
+                {{if .Card.AvatarExist}}
+                <img
+                    id="card-image-preview"
+                    src="/media/avatar/{{.Card.ID}}"
+                    alt="Your avatar preview"
+                />
+                {{else}}
                 <img id="card-image-preview" src="" alt="Your avatar preview" />
+                {{end}}
             </aside>
         </div>
         <script
