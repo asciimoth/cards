@@ -150,15 +150,31 @@
                 </form>
             </section>
             <aside id="card-preview">
-                {{if .Card.AvatarExist}}
-                <img
-                    id="card-image-preview"
-                    src="/media/avatar/{{.Card.ID}}"
-                    alt="Your avatar preview"
-                />
-                {{else}}
-                <img id="card-image-preview" src="" alt="Your avatar preview" />
-                {{end}}
+                <h2 id="card-company"></h2>
+                <div class="logo-container" id="logo-container">
+                    <img id="card-logo" src="" alt="Company logo" style="display:none;">
+                </div>
+                <div class="avatar">
+                    {{if .Card.AvatarExist}}
+                    <img
+                        id="card-image-preview"
+                        src="/media/avatar/{{.Card.ID}}"
+                        alt="Your avatar preview"
+                    />
+                    {{else}}
+                    <img id="card-image-preview" src="" alt="Your avatar preview" />
+                    {{end}}
+                </div>
+                <h3 id="card-name"></h3>
+                <h4 id="card-position"></h4>
+                <p id="card-text"></p>
+                <div class="contact-buttons">
+                    <a id="btn-phone" href="#" title="Phone">📞</a>
+                    <a id="btn-email" href="#" title="Email">✉️</a>
+                    <a id="btn-telegram" href="#" title="Telegram">📨</a>
+                    <a id="btn-whatsapp" href="#" title="WhatsApp">💬</a>
+                    <a id="btn-vk" href="#" title="VK">🖼️</a>
+                </div>
             </aside>
         </div>
         <script
@@ -167,46 +183,120 @@
             referrerpolicy="no-referrer"
         ></script>
         <script>
-            const fileInput = document.getElementById("input-avatar-precrop");
-            const croppedInput = document.getElementById("input-avatar");
-            const image = document.getElementById("image-preview");
-            const resultPreview = document.getElementById("card-image-preview");
-            let cropper;
+            document.addEventListener('DOMContentLoaded', () => {
+            // Preview elements
+            const cardCompany  = document.getElementById('card-company');
+            const cardLogoImg  = document.getElementById('card-logo');
+            const cardLogoCont = document.getElementById('logo-container');
+            const cardAvatar   = document.getElementById('card-image-preview');
+            const cardName     = document.getElementById('card-name');
+            const cardPosition = document.getElementById('card-position');
+            const cardText     = document.getElementById('card-text');
+            const btnPhone     = document.getElementById('btn-phone');
+            const btnEmail     = document.getElementById('btn-email');
+            const btnTelegram  = document.getElementById('btn-telegram');
+            const btnWhatsapp  = document.getElementById('btn-whatsapp');
+            const btnVk        = document.getElementById('btn-vk');
 
-            // Helper to update cropped file field
-            function updateCroppedFile() {
-                if (!cropper) return;
-                let canvas = cropper.getCroppedCanvas();
-                resultPreview.src = canvas.toDataURL();
-                canvas.toBlob((blob) => {
-                    const fileName = fileInput.files[0]?.name || "cropped.png";
-                    const croppedFile = new File([blob], fileName, {
-                        type: blob.type,
-                    });
-                    const dt = new DataTransfer();
-                    dt.items.add(croppedFile);
-                    croppedInput.files = dt.files;
+            // Form inputs
+            const inputCompany  = document.getElementById('input-company');
+            const logoInput     = document.getElementById('input-logo');
+            const inputName     = document.getElementById('input-name');
+            const inputPosition = document.getElementById('input-position');
+            const inputDesc     = document.getElementById('input-description');
+            const inputAvatar   = document.getElementById('input-avatar-precrop');
+            const inputPhone    = document.getElementById('input-phone');
+            const inputEmail    = document.getElementById('input-email');
+            const inputTelegram = document.getElementById('input-telegram');
+            const inputWhatsapp = document.getElementById('input-whatsapp');
+            const inputVk       = document.getElementById('input-vk');
+
+            function updatePreview() {
+                cardCompany.textContent  = inputCompany.value.trim();
+                cardName.textContent     = inputName.value.trim();
+                cardPosition.textContent = inputPosition.value.trim();
+                cardText.textContent     = inputDesc.value.trim();
+
+                // Avatar preview
+                if (inputAvatar.files[0]) {
+                cardAvatar.src = URL.createObjectURL(inputAvatar.files[0]);
+                }
+
+                // Contact buttons
+                [
+                { inp: inputPhone,  btn: btnPhone,  prefix: 'tel:' },
+                { inp: inputEmail,  btn: btnEmail,  prefix: 'mailto:' },
+                { inp: inputTelegram, btn: btnTelegram, prefix: '' },
+                { inp: inputWhatsapp, btn: btnWhatsapp, prefix: '' },
+                { inp: inputVk,      btn: btnVk,      prefix: '' },
+                ].forEach(({ inp, btn, prefix }) => {
+                const val = inp.value.trim();
+                if (val) {
+                    btn.href = prefix + val;
+                    btn.style.display = 'inline-flex';
+                } else {
+                    btn.style.display = 'none';
+                }
                 });
             }
 
-            fileInput.addEventListener("change", (e) => {
+
+            // Cropper
+            const fileInput = document.getElementById("input-avatar-precrop");
+            const resultPreview = cardAvatar;
+            let cropper;
+            fileInput.addEventListener("change", e => {
                 const file = e.target.files[0];
                 if (!file) return;
                 const url = URL.createObjectURL(file);
-
-                image.src = url;
-                image.style.display = "block";
-
+                const image = document.getElementById("image-preview");
+                image.src = url; image.style.display = "block";
                 if (cropper) cropper.destroy();
                 cropper = new Cropper(image, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    autoCrop: true,
-                    autoCropArea: 0.8,
-                    cropend: updateCroppedFile,
-                    ready: updateCroppedFile,
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCrop: true,
+                autoCropArea: 0.8,
+                cropend() {
+                    const canvas = cropper.getCroppedCanvas();
+                    resultPreview.src = canvas.toDataURL();
+                }
                 });
             });
+
+            // Listeners
+            [
+                inputCompany, inputName, inputPosition, inputDesc,
+                inputAvatar, inputPhone, inputEmail,
+                inputTelegram, inputWhatsapp, inputVk
+            ].forEach(el => {
+                el.addEventListener('input', updatePreview);
+                el.addEventListener('change', updatePreview);
+            });
+
+            logoInput.addEventListener('change', () => {
+                const file = logoInput.files[0];
+                if (!file) {
+                    cardLogoImg.style.display = 'none';
+                    cardLogoCont.style.display = 'none';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = evt => {
+                    const dataUrl = evt.target.result;
+                    // Подставляем в превью
+                    cardLogoImg.src = dataUrl;
+                    cardLogoImg.style.display = 'block';
+                    cardLogoCont.style.display = "block";
+
+                };
+                reader.readAsDataURL(file);
+                });
+
+            // init
+            updatePreview();
+            });
+            
         </script>
     </body>
 </html>

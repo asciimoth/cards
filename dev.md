@@ -39,7 +39,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
   - [X] Add cards grid
   - [X] Replace "create new card" link button with `+` sign
 - [ ] Style editor page
-  - [ ] Add live preview
+  - [X] Add live preview
   - [X] Make crop widget not so fucking big
   - [X] Style inputs (file inputs including)
 - [ ] Style card page
