@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -111,6 +112,9 @@ func uploader(log *logrus.Logger, storage *BlobStorage, ctx context.Context, max
 			mime := avatar.Header.Get("Content-Type")
 			if mime == "" {
 				errorPage(c, http.StatusBadRequest, fmt.Sprintf("Content type of %s unknown", avatar.Filename))
+			}
+			if !strings.HasPrefix(mime, "image/") {
+				errorPage(c, http.StatusBadRequest, fmt.Sprintf("%s is not an image. mime: %s", avatar.Filename, mime))
 			}
 
 			src, err := avatar.Open()
