@@ -1,15 +1,21 @@
-<!doctype html>
-<html>
-    <head>
-        {{ template "comp_header.html" . }}
-    </head>
-    <body hx-ext="response-targets">
-        <header>
-            {{ template "comp_nav.html" . }} {{ template "comp_error.html" . }}
-        </header>
-        <br />
-        <!--  -->
-        {{range .Cards}} {{ template "comp_card.html" . }} {{end}}
-        <a href="/editor"> Create new card </a>
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{ template "comp_header.html" . }}
+</head>
+<body>
+  <header>{{ template "comp_nav.html" . }} {{ template "comp_error.html" . }} {{ template "comp_error.html" . }}</header>
+
+  <main>
+
+    <section class="cards-grid">
+      {{ range .Cards }}
+        {{ template "comp_card.html" . }}
+      {{ end }}
+    </section>
+    <div class="add-card-container">
+        <a href="/editor" class="add-card-btn" aria-label="Create new card">＋</a>
+    </div>
+  </main>
+</body>
 </html>

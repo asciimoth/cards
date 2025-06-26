@@ -1,32 +1,47 @@
-<div id="card-{{.ID}}">
-    - {{ .Fields.Name }} {{ .Fields.Email }}
-    <a href="/editor/{{.ID}}"> Edit </a> - <a href="/c/{{.ID}}"> View </a> -
+<div id="card-{{ .ID }}" class="card-item">
+  <!-- Аватарка -->
+  <div class="avatar">
+    <img src="/media/avatar/{{.ID}}" />
+  </div>
+
+
+  <!-- Имя и Email -->
+  <h4>{{ .Fields.Name }}</h4>
+  <p>{{ .Fields.Email }}</p>
+
+  <!-- Действия -->
+  <div class="actions">
+    <a href="/c/{{ .ID }}">View</a>
+    <a href="/editor/{{ .ID }}">Edit</a>
+
     <button
-        hx-post="/delcard/{{.ID}}"
-        hx-confirm="Are you sure you wish to delete this card: {{ .Fields.Name }} {{ .Fields.Email }}"
-        hx-swap="outerHTML"
-        hx-target="#card-{{.ID}}"
-        hx-target-error="#global-error-block"
+      hx-post="/delcard/{{ .ID }}"
+      hx-confirm="Are you sure you wish to delete this card: {{ .Fields.Name }} {{ .Fields.Email }}?"
+      hx-swap="outerHTML"
+      hx-target="#card-{{ .ID }}"
+      hx-target-error="#global-error-block"
     >
-        Delete
+      Delete
     </button>
-    {{ if .Fields.IsHidden }} hidden
-    <button
-        hx-post="/visibility/{{.ID}}?visible=true"
+
+    {{ if .Fields.IsHidden }}
+      <button
+        hx-post="/visibility/{{ .ID }}?visible=true"
         hx-swap="outerHTML"
-        hx-target="#card-{{.ID}}"
+        hx-target="#card-{{ .ID }}"
         hx-target-error="#global-error-block"
-    >
+      >
         Make visible
-    </button>
-    {{else}}
-    <button
-        hx-post="/visibility/{{.ID}}?visible=false"
+      </button>
+    {{ else }}
+      <button
+        hx-post="/visibility/{{ .ID }}?visible=false"
         hx-swap="outerHTML"
-        hx-target="#card-{{.ID}}"
+        hx-target="#card-{{ .ID }}"
         hx-target-error="#global-error-block"
-    >
+      >
         Hide
-    </button>
-    {{end}}
+      </button>
+    {{ end }}
+  </div>
 </div>

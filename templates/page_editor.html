@@ -10,128 +10,132 @@
         />
     </head>
     <body>
-        <header>{{ template "comp_nav.html" . }}</header>
-        <br />
-        <form action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
-            <label for="input-name">Name</label> <br />
-            <input
-                name="name"
-                id="input-name"
-                type="text"
-                value="{{.Card.Fields.Name}}"
-                required
-            />
+        <div class="editor-layout">
+            <header>{{ template "comp_nav.html" . }}</header>
             <br />
+            <section id="controls">
+                <form id="editor-form" action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
+                    <label for="input-name">Name</label> <br />
+                    <input
+                        name="name"
+                        id="input-name"
+                        type="text"
+                        value="{{.Card.Fields.Name}}"
+                        required
+                    />
+                    <br />
 
-            <label for="input-company">Company</label> <br />
-            <input
-                name="company"
-                id="input-company"
-                type="text"
-                value="{{.Card.Fields.Company}}"
-            />
-            <br />
+                    <label for="input-company">Company</label> <br />
+                    <input
+                        name="company"
+                        id="input-company"
+                        type="text"
+                        value="{{.Card.Fields.Company}}"
+                    />
+                    <br />
 
-            <label for="input-logo">Company Logo</label> <br />
-            <input name="logo" id="input-logo" type="file" accept="image/*" />
-            <br />
+                    <label for="input-logo">Company Logo</label> <br />
+                    <input name="logo" id="input-logo" type="file" accept="image/*" />
+                    <br />
 
-            <label for="input-position">Position</label> <br />
-            <input
-                name="position"
-                id="input-position"
-                type="text"
-                value="{{.Card.Fields.Position}}"
-            />
-            <br />
+                    <label for="input-position">Position</label> <br />
+                    <input
+                        name="position"
+                        id="input-position"
+                        type="text"
+                        value="{{.Card.Fields.Position}}"
+                    />
+                    <br />
 
-            <label for="input-description">Self description</label> <br />
-            <textarea name="description" id="input-description" rows="5">
-{{.Card.Fields.Description}}</textarea
-            >
-            <br />
+                    <label for="input-description">Self description</label> <br />
+                    <textarea name="description" id="input-description" rows="5">
+        {{.Card.Fields.Description}}</textarea
+                    >
+                    <br />
 
-            <hr />
-            <h4>Avatar & Crop</h4>
-            <br />
+                    <hr />
+                    <h4>Avatar & Crop</h4>
+                    <br />
 
-            <label for="input-avatar-precrop">Avatar Image</label> <br />
-            <input
-                name="avatar-precrop"
-                id="input-avatar-precrop"
-                type="file"
-                accept="image/*"
-            />
-            <input
-                name="avatar"
-                id="input-avatar"
-                type="file"
-                accept="image/*"
-                hidden
-            />
-            <br />
-            <!-- Preview & Crop -->
-            <div id="preview-container">
-                <img id="image-preview" style="display: none" />
-            </div>
-            <button id="crop-btn" type="button" style="display: none">
-                Crop Image
-            </button>
+                    <label for="input-avatar-precrop">Avatar Image</label> <br />
+                    <input
+                        name="avatar-precrop"
+                        id="input-avatar-precrop"
+                        type="file"
+                        accept="image/*"
+                    />
+                    <input
+                        name="avatar"
+                        id="input-avatar"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                    />
+                    <br />
+                    <!-- Preview & Crop -->
+                    <div id="preview-container">
+                        <img id="image-preview" style="display: none" />
+                    </div>
+                    <button id="crop-btn" type="button" style="display: none">
+                        Crop Image
+                    </button>
 
-            <hr />
-            <h4>Contacts</h4>
-            <br />
+                    <hr />
+                    <h4>Contacts</h4>
+                    <br />
 
-            <label for="input-phone">Phone</label> <br />
-            <input
-                name="phone"
-                id="input-phone"
-                type="tel"
-                value="{{.Card.Fields.Phone}}"
-            />
-            <br />
+                    <label for="input-phone">Phone</label> <br />
+                    <input
+                        name="phone"
+                        id="input-phone"
+                        type="tel"
+                        value="{{.Card.Fields.Phone}}"
+                    />
+                    <br />
 
-            <label for="input-email">Email</label> <br />
-            <input
-                name="email"
-                id="input-email"
-                type="email"
-                value="{{.Card.Fields.Email}}"
-            />
-            <br />
+                    <label for="input-email">Email</label> <br />
+                    <input
+                        name="email"
+                        id="input-email"
+                        type="email"
+                        value="{{.Card.Fields.Email}}"
+                    />
+                    <br />
 
-            <label for="input-telegram">Telegram URL</label> <br />
-            <input
-                name="telegram"
-                id="input-telegram"
-                type="url"
-                value="{{.Card.Fields.Telegram}}"
-            />
-            <br />
+                    <label for="input-telegram">Telegram URL</label> <br />
+                    <input
+                        name="telegram"
+                        id="input-telegram"
+                        type="url"
+                        value="{{.Card.Fields.Telegram}}"
+                    />
+                    <br />
 
-            <label for="input-whatsapp">WhatsApp URL</label> <br />
-            <input
-                name="whatsapp"
-                id="input-whatsapp"
-                type="url"
-                value="{{.Card.Fields.Whatsapp}}"
-            />
-            <br />
+                    <label for="input-whatsapp">WhatsApp URL</label> <br />
+                    <input
+                        name="whatsapp"
+                        id="input-whatsapp"
+                        type="url"
+                        value="{{.Card.Fields.Whatsapp}}"
+                    />
+                    <br />
 
-            <label for="input-vk">VK URL</label> <br />
-            <input
-                name="vk"
-                id="input-vk"
-                type="url"
-                value="{{.Card.Fields.VK}}"
-            />
-            <br />
+                    <label for="input-vk">VK URL</label> <br />
+                    <input
+                        name="vk"
+                        id="input-vk"
+                        type="url"
+                        value="{{.Card.Fields.VK}}"
+                    />
+                    <br />
 
-            <button type="submit">{{.SubmitButton}}</button>
-        </form>
-        <aside id="card-preview">
-            <img id="card-image-preview" src="" alt="Your avatar preview" />
-        </aside>
+                    <button type="submit">{{.SubmitButton}}</button>
+                </form>
+            </section>
+            <aside id="card-preview">
+                <img id="card-image-preview" src="" alt="Your avatar preview" />
+            </aside>
+        </div>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"
             crossorigin="anonymous"
