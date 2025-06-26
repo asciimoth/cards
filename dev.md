@@ -22,12 +22,12 @@ docker compose up --build
   - [X] Use SVG logo instead of just text
 - [ ] Style cards page
   - [ ] If there is no cards, add text block about it
-  - [ ] Add cards grid
-  - [ ] Replace "create new card" link button with `+` sign
+  - [X] Add cards grid
+  - [X] Replace "create new card" link button with `+` sign
 - [ ] Style editor page
-  - [X] Add live preview
+  - [ ] Add live preview
   - [X] Make crop widget not so fucking big
-  - [ ] Style inputs (file inputs including)
+  - [X] Style inputs (file inputs including)
 - [ ] Style card page
 - [ ] Style card not found page
 - [ ] Style login page

@@ -223,9 +223,7 @@ button:hover { background:var(--btn-hover-bg); }
 #card-preview .avatar img {
     width:100%; height:100%; object-fit:cover;
 }
-#card-preview h2,h3,h4,p {
-    margin:0; text-align:center; color:#000;
-}
+
 .contact-buttons {
     display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;
 }
@@ -243,6 +241,151 @@ button:hover { background:var(--btn-hover-bg); }
 }
 #preview-container img {
     display:block; width:100%; height:auto;
+}
+
+/* Контейнер для всех карточек */
+.cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* Одна карточка */
+.card-item {
+    background: var(--nav-bg);
+    color: var(--text-light);
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.card-item h4,p {
+    color: var(--text-light);
+    margin: 0.5rem;
+}
+
+/* Аватар */
+.card-item .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+    border: 2px solid var(--btn-bg);
+}
+.card-item .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.add-card-container {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+/* Круглая кнопка «+» */
+.add-card-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;               /* 48px */
+  height: 3rem;
+  background: var(--btn-bg);
+  color: var(--text-light);
+  font-size: 1.75rem;
+  line-height: 1;
+  border-radius: 50%;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-speed), transform var(--transition-speed);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Hover/focus эффект */
+.add-card-btn:hover,
+.add-card-btn:focus {
+  background: var(--btn-hover-bg);
+  transform: scale(1.1);
+}
+
+
+/* Кнопки действий */
+.card-item .actions {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+    justify-content: center;
+}
+.card-item .actions a,
+.card-item .actions button {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 0.5rem;
+    background: var(--btn-bg);
+    color: var(--text-light);
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background var(--transition-speed);
+    white-space: nowrap;
+}
+.card-item .actions a:hover,
+.card-item .actions button:hover {
+    background: var(--btn-hover-bg);
+}
+
+.editor-layout {
+  display: flex;
+  align-items: flex-start;    /* превью сверху */
+  justify-content: center;    /* по центру экрана */
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;          /* ограничитель по ширине */
+  box-sizing: border-box;
+}
+
+/* --- Стили для панели управления --- */
+#controls {
+  flex: 1 1 0;                /* займёт всё доступное место */
+  max-width: 500px;           /* можете подкорректировать */
+}
+
+/* --- Превью визитки в редакторе --- */
+#card-preview {
+  flex: none;                 /* не растягивается */
+  width: 300px;               /* фиксированная ширина превью */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  background: var(--card-bg, #fff);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Центрируем картинку внутри превью */
+#card-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+/* Чтобы форма не растягивалась слишком широко */
+#controls form {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Мобильные стили */
