@@ -68,3 +68,5 @@ docker compose up --build
 - [ ] Add GH actions bases on nix
 ## Pr
 - [ ] Add video demostration to readme
+## Etc
+- [ ] GDPR and simmilar rules compliance
