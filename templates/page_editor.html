@@ -14,7 +14,12 @@
             <header>{{ template "comp_nav.html" . }}</header>
             <br />
             <section id="controls">
-                <form id="editor-form" action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
+                <form
+                    id="editor-form"
+                    action="{{.EditUrl}}"
+                    method="post"
+                    enctype="multipart/form-data"
+                >
                     <label for="input-name">Name</label> <br />
                     <input
                         name="name"
@@ -35,7 +40,12 @@
                     <br />
 
                     <label for="input-logo">Company Logo</label> <br />
-                    <input name="logo" id="input-logo" type="file" accept="image/*" />
+                    <input
+                        name="logo"
+                        id="input-logo"
+                        type="file"
+                        accept="image/*"
+                    />
                     <br />
 
                     <label for="input-position">Position</label> <br />
@@ -47,8 +57,13 @@
                     />
                     <br />
 
-                    <label for="input-description">Self description</label> <br />
-                    <textarea name="description" id="input-description" rows="5">
+                    <label for="input-description">Self description</label>
+                    <br />
+                    <textarea
+                        name="description"
+                        id="input-description"
+                        rows="5"
+                    >
         {{.Card.Fields.Description}}</textarea
                     >
                     <br />
@@ -57,7 +72,8 @@
                     <h4>Avatar & Crop</h4>
                     <br />
 
-                    <label for="input-avatar-precrop">Avatar Image</label> <br />
+                    <label for="input-avatar-precrop">Avatar Image</label>
+                    <br />
                     <input
                         name="avatar-precrop"
                         id="input-avatar-precrop"
@@ -179,6 +195,7 @@
                     autoCrop: true,
                     autoCropArea: 0.8,
                     cropend: updateCroppedFile,
+                    ready: updateCroppedFile,
                 });
             });
         </script>
