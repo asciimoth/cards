@@ -145,6 +145,10 @@ a:hover {
     box-sizing: border-box;
     word-wrap: break-word;
     hyphens: auto; /* Wrap by syllables if supported*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;        /* по горизонтали по центру */
+    justify-content: flex-start;/
 }
 
 .error-box .err-code {
