@@ -1,12 +1,8 @@
-/* style.css */
-
-/* Глобальный блок ошибок */
 #global-error-block {
     color: red;
     border: 2px solid red;
 }
 
-/* Переменные */
 :root {
     --bg-dark: #2b2b2b;
     --nav-bg: #000000;
@@ -16,7 +12,7 @@
     --transition-speed: 0.3s;
 }
 
-/* Шрифты и общий сброс */
+/* Fonts and style unset*/
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
 
 body {
@@ -26,7 +22,6 @@ body {
     color: var(--text-light);
 }
 
-/* Навигация */
 .nav-container {
     background-color: var(--nav-bg);
     display: flex;
@@ -66,11 +61,11 @@ body {
     z-index: 100; /* чтобы иконка была над меню */
 }
 
-/* Меню по умолчанию — горизонтальное */
+/* Dfault (horizontal) menu*/
 .menu {
     display: flex;
     gap: 1rem;
-    flex-wrap: nowrap; /* ссылки не ломают свою ширину */
+    flex-wrap: nowrap;
 }
 
 .menu a,
@@ -84,15 +79,15 @@ body {
     transition:
         background-color var(--transition-speed),
         color var(--transition-speed);
-    white-space: nowrap; /* не переносить текст */
-    flex: none; /* не растягиваться */
+    white-space: nowrap;
+    flex: none; /* Do not stretch */
 }
 .menu a:hover,
 .menu button:hover {
     background-color: var(--btn-hover-bg);
 }
 
-/* Стили для кнопок вне меню */
+/* Style for buttons outside of menu */
 button,
 .btn {
     background-color: var(--btn-bg);
@@ -123,7 +118,7 @@ a:hover {
     color: var(--btn-hover-bg);
 }
 
-/* Скрываем чекбокс */
+/* Hide burger checkbox */
 #burger-toggle {
     display: none;
 }
@@ -131,28 +126,27 @@ a:hover {
 .error-container {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* по умолчанию центрируем */
+    justify-content: center;
     align-items: center;
-    min-height: 100vh; /* минимум во всю высоту экрана */
+    min-height: 100vh;
     padding: 2rem;
     box-sizing: border-box;
     background: var(--bg-dark);
 }
 
-/* Красная рамка */
+/* Red border */
 .error-box {
     border: 3px solid red;
     padding: 3rem;
     text-align: center;
     color: red;
-    max-width: 600px; /* не шире 600px */
-    width: 100%; /* но растягивается до контейнера */
+    max-width: 600px;
+    width: 100%;
     box-sizing: border-box;
-    word-wrap: break-word; /* перенос слов */
-    hyphens: auto; /* перенос по слогам, если поддерживается */
+    word-wrap: break-word;
+    hyphens: auto; /* Wrap by syllables if supported*/
 }
 
-/* Код ошибки */
 .error-box .err-code {
     font-size: 8rem;
     font-weight: 700;
@@ -160,13 +154,12 @@ a:hover {
     margin: 0;
 }
 
-/* Текст ошибки */
 .error-box .err-text {
     font-size: 2.5rem;
     margin-top: 1.5rem;
 }
 
-/* Ссылка под контейнером */
+/* Link to main page under main container */
 .error-container > a {
     margin-top: 2rem;
     font-size: 1.5rem;
@@ -179,71 +172,123 @@ a:hover {
 }
 
 .editor-wrapper {
-    display:flex; flex:1; gap:2rem; padding:2rem;
+    display: flex;
+    flex: 1;
+    gap: 2rem;
+    padding: 2rem;
 }
 #controls {
-    flex:1; max-width:320px;
+    flex: 1;
+    max-width: 320px;
 }
-#controls form>* {
-    width:100%; box-sizing:border-box; margin-bottom:0.75rem;
+#controls form > * {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.75rem;
 }
 .field-label {
-    font-weight:600; margin-bottom:0.25rem; display:block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    display: block;
 }
-button,input,textarea {
-    background:#444; color:#fff; border:none; outline:none;
-    padding:0.5rem; font-family:inherit; transition:background var(--transition-speed);
+button,
+input,
+textarea {
+    background: #444;
+    color: #fff;
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    font-family: inherit;
+    transition: background var(--transition-speed);
 }
-button:hover { background:var(--btn-hover-bg); }
+button:hover {
+    background: var(--btn-hover-bg);
+}
 .actions {
-    display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
 }
-.actions button { flex:1; }
+.actions button {
+    flex: 1;
+}
 
 /* Preview card */
 #card-preview {
-    flex:none; width:350px; padding:1rem;
-    border:1px solid #ccc; border-radius:8px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.2);
-    background:var(--card-bg,#fff);
-    display:flex; flex-direction:column; align-items:center; gap:0.5rem;
-    margin:auto 0;
+    flex: none;
+    width: 350px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background: var(--card-bg, #fff);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin: auto 0;
 }
 #card-preview .logo-container {
-    width:80px; height:80px; margin-bottom:0.5rem;
-    display:none;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 0.5rem;
+    display: none;
 }
 #card-preview .logo-container img {
-    width:100%; height:100%; object-fit:contain;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 #card-preview .avatar {
-    width:100px; height:100px; border-radius:50%;
-    overflow:hidden; border:1px solid #777;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid #777;
 }
 #card-preview .avatar img {
-    width:100%; height:100%; object-fit:cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .contact-buttons {
-    display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .contact-buttons a {
-    display:inline-flex; align-items:center; justify-content:center;
-    width:40px; height:40px; background:var(--btn-bg);
-    border-radius:4px; color:#fff; text-decoration:none;
-    transition:background var(--transition-speed);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--btn-bg);
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    transition: background var(--transition-speed);
 }
-.contact-buttons a:hover { background:var(--btn-hover-bg); }
+.contact-buttons a:hover {
+    background: var(--btn-hover-bg);
+}
 
 /* Crop area */
 #preview-container {
-    overflow:hidden; margin-bottom:1rem; border:1px solid #777;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 1px solid #777;
 }
 #preview-container img {
-    display:block; width:100%; height:auto;
+    display: block;
+    width: 100%;
+    height: auto;
 }
 
-/* Контейнер для всех карточек */
+/* Container for all cards */
 .cards-grid {
     display: flex;
     flex-wrap: wrap;
@@ -252,7 +297,7 @@ button:hover { background:var(--btn-hover-bg); }
     padding: 1rem;
 }
 
-/* Одна карточка */
+/* Single card */
 .card-item {
     background: var(--nav-bg);
     color: var(--text-light);
@@ -262,15 +307,15 @@ button:hover { background:var(--btn-hover-bg); }
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.card-item h4,p {
+.card-item h4,
+p {
     color: var(--text-light);
     margin: 0.5rem;
 }
 
-/* Аватар */
 .card-item .avatar {
     width: 100px;
     height: 100px;
@@ -286,39 +331,40 @@ button:hover { background:var(--btn-hover-bg); }
 }
 
 .add-card-container {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
 }
 
-/* Круглая кнопка «+» */
+/* Round button «+» */
 .add-card-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;               /* 48px */
-  height: 3rem;
-  background: var(--btn-bg);
-  color: var(--text-light);
-  font-size: 1.75rem;
-  line-height: 1;
-  border-radius: 50%;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: background var(--transition-speed), transform var(--transition-speed);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem; /* 48px */
+    height: 3rem;
+    background: var(--btn-bg);
+    color: var(--text-light);
+    font-size: 1.75rem;
+    line-height: 1;
+    border-radius: 50%;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        background var(--transition-speed),
+        transform var(--transition-speed);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Hover/focus эффект */
+/* Hover/focus effect */
 .add-card-btn:hover,
 .add-card-btn:focus {
-  background: var(--btn-hover-bg);
-  transform: scale(1.1);
+    background: var(--btn-hover-bg);
+    transform: scale(1.1);
 }
 
-
-/* Кнопки действий */
+/* Action buttons */
 .card-item .actions {
     margin-top: auto;
     display: flex;
@@ -347,48 +393,48 @@ button:hover { background:var(--btn-hover-bg); }
 }
 
 .editor-layout {
-  display: flex;
-  align-items: flex-start;    /* превью сверху */
-  justify-content: center;    /* по центру экрана */
-  gap: 2rem;
-  width: 100%;
-  max-width: 1200px;          /* ограничитель по ширине */
-  box-sizing: border-box;
+    display: flex;
+    align-items: flex-start; /* Preview on top */
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
 }
 
-/* --- Стили для панели управления --- */
+/* --- Contol panel styles --- */
 #controls {
-  flex: 1 1 0;                /* займёт всё доступное место */
-  max-width: 500px;           /* можете подкорректировать */
+    flex: 1 1 0; /* Fill all avalable space */
+    max-width: 500px; /* TODO: Maybe change */
 }
 
-/* --- Превью визитки в редакторе --- */
+/* --- Card preview in editor --- */
 #card-preview {
-  flex: none;                 /* не растягивается */
-  width: 300px;               /* фиксированная ширина превью */
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
-  background: var(--card-bg, #fff);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    flex: none; /* Do not stretch */
+    width: 300px; /* Fixed witdth */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--card-bg, #fff);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Центрируем картинку внутри превью */
+/* Center image in preview */
 #card-preview img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
-  margin-bottom: 1rem;
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    margin-bottom: 1rem;
 }
 
-/* Чтобы форма не растягивалась слишком широко */
+/* Limit stretching */
 #controls form {
-  width: 100%;
-  box-sizing: border-box;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Мобильные стили */
+/* Mobile styles */
 @media (max-width: 768px) {
     .burger {
         display: block;
@@ -403,26 +449,34 @@ button:hover { background:var(--btn-hover-bg); }
         background-color: var(--nav-bg);
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* пункты ближе к верху */
+        justify-content: flex-start; /* Points closer to top */
         padding-top: 3rem;
         gap: 1rem;
-        transform: translateX(100%); /* прячем за правой границей */
+        transform: translateX(100%); /* Hide above right border */
         transition: transform var(--transition-speed) ease-out;
         z-index: 99;
     }
 
-    /* Показываем меню при чекнутом бургерe */
+    /* Show menu if burger is checked */
     #burger-toggle:checked ~ .menu {
         transform: translateX(0);
     }
 
-    /* Отступы между пунктами */
+    /* Margin between points */
     .menu a,
     .menu button {
         margin: 0;
     }
 
-    .editor-wrapper { flex-direction:column; padding:1rem; }
-    #controls { max-width:100%; }
-    #card-preview { width:100%; margin-top:1rem; }
+    .editor-wrapper {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    #controls {
+        max-width: 100%;
+    }
+    #card-preview {
+        width: 100%;
+        margin-top: 1rem;
+    }
 }

@@ -1,5 +1,4 @@
 <div id="card-{{ .ID }}" class="card-item">
-    <!-- Аватарка -->
     {{if .AvatarExist}}
     <div class="avatar" style="background-color: white">
         <img src="/media/avatar/{{.ID}}" />
@@ -8,11 +7,9 @@
     <div class="avatar"></div>
     {{end}}
 
-    <!-- Имя и Email -->
     <h4>{{ .Fields.Name }}</h4>
     <p>{{ .Fields.Email }}</p>
 
-    <!-- Действия -->
     <div class="actions">
         <a href="/c/{{ .ID }}">View</a>
         <a href="/editor/{{ .ID }}">Edit</a>
