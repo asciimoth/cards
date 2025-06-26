@@ -627,6 +627,7 @@ func SetupRoutes(
 				return
 			}
 
+			fields.IsHidden = card.Fields.IsHidden // TODO: Make it less ugly
 			card.Fields = fields
 			err = db.UpdateCard(card)
 
