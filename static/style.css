@@ -42,7 +42,7 @@ body {
     color: var(--btn-hover-bg);
 }
 
-.logo-icon {
+.logo img {
     width: 100px;
     height: 20px;
     padding-top: 10px;
