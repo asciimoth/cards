@@ -52,9 +52,11 @@ type CardFields struct {
 }
 
 type Card struct {
-	ID     uint `gorm:"primaryKey"`
-	Owner  uint
-	Fields CardFields `gorm:"embedded"`
+	ID          uint `gorm:"primaryKey"`
+	Owner       uint
+	Fields      CardFields `gorm:"embedded"`
+	AvatarExist bool
+	LogoExist   bool
 }
 
 type User struct {
@@ -112,13 +114,13 @@ func (db *PGDB) DeleteUser(id uint) error {
 	return err
 }
 
-func (db *PGDB) CreateCard(owner uint, fields CardFields) (uint, error) {
+func (db *PGDB) CreateCard(owner uint, fields CardFields) (Card, error) {
 	card := Card{Owner: uint(owner), Fields: fields}
 	result := db.DB.Create(&card)
 	if result.Error != nil {
-		return 0, result.Error
+		return card, result.Error
 	}
-	return card.ID, nil
+	return card, nil
 }
 
 func (db *PGDB) UpdateCard(card Card) error {

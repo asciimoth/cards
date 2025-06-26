@@ -99,47 +99,53 @@ func getUintParam(c *gin.Context, name string) (uint, error) {
 	return uint(iv), err
 }
 
+func isFileInForm(form *multipart.Form, input string) bool {
+	files, ok := form.File[input]
+	if !ok {
+		return false
+	}
+	return len(files) > 0 && files[0] != nil
+}
+
 func uploader(log *logrus.Logger, storage *BlobStorage, ctx context.Context, maxUploadSize int64) func(*gin.Context, *multipart.Form, string, string) bool {
 	return func(c *gin.Context, form *multipart.Form, input, key string) bool {
-		files, ok := form.File[input]
-		if ok && len(files) > 0 && files[0] != nil {
-			avatar := files[0]
-			if avatar.Size > maxUploadSize {
-				errorPage(c, http.StatusRequestEntityTooLarge, fmt.Sprintf("%s too large", avatar.Filename))
-				return false
-			}
+		files := form.File[input]
+		avatar := files[0]
+		if avatar.Size > maxUploadSize {
+			errorPage(c, http.StatusRequestEntityTooLarge, fmt.Sprintf("%s too large", avatar.Filename))
+			return false
+		}
 
-			mime := avatar.Header.Get("Content-Type")
-			if mime == "" {
-				errorPage(c, http.StatusBadRequest, fmt.Sprintf("Content type of %s unknown", avatar.Filename))
-			}
-			if !strings.HasPrefix(mime, "image/") {
-				errorPage(c, http.StatusBadRequest, fmt.Sprintf("%s is not an image. mime: %s", avatar.Filename, mime))
-			}
+		mime := avatar.Header.Get("Content-Type")
+		if mime == "" {
+			errorPage(c, http.StatusBadRequest, fmt.Sprintf("Content type of %s unknown", avatar.Filename))
+		}
+		if !strings.HasPrefix(mime, "image/") {
+			errorPage(c, http.StatusBadRequest, fmt.Sprintf("%s is not an image. mime: %s", avatar.Filename, mime))
+		}
 
-			src, err := avatar.Open()
-			if err != nil {
-				log.WithFields(logrus.Fields{
-					"err": err,
-				}).Error("Failed to receive form file")
-				errorPage(c, http.StatusBadRequest, fmt.Sprintf("Broken file %s", avatar.Filename))
-				return false
-			}
-
-			defer src.Close()
-
-			err = storage.WriteKey(ctx, key, src, avatar.Size, mime)
+		src, err := avatar.Open()
+		if err != nil {
 			log.WithFields(logrus.Fields{
-				"key": key,
-			}).Debug("File uploaded")
+				"err": err,
+			}).Error("Failed to receive form file")
+			errorPage(c, http.StatusBadRequest, fmt.Sprintf("Broken file %s", avatar.Filename))
+			return false
+		}
 
-			if err != nil {
-				log.WithFields(logrus.Fields{
-					"err": err,
-				}).Error("Failed to uload file to storage")
-				errorPage(c, http.StatusInternalServerError, fmt.Sprintf("Failed to upload file %s", avatar.Filename))
-				return false
-			}
+		defer src.Close()
+
+		err = storage.WriteKey(ctx, key, src, avatar.Size, mime)
+		log.WithFields(logrus.Fields{
+			"key": key,
+		}).Debug("File uploaded")
+
+		if err != nil {
+			log.WithFields(logrus.Fields{
+				"err": err,
+			}).Error("Failed to uload file to storage")
+			errorPage(c, http.StatusInternalServerError, fmt.Sprintf("Failed to upload file %s", avatar.Filename))
+			return false
 		}
 		return true
 	}
@@ -262,8 +268,6 @@ func SetupRoutes(
 			"User":    user,
 			"Owner":   is_owner,
 			"EditUrl": fmt.Sprintf("/editor/%d", cid),
-			"Avatar":  fmt.Sprintf("/media/avatar/%d", cid),
-			"Logo":    fmt.Sprintf("/media/logo/%d", cid),
 		})
 	})
 
@@ -467,6 +471,7 @@ func SetupRoutes(
 				"Card":         card,
 			})
 		})
+		// TODO: Merge /new & /update/:id endpoints
 		authorized.POST("/new", func(c *gin.Context) {
 			user := getUser(c)
 
@@ -489,14 +494,44 @@ func SetupRoutes(
 				return
 			}
 
-			cardId, err := db.CreateCard(user.ID, fields)
+			card, err := db.CreateCard(user.ID, fields)
 
-			if !uploadFormFile(c, form, "avatar", fmt.Sprintf("media/avatar/%d", cardId)) {
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to create card")
+				errorPage(c, http.StatusInternalServerError, "Failed to create card")
 				return
 			}
 
-			if !uploadFormFile(c, form, "logo", fmt.Sprintf("media/logo/%d", cardId)) {
-				return
+			if isFileInForm(form, "avatar") {
+				if !uploadFormFile(c, form, "avatar", fmt.Sprintf("media/avatar/%d", card.ID)) {
+					return
+				}
+				card.AvatarExist = true
+				err = db.UpdateCard(card)
+				if err != nil {
+					log.WithFields(logrus.Fields{
+						"err": err,
+					}).Error("Failed to upload avatar")
+					errorPage(c, http.StatusInternalServerError, "Failed to upload avatar")
+					return
+				}
+			}
+
+			if isFileInForm(form, "logo") {
+				if !uploadFormFile(c, form, "logo", fmt.Sprintf("media/logo/%d", card.ID)) {
+					return
+				}
+				card.LogoExist = true
+				err = db.UpdateCard(card)
+				if err != nil {
+					log.WithFields(logrus.Fields{
+						"err": err,
+					}).Error("Failed to upload logo")
+					errorPage(c, http.StatusInternalServerError, "Failed to upload logo")
+					return
+				}
 			}
 
 			redirect(c, "/cards")
@@ -552,12 +587,38 @@ func SetupRoutes(
 				return
 			}
 
-			if !uploadFormFile(c, form, "avatar", fmt.Sprintf("media/avatar/%d", cid)) {
-				return
+			if isFileInForm(form, "avatar") {
+				if !uploadFormFile(c, form, "avatar", fmt.Sprintf("media/avatar/%d", cid)) {
+					return
+				}
+				if !card.AvatarExist {
+					card.AvatarExist = true
+					err = db.UpdateCard(card)
+					if err != nil {
+						log.WithFields(logrus.Fields{
+							"err": err,
+						}).Error("Failed to upload avatar")
+						errorPage(c, http.StatusInternalServerError, "Failed to upload avatar")
+						return
+					}
+				}
 			}
 
-			if !uploadFormFile(c, form, "logo", fmt.Sprintf("media/logo/%d", cid)) {
-				return
+			if isFileInForm(form, "logo") {
+				if !uploadFormFile(c, form, "logo", fmt.Sprintf("media/logo/%d", cid)) {
+					return
+				}
+				if !card.LogoExist {
+					card.LogoExist = true
+					err = db.UpdateCard(card)
+					if err != nil {
+						log.WithFields(logrus.Fields{
+							"err": err,
+						}).Error("Failed to upload logo")
+						errorPage(c, http.StatusInternalServerError, "Failed to upload logo")
+						return
+					}
+				}
 			}
 
 			redirect(c, "/cards")
