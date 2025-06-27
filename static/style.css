@@ -22,6 +22,10 @@ body {
     color: var(--text-light);
 }
 
+img {
+    background-color: white;
+}
+
 .cropper-hide {
     visibility: collapse;
     display: none;
