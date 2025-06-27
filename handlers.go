@@ -354,7 +354,7 @@ func SetupRoutes(
 				"Title":     "Login",
 				"Providers": providers,
 				// "Providers": providers,
-				"User":      getUser(c),
+				"User": getUser(c),
 			})
 		})
 		us.POST("/logout", func(c *gin.Context) {
@@ -492,6 +492,24 @@ func SetupRoutes(
 				"User":         getUser(c),
 				"EditUrl":      "/new",
 				"SubmitButton": "Create Card",
+				"Card": Card{
+					ID:          0,
+					Owner:       0,
+					AvatarExist: false,
+					LogoExist:   false,
+					Fields: CardFields{
+						Name:        "",
+						Company:     "",
+						Position:    "",
+						Description: "",
+						Phone:       "",
+						Email:       "",
+						Telegram:    "",
+						Whatsapp:    "",
+						VK:          "",
+						IsHidden:    false,
+					},
+				},
 			})
 		})
 		authorized.GET("/editor/:id", func(c *gin.Context) {
@@ -713,7 +731,7 @@ func SetupRoutes(
 				}).Error("Failed to update card visibility")
 			}
 
-			c.HTML(http.StatusOK, "comp_card.html", card)
+			c.HTML(http.StatusOK, "comp_cardElement.html", card)
 		})
 		authorized.GET("/users", func(c *gin.Context) {
 			user := getUser(c)

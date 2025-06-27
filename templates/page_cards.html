@@ -11,7 +11,8 @@
 
         <main>
             <section class="cards-grid">
-                {{ range .Cards }} {{ template "comp_card.html" . }} {{ end }}
+                {{ range .Cards }} {{ template "comp_cardElement.html" . }} {{
+                end }}
             </section>
             <div class="add-card-container">
                 <a

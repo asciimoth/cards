@@ -17,7 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Default sync for text inputs
     let sync = () => {
-      const val = prefix + (targetEl.value ?? targetEl.textContent ?? "");
+      let val = targetEl.value ?? targetEl.textContent ?? "";
+      if (val) {
+        val = prefix + val;
+      }
       if ("href" in previewEl) {
         previewEl.href = val;
       } else if ("textContent" in previewEl) {

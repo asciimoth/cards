@@ -1,47 +1,139 @@
-<div id="card-{{ .ID }}" class="card-item">
-    {{if .AvatarExist}}
-    <div class="avatar" style="background-color: white">
-        <img src="/media/avatar/{{.ID}}" />
+<div id="card-component" style="background-color: red">
+    <!-- Is hidden block -->
+    {{ if .Card.Fields.IsHidden }}
+    <div class="hidden-flag">This card is hidden. Only owner can see it.</div>
+    {{ end }}
+    <div
+        class="logo-container"
+        id="logo-container"
+        hide-when-no-content="#card-logo"
+    >
+        {{if .Card.LogoExist}}
+        <img
+            id="card-logo"
+            src="/media/logo/{{.Card.ID}}"
+            alt="Company logo"
+            preview-for="#input-logo"
+            initial-sync="no"
+        />
+        {{else}}
+        <img
+            id="card-logo"
+            src=""
+            alt="Company logo"
+            preview-for="#input-logo"
+            initial-sync="no"
+        />
+        {{end}}
     </div>
-    {{else}}
-    <div class="avatar"></div>
-    {{end}}
-
-    <h4>{{ .Fields.Name }}</h4>
-    <p>{{ .Fields.Email }}</p>
-
-    <div class="actions">
-        <a href="/c/{{ .ID }}">View</a>
-        <a href="/editor/{{ .ID }}">Edit</a>
-
-        <button
-            hx-post="/delcard/{{ .ID }}"
-            hx-confirm="Are you sure you wish to delete this card: {{ .Fields.Name }} {{ .Fields.Email }}?"
-            hx-swap="outerHTML"
-            hx-target="#card-{{ .ID }}"
-            hx-target-error="#global-error-block"
+    <hr />
+    <button>Add to contacts</button>
+    <div class="avatar" hide-when-no-content="#card-image-preview">
+        {{if .Card.AvatarExist}}
+        <img
+            id="card-image-preview"
+            src="/media/avatar/{{.Card.ID}}"
+            alt="Your avatar preview"
+            preview-for="#input-avatar"
+            initial-sync="no"
+        />
+        {{else}}
+        <img
+            id="card-image-preview"
+            src=""
+            alt="Your avatar preview"
+            preview-for="#input-avatar"
+            initial-sync="no"
+        />
+        {{end}}
+    </div>
+    <h2 id="card-name" preview-for="#input-name">{{ .Card.Fields.Name }}</h2>
+    <div>
+        <span preview-for="#input-position">{{ .Card.Fields.Position }}</span>
+        <span preview-for="#input-company">{{ .Card.Fields.Company }}</span>
+    </div>
+    <div hide-when-no-content="#card-description">
+        <pre id="card-description" preview-for="#input-description">
+{{ .Card.Fields.Description }}</pre
         >
-            Delete
-        </button>
-
-        {{ if .Fields.IsHidden }}
-        <button
-            hx-post="/visibility/{{ .ID }}?visible=true"
-            hx-swap="outerHTML"
-            hx-target="#card-{{ .ID }}"
-            hx-target-error="#global-error-block"
-        >
-            Make visible
-        </button>
-        {{ else }}
-        <button
-            hx-post="/visibility/{{ .ID }}?visible=false"
-            hx-swap="outerHTML"
-            hx-target="#card-{{ .ID }}"
-            hx-target-error="#global-error-block"
-        >
-            Hide
-        </button>
-        {{ end }}
+    </div>
+    <div class="contact-block">
+        <div hide-when-no-content="#phone-span">
+            {{ if .Card.Fields.Phone }}
+            <a
+                href="tel:{{.Card.Fields.Phone}}"
+                title="Phone"
+                preview-for="#input-phone"
+                preview-prefix="tel:"
+                >📞</a
+            >
+            <span preview-for="#input-phone" id="phone-span"
+                >{{.Card.Fields.Phone}}</span
+            >
+            {{else}}
+            <a
+                href=""
+                title="Phone"
+                preview-for="#input-phone"
+                preview-prefix=""
+                >📞</a
+            >
+            <span preview-for="#input-phone" id="phone-span"></span>
+            {{end}}
+        </div>
+        <div hide-when-no-content="#email-span">
+            {{ if .Card.Fields.Email }}
+            <a
+                href="mailto:{{.Card.Fields.Email}}"
+                title="Email"
+                preview-for="#input-email"
+                preview-prefix="mailto:"
+                >✉️</a
+            >
+            <span preview-for="#input-email" id="email-span"
+                >{{.Card.Fields.Email}}</span
+            >
+            {{else}}
+            <a
+                href=""
+                title="Email"
+                preview-for="#input-email"
+                preview-prefix="mailto:"
+                >✉️</a
+            >
+            <span preview-for="#input-email" id="email-span"></span>
+            {{end}}
+        </div>
+        <div hide-when-no-content="#telegram-span">
+            {{ if .Card.Fields.Telegram }}
+            <a
+                href="https://t.me/{{.Card.Fields.Telegram}}"
+                title="Telegram"
+                preview-for="#input-telegram"
+                preview-prefix="https://t.me/"
+                >📨</a
+            >
+            <span
+                preview-for="#input-telegram"
+                preview-prefix="@"
+                id="telegram-span"
+                >@{{.Card.Fields.Telegram}}</span
+            >
+            {{else}}
+            <a
+                href=""
+                title="Telegram"
+                preview-for="#input-telegram"
+                preview-prefix="https://t.me/"
+                >📨</a
+            >
+            <span
+                preview-for="#input-telegram"
+                preview-prefix="@"
+                id="telegram-span"
+            ></span>
+            {{end}}
+        </div>
     </div>
 </div>
+<script src="/static/collapse.js"></script>
