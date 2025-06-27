@@ -27,6 +27,8 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 
 # TODO
 ## Fronend
+- [ ] Make avatars square
+- [ ] Add matching svg icons to contacts in card component
 - [X] Place name of logged in user somewhere
 - [X] Nav
   - [X] Same paddings for buttons in side nav
@@ -39,6 +41,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
   - [X] Add cards grid
   - [X] Replace "create new card" link button with `+` sign
 - [ ] Style editor page
+  - [ ] Add absolute position for preview
   - [X] Add live preview
   - [X] Make crop widget not so fucking big
   - [X] Style inputs (file inputs including)
@@ -83,4 +86,6 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 ## Pr
 - [ ] Add video demostration to readme
 ## Etc
+- [ ] Support for more sochial links in cards
 - [ ] GDPR and simmilar rules compliance
+- [ ] Scripts loading optimisation
