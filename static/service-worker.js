@@ -1,10 +1,10 @@
 const CACHE_NAME = 'cardapp-v1';
 const APP_SHELL = [
-  '/',             // если у вас главная страница
-  '/editor',       // маршрут редактирования, если он такой
-  '/c',         // маршрут просмотра визитки
+  '/',             
+  '/editor',       
+  '/c',         
   '/static/style.css',
-  'static/manifest.json',
+  '/static/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   'https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css',

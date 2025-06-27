@@ -1,7 +1,7 @@
 {
   "name": "CardApp Editor",
   "short_name": "CardApp",
-  "description": "Редактор и просмотр ваших визиток офлайн",
+  "description": "Offline CardApp",
   "lang": "en",
   "start_url": "/c",
   "scope": "/",
