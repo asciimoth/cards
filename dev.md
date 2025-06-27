@@ -39,21 +39,21 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
   - [X] Add cards grid
   - [X] Replace "create new card" link button with `+` sign
 - [ ] Style editor page
-  - [ ] Add live preview
+  - [X] Add live preview
   - [X] Make crop widget not so fucking big
   - [X] Style inputs (file inputs including)
 - [ ] Style card page
 - [ ] Style card not found page
 - [ ] Style login page
-  - [ ] Block with list of "sign with" buttons
-  - [ ] Each button themed in related service colors and with logo
+  - [X] Block with list of "sign with" buttons
+  - [X] Each button themed in related service colors and with logo
 - [ ] Implement VCF file generation
 - [ ] QR codes
   - [ ] Implement QR code with user provided logo generation
   - [ ] Generate two QR codes: one with link to card page and one with full VCF file (for offline usage)
 - [ ] Favicon
   - [ ] Add default one
-  - [ ] For cards use avatar as favicon
+  - [X] For cards use avatar as favicon
 - [ ] PWA
 - [ ] Add footer
 ## Backend
