@@ -75,6 +75,10 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
   - [ ] More cards
   - [ ] More fancy QR codes
   - [ ] Offline mode
+## Features
+- [ ] Avatar & logo deletion
+- [ ] Add personal site block
+- [ ] Support for more sochial links in cards
 ## Content
 - [ ] Fill main page with something
   - Maybe gallery of published cards
@@ -86,6 +90,5 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 ## Pr
 - [ ] Add video demostration to readme
 ## Etc
-- [ ] Support for more sochial links in cards
 - [ ] GDPR and simmilar rules compliance
 - [ ] Scripts loading optimisation
