@@ -1,13 +1,20 @@
 <!doctype html>
-<html>
-    <head>
-        {{ template "comp_header.html" . }}
-    </head>
-    <body>
-        <header>{{ template "comp_nav.html" . }}</header>
-        <br />
+<html lang="en">
+<head>
+  {{ template "comp_header.html" . }}
+</head>
+<body>
+  <header>{{ template "comp_nav.html" . }}</header>
+
+    <div class="login-container">
         {{range .Providers}}
-        <a href="/auth/{{.}}"> Sign in with {{.}} </a> <br />
-        {{end}}
-    </body>
+        <div class="{{.}}-container">
+            <a href="/auth/{{.}}" class="provider-btn {{ . }}-btn"> 
+                <img src="/static/{{.}}-logo.svg">
+                <span>Sign in with {{ . }}</span>
+            </a>
+        </div>
+    {{ end }}
+  </div>
+</body>
 </html>

@@ -353,6 +353,7 @@ func SetupRoutes(
 			c.HTML(http.StatusOK, "page_login.html", gin.H{
 				"Title":     "Login",
 				"Providers": providers,
+				// "Providers": providers,
 				"User":      getUser(c),
 			})
 		})

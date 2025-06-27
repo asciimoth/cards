@@ -58,7 +58,7 @@ body {
     font-size: 2rem;
     cursor: pointer;
     color: var(--text-light);
-    z-index: 100; /* чтобы иконка была над меню */
+    z-index: 100; 
 }
 
 /* Dfault (horizontal) menu*/
@@ -147,7 +147,7 @@ a:hover {
     hyphens: auto; /* Wrap by syllables if supported*/
     display: flex;
     flex-direction: column;
-    align-items: center;        /* по горизонтали по центру */
+    align-items: center;        
     justify-content: flex-start;/
 }
 
@@ -246,7 +246,6 @@ button:hover {
   margin: 0 auto 1rem;          
 }
 
-/* Аватарка — круг */
 #card-preview .avatar {
   width: 100px;
   height: 100px;
@@ -485,6 +484,49 @@ p {
     object-fit: cover;
     border-radius: 50%;
 }
+
+.github-btn { color: #fff; background: #333; border-color: #333; }
+.github-btn:hover { background: #444; }
+.google-btn { color: #444; background: #fff; border-color: #ddd; }
+.google-btn:hover { background: #f0f0f0; }
+.vk-btn { color: #fff; background: #4a76a8; border-color: #4a76a8; }
+.vk-btn:hover { background: #5b8bc6; }
+.yandex-btn { color: #000; background: #f5de19; border-color: #f5de19; }
+.yandex-btn:hover { background: #f7e24a; }
+
+.login-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.login-container img {
+    width: 30px;
+    height: 30px;
+    margin-left: 5%;
+}
+
+.provider-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.1rem;
+    width: 260px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    transition: background var(--transition-speed), box-shadow var(--transition-speed);
+}
+.provider-btn:hover {
+    background: #eaeaea;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
 /* Mobile styles */
 @media (max-width: 768px) {
     .burger {
