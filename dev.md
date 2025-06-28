@@ -60,13 +60,6 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] PWA
 - [ ] Add footer
 ## Backend
-- [ ] Inmemory caching
-  - [ ] Cards
-  - [ ] S3 blobs
-- [ ] Add TTL & etags for static files
-- [ ] Statistic
-  - [ ] Collect statistic inmemory and sync it to db periodically
-- [ ] Localisation
 - [ ] Add localisation system
 - [ ] Add VIP accounts system
 - [ ] Payment systems integration
@@ -79,6 +72,13 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Avatar & logo deletion
 - [ ] Add personal site block
 - [ ] Support for more sochial links in cards
+- [ ] Card views counter
+## Optimisation
+- [ ] Scripts loading optimisation
+- [ ] Inmemory caching
+  - [ ] Cards
+  - [ ] S3 blobs
+- [ ] Add TTL & etags for static files
 ## Content
 - [ ] Fill main page with something
   - Maybe gallery of published cards
@@ -91,4 +91,3 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Add video demostration to readme
 ## Etc
 - [ ] GDPR and simmilar rules compliance
-- [ ] Scripts loading optimisation

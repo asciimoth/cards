@@ -5,7 +5,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . .
+COPY *.go ./
 RUN go build -o /go/bin/app *.go
 
 FROM alpine:latest
@@ -14,6 +14,8 @@ RUN apk add --no-cache ca-certificates
 
 WORKDIR /root/
 
+COPY static ./static
+COPY templates ./templates
 COPY --from=builder /go/bin/app .
 
 EXPOSE 8080

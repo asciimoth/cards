@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"embed"
 	"fmt"
 	"html/template"
-	"io/fs"
 	"net/http"
 	"os"
 	"strconv"
@@ -18,12 +16,6 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
-
-//go:embed templates/*.html
-var templatesFS embed.FS
-
-//go:embed static/*
-var staticFS embed.FS
 
 func SetupServer(log *logrus.Logger) (*gin.Engine, *http.Server) {
 	str_ttl := os.Getenv("COOKIE_TTL")
@@ -61,14 +53,14 @@ func SetupServer(log *logrus.Logger) (*gin.Engine, *http.Server) {
 	g.Use(gin.LoggerWithWriter(log.Writer()))
 	g.Use(gin.RecoveryWithWriter(log.Writer()))
 
-	// Serve static files from embedded FS
-	staticContent, _ := fs.Sub(staticFS, "static")
-	g.StaticFS("/static", http.FS(staticContent))
+	// Serve static files from local filesystem
+	// Exposes ./static directory at /static URL path
+	g.Static("/static", "./static")
 
-	// Parse and set HTML templates
+	// Parse and set HTML templates from local filesystem
 	tmpl := template.Must(
-		template.New("*").Funcs(template.FuncMap{}).
-			ParseFS(templatesFS, "templates/*.html"),
+		template.New("").Funcs(template.FuncMap{}).
+			ParseGlob("templates/*.html"),
 	)
 	g.SetHTMLTemplate(tmpl)
 
