@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"maps"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -228,6 +229,15 @@ func SetupRoutes(
 
 	uploadFormFile := uploader(log, storage, ctx, mus)
 	fetchMedia := mediaFetcher(log, storage, ctx)
+	execHTML := func(c *gin.Context, status int, card string, add gin.H) {
+		dst := gin.H{
+			"User":    getUser(c),
+			"Lang":    c.MustGet("Lang").(string),
+			"Locales": locales,
+		}
+		maps.Copy(dst, add)
+		c.HTML(status, card, dst)
+	}
 
 	g.Use(sessionMiddleware(log, db))
 	g.Use(langMiddleware())
@@ -237,21 +247,18 @@ func SetupRoutes(
 	})
 
 	g.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "page_index.html", gin.H{
-			"Title": "Cards",
-			"User":  getUser(c),
+		execHTML(c, http.StatusOK, "page_index.html", gin.H{
+			"Title": "Main",
 		})
 	})
 	g.GET("/faq", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "page_faq.html", gin.H{
+		execHTML(c, http.StatusOK, "page_faq.html", gin.H{
 			"Title": "Faq",
-			"User":  getUser(c),
 		})
 	})
 	g.GET("/tutorial", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "page_tutorial.html", gin.H{
+		execHTML(c, http.StatusOK, "page_tutorial.html", gin.H{
 			"Title": "Tutorial",
-			"User":  getUser(c),
 		})
 	})
 
@@ -266,7 +273,7 @@ func SetupRoutes(
 
 		card, err := db.GetCard(cid)
 		if err != nil {
-			c.HTML(http.StatusNotFound, "page_cardNotFound.html", gin.H{"User": user})
+			execHTML(c, http.StatusNotFound, "page_cardNotFound.html", gin.H{})
 			return
 		}
 
@@ -276,14 +283,13 @@ func SetupRoutes(
 			is_owner = card.Owner == user.ID || user.Type == UserTypeAdmin
 		}
 		if !is_owner && card.Fields.IsHidden {
-			c.HTML(http.StatusNotFound, "page_cardNotFound.html", gin.H{"User": user})
+			execHTML(c, http.StatusNotFound, "page_cardNotFound.html", gin.H{})
 			return
 		}
 
-		c.HTML(http.StatusOK, "page_card.html", gin.H{
+		execHTML(c, http.StatusOK, "page_card.html", gin.H{
 			"Title":   card.Fields.Name,
 			"Card":    card,
-			"User":    user,
 			"Owner":   is_owner,
 			"EditUrl": fmt.Sprintf("/editor/%d", cid),
 		})
@@ -365,11 +371,9 @@ func SetupRoutes(
 	{
 		us := g.Group("/")
 		us.GET("/login", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "page_login.html", gin.H{
+			execHTML(c, http.StatusOK, "page_login.html", gin.H{
 				"Title":     "Login",
 				"Providers": providers,
-				// "Providers": providers,
-				"User": getUser(c),
 			})
 		})
 		us.POST("/logout", func(c *gin.Context) {
@@ -458,12 +462,9 @@ func SetupRoutes(
 				return
 			}
 
-			c.HTML(http.StatusOK, "page_cards.html", gin.H{
-				"Title":   "Your cards",
-				"User":    user,
-				"Cards":   cards,
-				"Lang":    c.MustGet("Lang").(string),
-				"Locales": locales,
+			execHTML(c, http.StatusOK, "page_cards.html", gin.H{
+				"Title": "Cards",
+				"Cards": cards,
 			})
 		})
 		authorized.POST("/delcard/:id", func(c *gin.Context) {
@@ -504,11 +505,10 @@ func SetupRoutes(
 			redirect(c, fmt.Sprintf("/cards/%d", card.Owner))
 		})
 		authorized.GET("/editor", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "page_editor.html", gin.H{
+			execHTML(c, http.StatusOK, "page_editor.html", gin.H{
 				"Title":        "Create new card",
-				"User":         getUser(c),
 				"EditUrl":      "/new",
-				"SubmitButton": "Create Card",
+				"SubmitButton": "CreateCard",
 				"Card": Card{
 					ID:          0,
 					Owner:       0,
@@ -550,11 +550,10 @@ func SetupRoutes(
 				return
 			}
 
-			c.HTML(http.StatusOK, "page_editor.html", gin.H{
+			execHTML(c, http.StatusOK, "page_editor.html", gin.H{
 				"Title":        "Edit card",
 				"EditUrl":      fmt.Sprintf("/update/%d", cid),
-				"User":         user,
-				"SubmitButton": "Update Card",
+				"SubmitButton": "UpdateCard",
 				"Card":         card,
 			})
 		})
@@ -768,9 +767,8 @@ func SetupRoutes(
 				return
 			}
 
-			c.HTML(http.StatusOK, "page_users.html", gin.H{
+			execHTML(c, http.StatusOK, "page_users.html", gin.H{
 				"Title": "Your cards",
-				"User":  user,
 				"Users": users,
 			})
 		})
@@ -783,7 +781,11 @@ func SetupRoutes(
 				sess.Set("Lang", locale)
 			}
 			sess.Save()
-			redirect(c, "/cards")
+			referrer := c.Request.Referer()
+			if referrer == "" {
+				referrer = "/"
+			}
+			redirect(c, referrer)
 		})
 	}
 }
