@@ -64,7 +64,9 @@
                 {{ template "comp_card.html" . }}
                 <br />
                 {{ if .Owner }}
-                <a class="edit-link" href="{{ .EditUrl }}">Edit this card</a>
+                <a class="edit-link" href="{{ .EditUrl }}"
+                    >{{ T "EditCard" .Lang }}</a
+                >
                 {{ end }}
             </div>
         </div>

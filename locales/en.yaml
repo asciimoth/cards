@@ -1,2 +1,62 @@
 - id: hello
   translation: "Hello, world!"
+- id: Wellcome
+  translation: "Wellcome"
+- id: CreateCard
+  translation: "Create card"
+- id: UpdateCard
+  translation: "Update card"
+- id: HiddenCard
+  translation: "This card is hidden. Only owner can see it."
+- id: AddToContacts
+  translation: "Add to contacts"
+- id: ViewButton
+  translation: "View"
+- id: WarnCardDeletion
+  translation: "Are you sure you wish to delete this card:"
+- id: WarnUserDeletion
+  translation: "Are you sure you wish to delete account:"
+- id: DeleteButton
+  translation: "Delete"
+- id: MakeVisibleButton
+  translation: "Make visible"
+- id: HideButton
+  translation: "Hide"
+- id: EditButton
+  translation: "Edit"
+- id: NavHowTo
+  translation: "How to use"
+- id: NavFAQ
+  translation: "FAQ"
+- id: NavUsers
+  translation: "Users"
+- id: NavCards
+  translation: "Cards"
+- id: NavLogout
+  translation: "Logout"
+- id: NavDeleteUser
+  translation: "Delete user"
+- id: NavLogin
+  translation: "Login"
+- id: EditCard
+  translation: "Edit this card"
+- id: ErrCardNotExist
+  translation: "Card is hidden or not exist"
+- id: CreateNewCard
+  translation: "Create a card"
+- id: LoginToCreateNewCard
+  translation: "Login to create a card"
+- id: EditorLabelName
+  translation: "Name"
+- id: EditorLabelCompany
+  translation: "Company"
+- id: EditorLabelCompanyLogo
+  translation: "Company Logo"
+- id: EditorLabelPosition
+  translation: "Position"
+- id: EditorLabelSelfDescription
+  translation: "Self description"
+- id: EditorLabelCompanyLogo
+  translation: "Company Logo"
+- id: EditorLabelCancelLogo
+  translation: "Cancel logo"

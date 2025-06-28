@@ -747,7 +747,9 @@ func SetupRoutes(
 				}).Error("Failed to update card visibility")
 			}
 
-			c.HTML(http.StatusOK, "comp_cardElement.html", card)
+			execHTML(c, http.StatusOK, "comp_cardElement.html", gin.H{
+				"Card": card,
+			})
 		})
 		authorized.GET("/users", func(c *gin.Context) {
 			user := getUser(c)

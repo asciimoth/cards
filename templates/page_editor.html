@@ -20,7 +20,10 @@
                     method="post"
                     enctype="multipart/form-data"
                 >
-                    <label for="input-name">Name</label> <br />
+                    <label for="input-name"
+                        >{{ T "EditorLabelName" .Lang }}</label
+                    >
+                    <br />
                     <input
                         name="name"
                         id="input-name"
@@ -28,54 +31,6 @@
                         value="{{.Card.Fields.Name}}"
                         required
                     />
-                    <br />
-
-                    <label for="input-company">Company</label> <br />
-                    <input
-                        name="company"
-                        id="input-company"
-                        type="text"
-                        value="{{.Card.Fields.Company}}"
-                    />
-                    <br />
-
-                    <label for="input-logo">Company Logo</label> <br />
-                    <input
-                        name="logo"
-                        id="input-logo"
-                        type="file"
-                        accept="image/*"
-                        autocomplete="off"
-                    />
-                    <br />
-                    <div hide-when-no-content="#input-logo">
-                        <button type="button" clear-inputs="#input-logo">
-                            Rollback logo
-                        </button>
-                    </div>
-
-                    <label for="input-position">Position</label> <br />
-                    <input
-                        name="position"
-                        id="input-position"
-                        type="text"
-                        value="{{.Card.Fields.Position}}"
-                    />
-                    <br />
-
-                    <label for="input-description">Self description</label>
-                    <br />
-                    <textarea
-                        name="description"
-                        id="input-description"
-                        rows="5"
-                    >
-{{.Card.Fields.Description}}</textarea
-                    >
-                    <br />
-
-                    <hr />
-                    <h4>Avatar & Crop</h4>
                     <br />
 
                     <label for="input-avatar-precrop">Avatar Image</label>
@@ -109,10 +64,66 @@
                             Rollback avatar
                         </button>
                     </div>
+                    <label for="input-description"
+                        >{{ T "EditorLabelSelfDescription" .Lang }}</label
+                    >
+                    <br />
+                    <textarea
+                        name="description"
+                        id="input-description"
+                        rows="5"
+                    >
+{{.Card.Fields.Description}}</textarea
+                    >
+                    <br />
+                    <hr />
+                    <h4>Work</h4>
+                    <hr />
+                    <label for="input-company"
+                        >{{ T "EditorLabelCompany" .Lang }}</label
+                    >
+                    <br />
+                    <input
+                        name="company"
+                        id="input-company"
+                        type="text"
+                        value="{{.Card.Fields.Company}}"
+                    />
+                    <br />
+
+                    <label for="input-logo"
+                        >{{ T "EditorLabelCompanyLogo" .Lang }}</label
+                    >
+                    <br />
+                    <input
+                        name="logo"
+                        id="input-logo"
+                        type="file"
+                        accept="image/*"
+                        autocomplete="off"
+                    />
+                    <br />
+                    <div hide-when-no-content="#input-logo">
+                        <button type="button" clear-inputs="#input-logo">
+                            {{ T "EditorLabelCancelLogo" .Lang }}
+                        </button>
+                    </div>
+
+                    <label for="input-position"
+                        >{{ T "EditorLabelPosition" .Lang }}</label
+                    >
+                    <br />
+                    <input
+                        name="position"
+                        id="input-position"
+                        type="text"
+                        value="{{.Card.Fields.Position}}"
+                    />
+                    <br />
+
                     <hr />
                     <h4>Contacts</h4>
                     <br />
-
                     <label for="input-phone">Phone</label> <br />
                     <input
                         name="phone"
@@ -155,7 +166,7 @@
                     />
                     <br /> -->
 
-                    <button type="submit">{{.SubmitButton}}</button>
+                    <button type="submit">{{ T .SubmitButton .Lang }}</button>
                 </form>
             </section>
             <aside id="card-preview">

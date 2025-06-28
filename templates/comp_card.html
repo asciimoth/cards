@@ -1,7 +1,7 @@
 <div id="card-component" style="background-color: red">
     <!-- Is hidden block -->
     {{ if .Card.Fields.IsHidden }}
-    <div class="hidden-flag">This card is hidden. Only owner can see it.</div>
+    <div class="hidden-flag">{{ T "HiddenCard" .Lang }}</div>
     {{ end }}
     <div
         class="logo-container"
@@ -27,7 +27,7 @@
         {{end}}
     </div>
     <hr />
-    <button>Add to contacts</button>
+    <button>{{ T "AddToContacts" .Lang }}</button>
     <div class="avatar" hide-when-no-content="#card-image-preview">
         {{if .Card.AvatarExist}}
         <img

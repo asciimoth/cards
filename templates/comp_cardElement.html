@@ -1,46 +1,46 @@
-<div id="card-{{ .ID }}" class="card-item">
-    {{if .AvatarExist}}
+<div id="card-{{ .Card.ID }}" class="card-item">
+    {{if .Card.AvatarExist}}
     <div class="avatar" style="background-color: white">
-        <img src="/media/avatar/{{.ID}}" />
+        <img src="/media/avatar/{{.Card.ID}}" />
     </div>
     {{else}}
     <div class="avatar"></div>
     {{end}}
 
-    <h4>{{ .Fields.Name }}</h4>
-    <p>{{ .Fields.Email }}</p>
+    <h4>{{ .Card.Fields.Name }}</h4>
+    <p>{{ .Card.Fields.Email }}</p>
 
     <div class="actions">
-        <a href="/c/{{ .ID }}">View</a>
-        <a href="/editor/{{ .ID }}">Edit</a>
+        <a href="/c/{{ .Card.ID }}">{{ T "ViewButton" .Lang }}</a>
+        <a href="/editor/{{ .Card.ID }}">{{ T "EditButton" .Lang }}</a>
 
         <button
-            hx-post="/delcard/{{ .ID }}"
-            hx-confirm="Are you sure you wish to delete this card: {{ .Fields.Name }} {{ .Fields.Email }}?"
+            hx-post="/delcard/{{ .Card.ID }}"
+            hx-confirm='{{ T "WarnCardDeletion" .Lang }} {{ .Card.Fields.Name }} {{ .Card.Fields.Email }}?'
             hx-swap="outerHTML"
-            hx-target="#card-{{ .ID }}"
+            hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
         >
-            Delete
+            {{ T "DeleteButton" .Lang }}
         </button>
 
-        {{ if .Fields.IsHidden }}
+        {{ if .Card.Fields.IsHidden }}
         <button
-            hx-post="/visibility/{{ .ID }}?visible=true"
+            hx-post="/visibility/{{ .Card.ID }}?visible=true"
             hx-swap="outerHTML"
-            hx-target="#card-{{ .ID }}"
+            hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
         >
-            Make visible
+            {{ T "MakeVisibleButton" .Lang }}
         </button>
         {{ else }}
         <button
-            hx-post="/visibility/{{ .ID }}?visible=false"
+            hx-post="/visibility/{{ .Card.ID }}?visible=false"
             hx-swap="outerHTML"
-            hx-target="#card-{{ .ID }}"
+            hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
         >
-            Hide
+            {{ T "HideButton" .Lang }}
         </button>
         {{ end }}
     </div>

@@ -4,30 +4,31 @@
     </a>
 
     {{if .User}}
-    {{if eq .User.Type 1}}
-    <b style="color: red;">ADMIN USER</b>
-    {{end}}
-    <span class="user-info">Logged as {{.User.ID}} {{.User.Name}}</span>
+        {{if eq .User.Type 1}}
+            <span class="user-info" style="color: red;">{{ T "Wellcome" .Lang }}, {{.User.Name}}</span>
+        {{else}}
+            <span class="user-info">{{ T "Wellcome" .Lang }}, {{.User.Name}}</span>
+        {{end}}
     {{end}}
     <input type="checkbox" id="burger-toggle" />
     <label for="burger-toggle" class="burger">&#9776;</label>
     <nav class="menu">
-    <a href="/tutorial">How to use</a>
-    <a href="/faq">FAQ</a>
+    <a href="/tutorial">{{ T "NavHowTo" .Lang }}</a>
+    <a href="/faq">{{ T "NavFAQ" .Lang }}</a>
     {{if .User}}
         {{if eq .User.Type 1}}
-            <a href="/users" style="background-color: red;">Users</a>
+            <a href="/users" style="background-color: red;">{{ T "NavUsers" .Lang }}</a>
         {{end}}
-        <a href="/cards">Cards</a>
-        <a href="/logout">Logout</a>
+        <a href="/cards">{{ T "NavCards" .Lang }}</a>
+        <a href="/logout">{{ T "NavLogout" .Lang }}</a>
         <button
         hx-post="/userdel"
-        hx-confirm="Are you sure you wish to delete {{.User.Name}} account?"
+        hx-confirm='{{ T "WarnUserDeletion" .Lang }} {{.User.Name}}?'
         hx-swap="none">
-        Delete user
+            {{ T "NavDeleteUser" .Lang }}
         </button>
     {{else}}
-        <a href="/login">Login</a>
+        <a href="/login">{{ T "NavLogin" .Lang }}</a>
     {{end}}
     </nav>
 </div>

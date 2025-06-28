@@ -5,11 +5,11 @@
     </head>
     <body>
         <header>{{ template "comp_nav.html" . }}</header>
-        Card is hidden or not exist <br />
+        {{ T "ErrCardNotExist" .Lang }}<br />
         {{if .User}}
-        <a href="/editor">Create a card</a>
+        <a href="/editor">{{ T "CreateNewCard" .Lang }}</a>
         {{else}}
-        <a href="/login">Login to create a card</a>
+        <a href="/login">{{ T "LoginToCreateNewCard" .Lang }}</a>
         {{end}}
     </body>
 </html>

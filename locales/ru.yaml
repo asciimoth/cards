@@ -1,2 +1,6 @@
 - id: hello
   translation: "Привет, мир!"
+- id: CreateCard
+  translation: "Создать визитку"
+- id: UpdateCard
+  translation: "Обновить визитку"

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -17,6 +18,21 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
+
+func dict(values ...interface{}) (map[string]interface{}, error) {
+	if len(values)%2 != 0 {
+		return nil, errors.New("invalid dict call: must have even number of args")
+	}
+	m := make(map[string]interface{}, len(values)/2)
+	for i := 0; i < len(values); i += 2 {
+		key, ok := values[i].(string)
+		if !ok {
+			return nil, errors.New("dict keys must be strings")
+		}
+		m[key] = values[i+1]
+	}
+	return m, nil
+}
 
 func SetupServer(log *logrus.Logger, bundle *i18n.Bundle) (*gin.Engine, *http.Server) {
 	str_ttl := os.Getenv("COOKIE_TTL")
@@ -69,6 +85,7 @@ func SetupServer(log *logrus.Logger, bundle *i18n.Bundle) (*gin.Engine, *http.Se
 			}
 			return msg
 		},
+		"dict": dict,
 	}).ParseGlob("templates/*.html"))
 	g.SetHTMLTemplate(tmpl)
 

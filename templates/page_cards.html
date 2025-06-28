@@ -3,15 +3,15 @@
     <head>
         {{ template "comp_header.html" . }}
     </head>
-    <body>
+    <body hx-ext="response-targets">
         <header>
             {{ template "comp_nav.html" . }} {{ template "comp_error.html" . }}
-            {{ template "comp_error.html" . }}
         </header>
         <main>
             <section class="cards-grid">
-                {{ range .Cards }} {{ template "comp_cardElement.html" . }} {{
-                end }}
+                {{ $top := . }} {{ range .Cards }} {{ $ctx := dict "Card" .
+                "Lang" $top.Lang }} {{ template "comp_cardElement.html" $ctx }}
+                {{end}}
             </section>
             <div class="add-card-container">
                 <a
