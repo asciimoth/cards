@@ -36,6 +36,19 @@ func errorBlock(c *gin.Context, status int, text string) {
 	})
 }
 
+func langMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		sess := sessions.Default(c)
+		lang := sess.Get("Lang")
+		if lang == nil {
+			c.Set("Lang", "en")
+		} else {
+			c.Set("Lang", lang.(string))
+		}
+		c.Next()
+	}
+}
+
 func sessionMiddleware(log *logrus.Logger, db *PGDB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("User", nil)
@@ -205,6 +218,7 @@ func SetupRoutes(
 	db *PGDB,
 	log *logrus.Logger,
 	providers []string,
+	locales []string,
 ) {
 	max_upload_size := os.Getenv("MAX_UPLOAD_SIZE")
 	mus, err := strconv.ParseInt(max_upload_size, 10, 64)
@@ -216,6 +230,7 @@ func SetupRoutes(
 	fetchMedia := mediaFetcher(log, storage, ctx)
 
 	g.Use(sessionMiddleware(log, db))
+	g.Use(langMiddleware())
 
 	g.NoRoute(func(c *gin.Context) {
 		errorPage(c, http.StatusNotFound, "")
@@ -444,9 +459,11 @@ func SetupRoutes(
 			}
 
 			c.HTML(http.StatusOK, "page_cards.html", gin.H{
-				"Title": "Your cards",
-				"User":  user,
-				"Cards": cards,
+				"Title":   "Your cards",
+				"User":    user,
+				"Cards":   cards,
+				"Lang":    c.MustGet("Lang").(string),
+				"Locales": locales,
 			})
 		})
 		authorized.POST("/delcard/:id", func(c *gin.Context) {
@@ -756,6 +773,17 @@ func SetupRoutes(
 				"User":  user,
 				"Users": users,
 			})
+		})
+		authorized.POST("/setlocale", func(c *gin.Context) {
+			locale := c.PostForm("lang")
+			sess := sessions.Default(c)
+			if locale == "" {
+				sess.Set("Lang", "en")
+			} else {
+				sess.Set("Lang", locale)
+			}
+			sess.Save()
+			redirect(c, "/cards")
 		})
 	}
 }

@@ -16,6 +16,7 @@ WORKDIR /root/
 
 COPY static ./static
 COPY templates ./templates
+COPY locales ./locales
 COPY --from=builder /go/bin/app .
 
 EXPOSE 8080

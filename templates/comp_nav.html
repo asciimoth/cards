@@ -31,7 +31,18 @@
     {{end}}
     </nav>
 </div>
-
+{{if .Lang}}
+    {{.Lang}} | {{ T "hello" .Lang }} | {{ T "BBB" .Lang }} | {{.Locales}} |
+    <select name="lang" hx-post="/setlocale" hx-trigger="change" hx-swap="none">
+        <option selected>{{.Lang}}</option>
+        {{ $top := . }}
+        {{ range .Locales }}
+            {{if ne . $top.Lang }}
+                <option>{{.}}</option>
+            {{end}}
+        {{end}}
+    </select>
+{{end}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const burgerToggle = document.getElementById('burger-toggle');

@@ -60,7 +60,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] PWA
 - [ ] Add footer
 ## Backend
-- [ ] Add localisation system
+- [X] Add localisation system
 - [ ] Add VIP accounts system
 - [ ] Payment systems integration
 - [ ] Paid features
