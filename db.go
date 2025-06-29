@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 
@@ -63,6 +64,12 @@ type Card struct {
 	AvatarExist bool
 	LogoExist   bool
 }
+
+type ByID []Card
+
+func (a ByID) Len() int           { return len(a) }
+func (a ByID) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByID) Less(i, j int) bool { return a[i].ID < a[j].ID }
 
 type User struct {
 	ID         uint `gorm:"primaryKey"`
@@ -154,6 +161,7 @@ func (db *PGDB) ListCards(uid uint) ([]Card, error) {
 	cards := []Card{}
 
 	result := db.DB.Where(&Card{Owner: uid}).Find(&cards)
+	sort.Sort(ByID(cards))
 	return cards, result.Error
 }
 
