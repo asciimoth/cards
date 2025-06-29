@@ -54,7 +54,7 @@ body {
 }
 
 .user-info {
-    margin-left: 1rem;
+    margin-left: 2rem;
     font-size: 0.9rem;
 }
 
@@ -531,7 +531,42 @@ p {
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-/* Mobile styles */
+.nav-container .nav-lang-switcher {
+    display: flex;
+    align-items: center;
+}
+
+.nav-container .nav-lang-switcher select {
+    background-color: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--btn-bg);
+    border-radius: 4px;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    transition: all var(--transition-speed);
+}
+
+.nav-container .nav-lang-switcher select:hover {
+    background-color: var(--btn-bg);
+}
+
+.nav-container .desktop-only {
+    margin-left: auto;
+    margin-right: 1rem;
+}
+
+
+.nav-container .mobile-only {
+    display: none;
+}
+
+
 @media (max-width: 768px) {
     .burger {
         display: block;
@@ -581,9 +616,33 @@ p {
         flex-direction: column;
         align-items: center;
         }
-        aside#card-preview {
-        width: 100%;
-        max-width: 350px;
-        margin-top: 2rem;
+    
+    aside#card-preview {
+    width: 100%;
+    max-width: 350px;
+    margin-top: 2rem;
     }
+
+    .nav-container .desktop-only {
+        display: none;
+    }
+    
+    .nav-container .mobile-only {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-container .mobile-only select {
+        width: 80%;
+        text-align: center;
+    }
+    
+    .nav-container #burger-toggle:checked ~ .menu {
+        display: flex;
+    }
+
 }
