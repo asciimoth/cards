@@ -9,13 +9,13 @@
         </header>
         <main>
             <section>
-                {{ range .Users }} {{.}}
+                {{ $top := . }} {{ range .Users }} {{.}}
                 <button
                     hx-post="/userdel/{{.ID}}"
-                    hx-confirm={{ T .DeleteConf .Lang }}
+                    hx-confirm='{{ T "DeleteConf" $top.Lang }} {{.Name}}?'
                     hx-swap="none"
                 >
-                    {{ T .Delete .Lang }}
+                    {{ T "Delete" $top.Lang }}
                 </button>
                 <a href="/cards/{{.ID}}">Cards</a>
                 <br />

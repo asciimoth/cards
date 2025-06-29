@@ -65,7 +65,7 @@
 - id: SignIn
   translation: "Войти через"
 - id: DeleteConf
-  translation: "Вы действительно хотите удалить аккаунт {{.Name}}?"
+  translation: "Вы действительно хотите удалить аккаунт:"
 - id: Delete
   translation: "Удалить"
 - id: Work

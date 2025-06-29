@@ -65,7 +65,7 @@
 - id: SignIn
   translation: "Sign in with"
 - id: DeleteConf
-  translation: "Are you sure you wish to delete {{.Name}} account?"
+  translation: "Are you sure you wish to delete account:"
 - id: Delete
   translation: "Delete"
 - id: Work
