@@ -126,3 +126,19 @@
   translation: "Card not found"
 - id: ErrMsgFailedToListUsers
   translation: "Failed to list users"
+- id: TitleMain
+  translation: "Main"
+- id: TitleFaq
+  translation: "FAQ"
+- id: TitleTutorial
+  translation: "Tutorial"
+- id: TitleLogin
+  translation: "Login"
+- id: TitleCards
+  translation: "Cards"
+- id: TitleCreateNewCard
+  translation: "New card"
+- id: TitleEditCard
+  translation: "Edit card"
+- id: TitleUsers
+  translation: "Users"

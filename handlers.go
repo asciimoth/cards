@@ -300,17 +300,17 @@ func SetupRoutes(
 
 	g.GET("/", func(c *gin.Context) {
 		execHTML(c, http.StatusOK, "page_index.html", gin.H{
-			"Title": "Main",
+			"Title": localize(c, "TitleMain"),
 		})
 	})
 	g.GET("/faq", func(c *gin.Context) {
 		execHTML(c, http.StatusOK, "page_faq.html", gin.H{
-			"Title": "Faq",
+			"Title": localize(c, "TitleFaq"),
 		})
 	})
 	g.GET("/tutorial", func(c *gin.Context) {
 		execHTML(c, http.StatusOK, "page_tutorial.html", gin.H{
-			"Title": "Tutorial",
+			"Title": localize(c, "TitleTutorial"),
 		})
 	})
 
@@ -444,7 +444,7 @@ func SetupRoutes(
 		us := g.Group("/")
 		us.GET("/login", func(c *gin.Context) {
 			execHTML(c, http.StatusOK, "page_login.html", gin.H{
-				"Title":     "Login",
+				"Title":     localize(c, "TitleLogin"),
 				"Providers": providers,
 			})
 		})
@@ -547,7 +547,7 @@ func SetupRoutes(
 			}
 
 			execHTML(c, http.StatusOK, "page_cards.html", gin.H{
-				"Title": "Cards",
+				"Title": localize(c, "TitleCards"),
 				"Cards": cards,
 			})
 		})
@@ -594,7 +594,7 @@ func SetupRoutes(
 		})
 		authorized.GET("/editor", func(c *gin.Context) {
 			execHTML(c, http.StatusOK, "page_editor.html", gin.H{
-				"Title":        "Create new card",
+				"Title":        localize(c, "TitleCreateNewCard"),
 				"EditUrl":      "/new",
 				"SubmitButton": "CreateCard",
 				"Card": Card{
@@ -639,7 +639,7 @@ func SetupRoutes(
 			}
 
 			execHTML(c, http.StatusOK, "page_editor.html", gin.H{
-				"Title":        "Edit card",
+				"Title":        localize(c, "TitleEditCard"),
 				"EditUrl":      fmt.Sprintf("/update/%d", cid),
 				"SubmitButton": "UpdateCard",
 				"Card":         card,
@@ -898,7 +898,7 @@ func SetupRoutes(
 			}
 
 			execHTML(c, http.StatusOK, "page_users.html", gin.H{
-				"Title": "Your cards",
+				"Title": localize(c, "TitleUsers"),
 				"Users": users,
 			})
 		})

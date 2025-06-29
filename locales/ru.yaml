@@ -126,3 +126,19 @@
   translation: "Визитка не найдена"
 - id: ErrMsgFailedToListUsers
   translation: "Не удалось найти пользователей"
+- id: TitleMain
+  translation: "Главная"
+- id: TitleFaq
+  translation: "Вопросы"
+- id: TitleTutorial
+  translation: "Инструкция"
+- id: TitleLogin
+  translation: "Вход"
+- id: TitleCards
+  translation: "Визитки"
+- id: TitleCreateNewCard
+  translation: "Создать"
+- id: TitleEditCard
+  translation: "Редактировать"
+- id: TitleUsers
+  translation: "Пользователи"
