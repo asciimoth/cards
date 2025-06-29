@@ -86,3 +86,43 @@
   translation: "Внутренняя ошибка сервера"
 - id: GoToMainPage
   translation: "Перейти на главную страницу"
+- id: ErrMsgFileIsTooBig
+  translation: "Файл %s слишком большой"
+- id: ErrMsgUnknownMimeType
+  translation: "Неизвестный тип файла %s"
+- id: ErrMsgFileIsNotAnImage
+  translation: "%s не является изображением. mime: %s"
+- id: ErrMsgBrokenFile
+  translation: "Файл %s поврежден"
+- id: ErrMsgFailedToUploadFile
+  translation: "Не удалось загрузить файл %s"
+- id: ErrMsgFailedToLoadFile
+  translation: "Не удалось загрузить медиа"
+- id: ErrMsgInvalidCardID
+  translation: "Неверный ID визитки"
+- id: ErrMsgIsNotFound_avatar
+  translation: "Аватар не найден"
+- id: ErrMsgIsNotFound_logo
+  translation: "Лого не найдено"
+- id: ErrMsgFailedAuth500
+  translation: "Не удалось завершить вход из за внутренней ошибки сервера"
+- id: ErrMsgBrokenUserID
+  translation: "Неверный ID пользователя"
+- id: ErrMsgFailedTODeleteUser
+  translation: "Не удалось удалить пользователя"
+- id: ErrMsgFailedToListCards
+  translation: "Не удалось найти визитки"
+- id: ErrMsgCardIsOwnedByAnotherUser
+  translation: "Визитка принадлежит другому пользователю"
+- id: ErrMsgInvalidFromData
+  translation: "Некорректные данные формы"
+- id: ErrMsgFailedToCreateCard500
+  translation: "Не удалось создать визитку из за внутренней ошибки сервера"
+- id: ErrMsgFailedToUploadAvatar
+  translation: "Не удалось загрузить аватар из за внутренней ошибки сервера"
+- id: ErrMsgFailedToUploadLogo
+  translation: "Не удалось загрузить лого из за внутренней ошибки сервера"
+- id: ErrMsgCardNotFound
+  translation: "Визитка не найдена"
+- id: ErrMsgFailedToListUsers
+  translation: "Не удалось найти пользователей"

@@ -1,20 +1,20 @@
 <!doctype html>
 <html lang="en">
-<head>
-  {{ template "comp_header.html" . }}
-</head>
-<body>
-  <header>{{ template "comp_nav.html" . }}</header>
+    <head>
+        {{ template "comp_header.html" . }}
+    </head>
+    <body>
+        <header>{{ template "comp_nav.html" . }}</header>
 
-    <div class="login-container">
-        {{range .Providers}}
-        <div class="{{.}}-container">
-            <a href="/auth/{{.}}" class="provider-btn {{ . }}-btn"> 
-                <img src="/static/{{.}}-logo.svg">
-                <span>{{ T .SignIn .Lang }} {{ . }}</span>
-            </a>
+        <div class="login-container">
+            {{ $top := . }} {{range .Providers}}
+            <div class="{{.}}-container">
+                <a href="/auth/{{.}}" class="provider-btn {{ . }}-btn">
+                    <img src="/static/{{.}}-logo.svg" />
+                    <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
+                </a>
+            </div>
+            {{ end }}
         </div>
-    {{ end }}
-  </div>
-</body>
+    </body>
 </html>

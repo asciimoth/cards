@@ -86,3 +86,43 @@
   translation: "Internal server error"
 - id: GoToMainPage
   translation: "Go to main page"
+- id: ErrMsgFileIsTooBig
+  translation: "File %s too large"
+- id: ErrMsgUnknownMimeType
+  translation: "Content type of %s unknown"
+- id: ErrMsgFileIsNotAnImage
+  translation: "%s is not an image. mime: %s"
+- id: ErrMsgBrokenFile
+  translation: "File %s is broken"
+- id: ErrMsgFailedToUploadFile
+  translation: "Failed to upload file %s"
+- id: ErrMsgFailedToLoadFile
+  translation: "Failed to load media"
+- id: ErrMsgInvalidCardID
+  translation: "Invalid card id"
+- id: ErrMsgIsNotFound_avatar
+  translation: "Avatar not found"
+- id: ErrMsgIsNotFound_logo
+  translation: "Logo not found"
+- id: ErrMsgFailedAuth500
+  translation: "Failed to complete auth due internal server error"
+- id: ErrMsgBrokenUserID
+  translation: "Broken user ID"
+- id: ErrMsgFailedTODeleteUser
+  translation: "Failed to delete user"
+- id: ErrMsgFailedToListCards
+  translation: "Failed to list cards"
+- id: ErrMsgCardIsOwnedByAnotherUser
+  translation: "Card is owned by another user"
+- id: ErrMsgInvalidFromData
+  translation: "Invalid form data"
+- id: ErrMsgFailedToCreateCard500
+  translation: "Failed to create a card due internal server error"
+- id: ErrMsgFailedToUploadAvatar
+  translation: "Failed to upload avatar due internal server error"
+- id: ErrMsgFailedToUploadLogo
+  translation: "Failed to upload logo due internal server error"
+- id: ErrMsgCardNotFound
+  translation: "Card not found"
+- id: ErrMsgFailedToListUsers
+  translation: "Failed to list users"

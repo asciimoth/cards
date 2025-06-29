@@ -107,21 +107,36 @@ func uploader(
 	ctx context.Context,
 	maxUploadSize int64,
 	errorPage func(*gin.Context, int, string),
+	localize func(*gin.Context, string) string,
 ) func(*gin.Context, *multipart.Form, string, string) bool {
 	return func(c *gin.Context, form *multipart.Form, input, key string) bool {
 		files := form.File[input]
 		avatar := files[0]
 		if avatar.Size > maxUploadSize {
-			errorPage(c, http.StatusRequestEntityTooLarge, fmt.Sprintf("%s too large", avatar.Filename))
+			errorPage(
+				c,
+				http.StatusRequestEntityTooLarge,
+				fmt.Sprintf(localize(c, "ErrMsgFileIsTooBig"), avatar.Filename),
+			)
 			return false
 		}
 
 		mime := avatar.Header.Get("Content-Type")
 		if mime == "" {
-			errorPage(c, http.StatusBadRequest, fmt.Sprintf("Content type of %s unknown", avatar.Filename))
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				fmt.Sprintf(localize(c, "ErrMsgUnknownMimeType"), avatar.Filename),
+			)
+			return false
 		}
 		if !strings.HasPrefix(mime, "image/") {
-			errorPage(c, http.StatusBadRequest, fmt.Sprintf("%s is not an image. mime: %s", avatar.Filename, mime))
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				fmt.Sprintf(localize(c, "ErrMsgFileIsNotAnImage"), avatar.Filename, mime),
+			)
+			return false
 		}
 
 		src, err := avatar.Open()
@@ -129,7 +144,11 @@ func uploader(
 			log.WithFields(logrus.Fields{
 				"err": err,
 			}).Error("Failed to receive form file")
-			errorPage(c, http.StatusBadRequest, fmt.Sprintf("Broken file %s", avatar.Filename))
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				fmt.Sprintf(localize(c, "ErrMsgBrokenFile"), avatar.Filename),
+			)
 			return false
 		}
 
@@ -144,7 +163,11 @@ func uploader(
 			log.WithFields(logrus.Fields{
 				"err": err,
 			}).Error("Failed to uload file to storage")
-			errorPage(c, http.StatusInternalServerError, fmt.Sprintf("Failed to upload file %s", avatar.Filename))
+			errorPage(
+				c,
+				http.StatusInternalServerError,
+				fmt.Sprintf(localize(c, "ErrMsgFailedToUploadFile"), avatar.Filename),
+			)
 			return false
 		}
 		return true
@@ -156,6 +179,7 @@ func mediaFetcher(
 	storage *BlobStorage,
 	ctx context.Context,
 	errorPage func(*gin.Context, int, string),
+	localize func(*gin.Context, string) string,
 ) func(c *gin.Context, key string) {
 	return func(c *gin.Context, key string) {
 		changed, size, reader, mime, etag, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
@@ -181,7 +205,11 @@ func mediaFetcher(
 			log.WithFields(logrus.Fields{
 				"key": key,
 			}).Error("Unknown content-type of media")
-			errorPage(c, http.StatusInternalServerError, "failed to load")
+			errorPage(
+				c,
+				http.StatusInternalServerError,
+				localize(c, "ErrMsgFailedToLoadFile"),
+			)
 			return
 		}
 		if _, err := io.Copy(c.Writer, reader); err != nil {
@@ -189,7 +217,11 @@ func mediaFetcher(
 				"key": key,
 				"err": err,
 			}).Error("Error streaming media")
-			errorPage(c, http.StatusInternalServerError, "failed to load")
+			errorPage(
+				c,
+				http.StatusInternalServerError,
+				localize(c, "ErrMsgFailedToLoadFile"),
+			)
 		}
 	}
 }
@@ -219,6 +251,13 @@ func SetupRoutes(
 		log.Fatalf("Failed to conf max upload size: %s", max_upload_size)
 	}
 
+	localize := func(c *gin.Context, key string) string {
+		return localizer(
+			key,
+			c.MustGet("Lang").(string),
+		)
+	}
+
 	execHTML := func(c *gin.Context, status int, card string, add gin.H) {
 		dst := gin.H{
 			"User":    getUser(c),
@@ -231,10 +270,7 @@ func SetupRoutes(
 
 	errorPage := func(c *gin.Context, status int, text string) {
 		if text == "" {
-			text = localizer(
-				fmt.Sprintf("ErrCode%d", status),
-				c.MustGet("Lang").(string),
-			)
+			text = localize(c, fmt.Sprintf("ErrCode%d", status))
 		}
 		execHTML(c, status, "page_error.html", gin.H{
 			"Code": status,
@@ -244,10 +280,7 @@ func SetupRoutes(
 
 	errorBlock := func(c *gin.Context, status int, text string) {
 		if text == "" {
-			text = localizer(
-				fmt.Sprintf("ErrCode%d", status),
-				c.MustGet("Lang").(string),
-			)
+			text = localize(c, fmt.Sprintf("ErrCode%d", status))
 		}
 		execHTML(c, status, "comp_error.html", gin.H{
 			"ErrorCode": status,
@@ -255,8 +288,8 @@ func SetupRoutes(
 		})
 	}
 
-	uploadFormFile := uploader(log, storage, ctx, mus, errorPage)
-	fetchMedia := mediaFetcher(log, storage, ctx, errorPage)
+	uploadFormFile := uploader(log, storage, ctx, mus, errorPage, localize)
+	fetchMedia := mediaFetcher(log, storage, ctx, errorPage, localize)
 
 	g.Use(sessionMiddleware(log, db))
 	g.Use(langMiddleware())
@@ -284,7 +317,11 @@ func SetupRoutes(
 	g.GET("/c/:id", func(c *gin.Context) {
 		cid, err := getUintParam(c, "id")
 		if err != nil {
-			errorPage(c, http.StatusBadRequest, "Invalid card id")
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				localize(c, "ErrMsgInvalidCardID"),
+			)
 			return
 		}
 
@@ -323,13 +360,21 @@ func SetupRoutes(
 		}
 
 		if _, ok := allowed[kind]; !ok {
-			errorPage(c, http.StatusNotFound, kind+" not found")
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				localize(c, "ErrMsgIsNotFound_"+kind),
+			)
 			return
 		}
 
 		cid, err := getUintParam(c, "id")
 		if err != nil {
-			errorPage(c, http.StatusNotFound, kind+" not found")
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				localize(c, "ErrMsgIsNotFound_"+kind),
+			)
 			return
 		}
 		fetchMedia(c, fmt.Sprintf("media/%s/%d", kind, cid))
@@ -357,7 +402,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to complete auth")
-				errorPage(c, http.StatusNotFound, "Failed to complete auth due internal server error")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedAuth500"),
+				)
 				return
 			}
 
@@ -369,7 +418,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to complete auth")
-				errorPage(c, http.StatusNotFound, "Failed to complete auth due internal server error")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedAuth500"),
+				)
 				return
 			}
 
@@ -437,7 +490,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Wrong user id")
-				errorPage(c, http.StatusInternalServerError, "Wrong user id")
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgBrokenUserID"),
+				)
 				return
 			}
 
@@ -447,7 +504,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to delete user")
-				errorPage(c, http.StatusInternalServerError, "Failed to delete user")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedTODeleteUser"),
+				)
 				return
 			}
 
@@ -477,7 +538,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to list cards")
-				errorPage(c, http.StatusInternalServerError, "Failed to list cards")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedToListCards"),
+				)
 				return
 			}
 
@@ -508,7 +573,11 @@ func SetupRoutes(
 			}
 
 			if card.Owner != user.ID && user.Type != UserTypeAdmin {
-				errorPage(c, http.StatusForbidden, "Card is owned by another user")
+				errorPage(
+					c,
+					http.StatusForbidden,
+					localize(c, "ErrMsgCardIsOwnedByAnotherUser"),
+				)
 				return
 			}
 
@@ -586,7 +655,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to bind form data")
-				errorPage(c, http.StatusBadRequest, "Invalid form data")
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgInvalidFromData"),
+				)
 				return
 			}
 
@@ -595,7 +668,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to get multipart form data")
-				errorPage(c, http.StatusBadRequest, "Invalid form data")
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgInvalidFromData"),
+				)
 				return
 			}
 
@@ -605,7 +682,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to create card")
-				errorPage(c, http.StatusInternalServerError, "Failed to create card")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedToCreateCard500"),
+				)
 				return
 			}
 
@@ -619,7 +700,11 @@ func SetupRoutes(
 					log.WithFields(logrus.Fields{
 						"err": err,
 					}).Error("Failed to upload avatar")
-					errorPage(c, http.StatusInternalServerError, "Failed to upload avatar")
+					errorPage(
+						c,
+						http.StatusInternalServerError,
+						localize(c, "ErrMsgFailedToUploadAvatar"),
+					)
 					return
 				}
 			}
@@ -634,7 +719,11 @@ func SetupRoutes(
 					log.WithFields(logrus.Fields{
 						"err": err,
 					}).Error("Failed to upload logo")
-					errorPage(c, http.StatusInternalServerError, "Failed to upload logo")
+					errorPage(
+						c,
+						http.StatusInternalServerError,
+						localize(c, "ErrMsgFailedToUploadLogo"),
+					)
 					return
 				}
 			}
@@ -668,7 +757,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to bind form data")
-				errorPage(c, http.StatusBadRequest, "Invalid form data")
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgInvalidFromData"),
+				)
 				return
 			}
 
@@ -677,7 +770,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to get multipart form data")
-				errorPage(c, http.StatusBadRequest, "Invalid form data")
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgInvalidFromData"),
+				)
 				return
 			}
 
@@ -742,12 +839,20 @@ func SetupRoutes(
 
 			card, err := db.GetCard(cid)
 			if err != nil {
-				errorBlock(c, http.StatusInternalServerError, "Card not found")
+				errorBlock(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgInvalidFromData"),
+				)
 				return
 			}
 
 			if card.Owner != user.ID && user.Type != UserTypeAdmin {
-				errorBlock(c, http.StatusForbidden, "You are not owner of this card")
+				errorBlock(
+					c,
+					http.StatusForbidden,
+					localize(c, "ErrMsgCardIsOwnedByAnotherUser"),
+				)
 				return
 			}
 
@@ -784,7 +889,11 @@ func SetupRoutes(
 				log.WithFields(logrus.Fields{
 					"err": err,
 				}).Error("Failed to list users")
-				errorPage(c, http.StatusInternalServerError, "Failed to list users")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedToListUsers"),
+				)
 				return
 			}
 

@@ -29,6 +29,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 ## Fronend
 - [ ] Make avatars square
 - [ ] Add matching svg icons to contacts in card component
+- [ ] Repalce text at buttons on cards page winth svg icons
 - [X] Place name of logged in user somewhere
 - [X] Nav
   - [X] Same paddings for buttons in side nav
@@ -60,6 +61,8 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] PWA
 - [ ] Add footer
 ## Backend
+- [ ] Add rate limiting
+  - [ ] Check if file can exists via DB before going to S3
 - [ ] Assume default locale by GeoIP & HTTP headers
 - [X] Add localisation system
 - [ ] Add VIP accounts system
@@ -76,6 +79,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Card views counter
 ## Optimisation
 - [ ] Scripts loading optimisation
+- [ ] Media reencoding
 - [ ] Inmemory caching
   - [ ] Cards
   - [ ] S3 blobs
