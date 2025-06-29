@@ -2,5 +2,69 @@
   translation: "Привет, мир!"
 - id: CreateCard
   translation: "Создать визитку"
+- id: Welcome
+  translation: "Добро пожаловать"
 - id: UpdateCard
   translation: "Обновить визитку"
+- id: HiddenCard
+  translation: "Эта визитка скрыта. Видеть её может только владелец."
+- id: AddToContacts
+  translation: "Добавить в контакты"
+- id: ViewButton
+  translation: "Просмотр"
+- id: WarnCardDeletion
+  translation: "Вы действительно хотите удалить эту визитку:"
+- id: WarnUserDeletion
+  translation: "Вы действительно хотите удалить аккаунт:"
+- id: DeleteButton
+  translation: "Удалить"
+- id: MakeVisibleButton
+  translation: "Сделать видимой"
+- id: HideButton
+  translation: "Скрыть"
+- id: EditButton
+  translation: "Редактировать"
+- id: NavHowTo
+  translation: "Как использовать"
+- id: NavFAQ
+  translation: "Частые вопросы (ЧЗВ)"
+- id: NavUsers
+  translation: "Пользователи"
+- id: NavCards
+  translation: "Визитки"
+- id: NavLogout
+  translation: "Выйти"
+- id: NavDeleteUser
+  translation: "Удалить пользователя"
+- id: NavLogin
+  translation: "Войти"
+- id: EditCard
+  translation: "Редактировать эту визитку"
+- id: ErrCardNotExist
+  translation: "Визитка скрыта или не существует"
+- id: CreateNewCard
+  translation: "Создать визитку"
+- id: LoginToCreateNewCard
+  translation: "Войдите, чтобы создать визитку"
+- id: EditorLabelName
+  translation: "Имя"
+- id: EditorLabelCompany
+  translation: "Компания"
+- id: EditorLabelCompanyLogo
+  translation: "Логотип компании"
+- id: EditorLabelPosition
+  translation: "Должность"
+- id: EditorLabelSelfDescription
+  translation: "О себе"
+- id: EditorLabelCompanyLogo  
+  translation: "Логотип компании"
+- id: EditorLabelCancelLogo
+  translation: "Отменить логотип"
+- id: Phone
+  translation: "Телефон"
+- id: SignIn  
+  translation: "Войти через"
+- id: DeleteConf
+  translation: "Вы действительно хотите удалить аккаунт {{.Name}}?"
+- id: Delete
+  translation: "Удалить"

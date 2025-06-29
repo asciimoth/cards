@@ -5,9 +5,9 @@
 
     {{if .User}}
         {{if eq .User.Type 1}}
-            <span class="user-info" style="color: red;">{{ T "Wellcome" .Lang }}, {{.User.Name}}</span>
+            <span class="user-info" style="color: red;">{{ T "Welcome" .Lang }}, {{.User.Name}}</span>
         {{else}}
-            <span class="user-info">{{ T "Wellcome" .Lang }}, {{.User.Name}}</span>
+            <span class="user-info">{{ T "Welcome" .Lang }}, {{.User.Name}}</span>
         {{end}}
     {{end}}
     <input type="checkbox" id="burger-toggle" />

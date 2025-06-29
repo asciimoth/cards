@@ -12,10 +12,10 @@
                 {{ range .Users }} {{.}}
                 <button
                     hx-post="/userdel/{{.ID}}"
-                    hx-confirm="Are you sure you wish to delete {{.Name}} account?"
+                    hx-confirm={{ T .DeleteConf .Lang }}
                     hx-swap="none"
                 >
-                    Delete user
+                    {{ T .Delete .Lang }}
                 </button>
                 <a href="/cards/{{.ID}}">Cards</a>
                 <br />
