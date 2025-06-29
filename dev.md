@@ -60,6 +60,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] PWA
 - [ ] Add footer
 ## Backend
+- [ ] Assume default locale by GeoIP & HTTP headers
 - [X] Add localisation system
 - [ ] Add VIP accounts system
 - [ ] Payment systems integration

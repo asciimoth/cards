@@ -56,13 +56,13 @@
   translation: "Должность"
 - id: EditorLabelSelfDescription
   translation: "О себе"
-- id: EditorLabelCompanyLogo  
+- id: EditorLabelCompanyLogo
   translation: "Логотип компании"
 - id: EditorLabelCancelLogo
   translation: "Отменить логотип"
 - id: Phone
   translation: "Телефон"
-- id: SignIn  
+- id: SignIn
   translation: "Войти через"
 - id: DeleteConf
   translation: "Вы действительно хотите удалить аккаунт {{.Name}}?"
@@ -74,3 +74,15 @@
   translation: "Контакты"
 - id: Avatar
   translation: "Аватар"
+- id: ErrCode400
+  translation: "Ошибочный запрос"
+- id: ErrCode403
+  translation: "Доступ запрещен"
+- id: ErrCode404
+  translation: "Не найдено"
+- id: ErrCode413
+  translation: "Отправленные файлы слишком большие"
+- id: ErrCode500
+  translation: "Внутренняя ошибка сервера"
+- id: GoToMainPage
+  translation: "Перейти на главную страницу"

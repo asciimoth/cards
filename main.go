@@ -17,13 +17,13 @@ func main() {
 
 	log := SetupLogger()
 
-	bundle, locales := SetupLocales(log)
+	localizer, locales := SetupLocales(log)
 
 	storage := SetupBlobStorage(log)
 	db := SetupDB(storage, log)
-	g, srv := SetupServer(log, bundle)
+	g, srv := SetupServer(log, localizer)
 	names := SetupProviders(log)
-	SetupRoutes(g, ctx, storage, db, log, names, locales)
+	SetupRoutes(g, ctx, storage, db, log, names, locales, localizer)
 
 	var wg sync.WaitGroup
 	RunServer(srv, &wg, ctx, log)

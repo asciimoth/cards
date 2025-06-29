@@ -17,26 +17,6 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func errorPage(c *gin.Context, status int, text string) {
-	if text == "" {
-		text = http.StatusText(status)
-	}
-	c.HTML(status, "page_error.html", gin.H{
-		"Code": status,
-		"Text": text,
-	})
-}
-
-func errorBlock(c *gin.Context, status int, text string) {
-	if text == "" {
-		text = http.StatusText(status)
-	}
-	c.HTML(status, "comp_error.html", gin.H{
-		"ErrorCode": status,
-		"ErrorText": text,
-	})
-}
-
 func langMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sess := sessions.Default(c)
@@ -100,7 +80,7 @@ func authMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := getUser(c)
 		if user == nil {
-			c.Redirect(http.StatusTemporaryRedirect, "/")
+			redirect(c, "/")
 			return
 		}
 		c.Next()
@@ -121,7 +101,13 @@ func isFileInForm(form *multipart.Form, input string) bool {
 	return len(files) > 0 && files[0] != nil
 }
 
-func uploader(log *logrus.Logger, storage *BlobStorage, ctx context.Context, maxUploadSize int64) func(*gin.Context, *multipart.Form, string, string) bool {
+func uploader(
+	log *logrus.Logger,
+	storage *BlobStorage,
+	ctx context.Context,
+	maxUploadSize int64,
+	errorPage func(*gin.Context, int, string),
+) func(*gin.Context, *multipart.Form, string, string) bool {
 	return func(c *gin.Context, form *multipart.Form, input, key string) bool {
 		files := form.File[input]
 		avatar := files[0]
@@ -165,7 +151,12 @@ func uploader(log *logrus.Logger, storage *BlobStorage, ctx context.Context, max
 	}
 }
 
-func mediaFetcher(log *logrus.Logger, storage *BlobStorage, ctx context.Context) func(c *gin.Context, key string) {
+func mediaFetcher(
+	log *logrus.Logger,
+	storage *BlobStorage,
+	ctx context.Context,
+	errorPage func(*gin.Context, int, string),
+) func(c *gin.Context, key string) {
 	return func(c *gin.Context, key string) {
 		changed, size, reader, mime, etag, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
 		if reader != nil {
@@ -220,6 +211,7 @@ func SetupRoutes(
 	log *logrus.Logger,
 	providers []string,
 	locales []string,
+	localizer func(string, string) string,
 ) {
 	max_upload_size := os.Getenv("MAX_UPLOAD_SIZE")
 	mus, err := strconv.ParseInt(max_upload_size, 10, 64)
@@ -227,8 +219,6 @@ func SetupRoutes(
 		log.Fatalf("Failed to conf max upload size: %s", max_upload_size)
 	}
 
-	uploadFormFile := uploader(log, storage, ctx, mus)
-	fetchMedia := mediaFetcher(log, storage, ctx)
 	execHTML := func(c *gin.Context, status int, card string, add gin.H) {
 		dst := gin.H{
 			"User":    getUser(c),
@@ -238,6 +228,35 @@ func SetupRoutes(
 		maps.Copy(dst, add)
 		c.HTML(status, card, dst)
 	}
+
+	errorPage := func(c *gin.Context, status int, text string) {
+		if text == "" {
+			text = localizer(
+				fmt.Sprintf("ErrCode%d", status),
+				c.MustGet("Lang").(string),
+			)
+		}
+		execHTML(c, status, "page_error.html", gin.H{
+			"Code": status,
+			"Text": text,
+		})
+	}
+
+	errorBlock := func(c *gin.Context, status int, text string) {
+		if text == "" {
+			text = localizer(
+				fmt.Sprintf("ErrCode%d", status),
+				c.MustGet("Lang").(string),
+			)
+		}
+		execHTML(c, status, "comp_error.html", gin.H{
+			"ErrorCode": status,
+			"ErrorText": text,
+		})
+	}
+
+	uploadFormFile := uploader(log, storage, ctx, mus, errorPage)
+	fetchMedia := mediaFetcher(log, storage, ctx, errorPage)
 
 	g.Use(sessionMiddleware(log, db))
 	g.Use(langMiddleware())

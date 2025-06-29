@@ -10,7 +10,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func SetupLocales(log *logrus.Logger) (*i18n.Bundle, []string) {
+func SetupLocales(log *logrus.Logger) (func(string, string) string, []string) {
 	names := []string{}
 	b := i18n.NewBundle(language.English)
 	b.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
@@ -33,5 +33,15 @@ func SetupLocales(log *logrus.Logger) (*i18n.Bundle, []string) {
 		}
 	}
 
-	return b, names
+	localizer := func(key string, locale string) string {
+		// Create a localizer for given locale
+		localizer := i18n.NewLocalizer(b, locale)
+		msg, err := localizer.Localize(&i18n.LocalizeConfig{MessageID: key})
+		if err != nil {
+			return "<<" + key + ">>"
+		}
+		return msg
+	}
+
+	return localizer, names
 }

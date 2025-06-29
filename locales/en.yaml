@@ -74,3 +74,15 @@
   translation: "Contacts"
 - id: Avatar
   translation: "Avatar Image"
+- id: ErrCode400
+  translation: "Bad request"
+- id: ErrCode403
+  translation: "Forbidden"
+- id: ErrCode404
+  translation: "Not found"
+- id: ErrCode413
+  translation: "Request entity too large"
+- id: ErrCode500
+  translation: "Internal server error"
+- id: GoToMainPage
+  translation: "Go to main page"

@@ -11,7 +11,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/sirupsen/logrus"
 
 	"github.com/gin-contrib/sessions"
@@ -34,7 +33,7 @@ func dict(values ...interface{}) (map[string]interface{}, error) {
 	return m, nil
 }
 
-func SetupServer(log *logrus.Logger, bundle *i18n.Bundle) (*gin.Engine, *http.Server) {
+func SetupServer(log *logrus.Logger, localizer func(string, string) string) (*gin.Engine, *http.Server) {
 	str_ttl := os.Getenv("COOKIE_TTL")
 	cookie_ttl := 24
 	if str_ttl == "" {
@@ -76,15 +75,7 @@ func SetupServer(log *logrus.Logger, bundle *i18n.Bundle) (*gin.Engine, *http.Se
 
 	// Parse and set HTML templates from local filesystem
 	tmpl := template.Must(template.New("").Funcs(template.FuncMap{
-		"T": func(key string, locale string) string {
-			// Create a localizer for given locale
-			localizer := i18n.NewLocalizer(bundle, locale)
-			msg, err := localizer.Localize(&i18n.LocalizeConfig{MessageID: key})
-			if err != nil {
-				return "<<" + key + ">>"
-			}
-			return msg
-		},
+		"T":    localizer,
 		"dict": dict,
 	}).ParseGlob("templates/*.html"))
 	g.SetHTMLTemplate(tmpl)
