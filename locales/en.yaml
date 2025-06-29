@@ -68,3 +68,9 @@
   translation: "Are you sure you wish to delete {{.Name}} account?"
 - id: Delete
   translation: "Delete"
+- id: Work
+  translation: "Work"
+- id: Contacts
+  translation: "Contacts"
+- id: Avatar
+  translation: "Avatar Image"

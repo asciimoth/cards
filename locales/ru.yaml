@@ -25,9 +25,9 @@
 - id: EditButton
   translation: "Редактировать"
 - id: NavHowTo
-  translation: "Как использовать"
+  translation: "Инструкция"
 - id: NavFAQ
-  translation: "Частые вопросы (ЧЗВ)"
+  translation: "Вопросы"
 - id: NavUsers
   translation: "Пользователи"
 - id: NavCards
@@ -68,3 +68,9 @@
   translation: "Вы действительно хотите удалить аккаунт {{.Name}}?"
 - id: Delete
   translation: "Удалить"
+- id: Work
+  translation: "Работа"
+- id: Contacts
+  translation: "Контакты"
+- id: Avatar
+  translation: "Аватар"
