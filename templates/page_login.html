@@ -11,7 +11,7 @@
         <div class="{{.}}-container">
             <a href="/auth/{{.}}" class="provider-btn {{ . }}-btn"> 
                 <img src="/static/{{.}}-logo.svg">
-                <span>Sign in with {{ . }}</span>
+                <span>{{ T .SignIn .Lang }} {{ . }}</span>
             </a>
         </div>
     {{ end }}

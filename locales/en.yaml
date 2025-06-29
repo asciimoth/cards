@@ -1,7 +1,7 @@
 - id: hello
   translation: "Hello, world!"
-- id: Wellcome
-  translation: "Wellcome"
+- id: Welcome
+  translation: "Welcome"
 - id: CreateCard
   translation: "Create card"
 - id: UpdateCard
@@ -60,3 +60,11 @@
   translation: "Company Logo"
 - id: EditorLabelCancelLogo
   translation: "Cancel logo"
+- id: Phone
+  translation: "Phone"
+- id: SignIn
+  translation: "Sign in with"
+- id: DeleteConf
+  translation: "Are you sure you wish to delete {{.Name}} account?"
+- id: Delete
+  translation: "Delete"
