@@ -128,19 +128,11 @@ func uploader(
 		}
 
 		mime := avatar.Header.Get("Content-Type")
-		if mime == "" {
+		if mime == "image/webp" {
 			errorPage(
 				c,
 				http.StatusBadRequest,
 				fmt.Sprintf(localize(c, "ErrMsgUnknownMimeType"), avatar.Filename),
-			)
-			return false
-		}
-		if !strings.HasPrefix(mime, "image/") {
-			errorPage(
-				c,
-				http.StatusBadRequest,
-				fmt.Sprintf(localize(c, "ErrMsgFileIsNotAnImage"), avatar.Filename, mime),
 			)
 			return false
 		}

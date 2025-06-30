@@ -31,11 +31,12 @@ services:
 
   minio:
     image: minio/minio:latest
-    command: server /data
+    command: server --console-address :9001 /data
     restart: always
     env_file: ".env"
     ports:
       - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
     healthcheck:
