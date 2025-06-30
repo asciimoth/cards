@@ -53,8 +53,8 @@
     </div>
     <h2 id="card-name" preview-for="#input-name">{{ .Card.Fields.Name }}</h2>
     <div>
-        <span preview-for="#input-position">{{ .Card.Fields.Position }}</span>
-        <span preview-for="#input-company">{{ .Card.Fields.Company }}</span>
+        <div preview-for="#input-position">{{ .Card.Fields.Position }}</div>
+        <div preview-for="#input-company">{{ .Card.Fields.Company }}</div>
     </div>
     <div hide-when-no-content="#card-description">
         <pre id="card-description" preview-for="#input-description">
