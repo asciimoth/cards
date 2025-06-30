@@ -1,0 +1,92 @@
+<div class="qr-container">
+    <div class="qr-section">
+        <h3>{{ T "ShareCard" .Lang }}</h3>
+        <div id="qr-card-link" class="qr-code"></div>
+        <p>{{ T "ScanToView" .Lang }}</p>
+    </div>
+    
+    <div class="qr-section">
+        <h3>{{ T "SaveContact" .Lang }}</h3>
+        <div id="qr-vcard" class="qr-code"></div>
+        <p>{{ T "ScanToSave" .Lang }}</p>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    // Генерация QR-кода для ссылки на визитку
+    new QRCode(document.getElementById("qr-card-link"), {
+        text: "localhost:8080/c/{{ .Card.ID }}",
+        width: 180,
+        height: 180,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    // Генерация vCard и QR-кода для контакта
+    function generateVCard() {
+        const card = {{ .Card }};
+        const vCard = `BEGIN:VCARD
+VERSION:4.0
+N:;${card.Fields.Name || ''};;;
+FN:${card.Fields.Name || ''}
+ORG:${card.Fields.Company || ''}
+TITLE:${card.Fields.Position || ''}
+TEL;TYPE=work,voice:${card.Fields.Phone || ''}
+EMAIL:${card.Fields.Email || ''}
+URL:https://t.me/${card.Fields.Telegram || ''}
+NOTE:${card.Fields.Description || ''}
+END:VCARD`;
+        
+        return vCard;
+    }
+
+    new QRCode(document.getElementById("qr-vcard"), {
+        text: generateVCard(),
+        width: 180,
+        height: 180,
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+</script>
+
+<style>
+    .qr-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        margin: 20px 0;
+    }
+    
+    .qr-section {
+        text-align: center;
+        padding: 15px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        min-width: 220px;
+    }
+    
+    .qr-code {
+        display: inline-block;
+        margin: 10px auto;
+        padding: 10px;
+        background: white;
+        border-radius: 8px;
+    }
+    
+    .qr-section h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 1.1rem;
+    }
+    
+    .qr-section p {
+        margin: 10px 0 0 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+</style>

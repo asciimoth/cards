@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         {{ template "comp_header.html" . }}
-        <link rel="manifest" href="static/manifest.json" />
+        <link rel="manifest" href="/static/manifest.json" />
         <meta name="theme-color" content="#007BFF" />
         {{ if .Card.AvatarExist }}
         <link rel="icon" href="/media/avatar/{{.Card.ID}}" sizes="any" />
@@ -24,14 +24,66 @@
             >
             {{ end }}
         </div>
+        {{ template "comp_qr.html" . }}
     </body>
     <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker
-                    .register("/service-worker.js")
-                    .then(() => console.log("SW registered"))
-                    .catch((err) => console.error("SW failed", err));
+        // Регистрация Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/service-worker.js', { 
+                    scope: '/' 
+                })
+                .then(reg => {
+                    console.log('SW registered for scope:', reg.scope);
+                    // Проверяем обновления каждые 5 минут
+                    setInterval(() => reg.update(), 300000);
+                })
+                .catch(err => console.error('SW registration failed:', err));
+            });
+        }
+        
+        // Динамическое предложение установки PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Показываем кнопку установки только если еще не показывали
+            if (!localStorage.getItem('pwaInstallShown')) {
+                showInstallButton();
+            }
+        });
+        
+        function showInstallButton() {
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '{{ T "InstallApp" .Lang }}';
+            installBtn.id = 'install-pwa-btn';
+            installBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 15px;
+                background: #007BFF;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            `;
+            
+            document.body.appendChild(installBtn);
+            
+            installBtn.addEventListener('click', () => {
+                installBtn.style.display = 'none';
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choice => {
+                    if (choice.outcome === 'accepted') {
+                        console.log('User accepted install');
+                        localStorage.setItem('pwaInstallShown', 'true');
+                    }
+                    deferredPrompt = null;
+                });
             });
         }
     </script>
