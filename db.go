@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	UserTypeUsual uint = 0
-	UserTypeAdmin uint = 1
+	UserTypeUsual   uint = 0
+	UserTypeAdmin   uint = 1
+	UserTypeLimited uint = 2
 )
 
 // Custom logrus based logger for gorm
@@ -79,8 +80,9 @@ type User struct {
 }
 
 type PGDB struct {
-	DB      *gorm.DB
-	Storage *BlobStorage
+	DB              *gorm.DB
+	Storage         *BlobStorage
+	DefaultUserType uint
 }
 
 func (db *PGDB) SignUser(pid, name string) (string, error) {
@@ -89,7 +91,7 @@ func (db *PGDB) SignUser(pid, name string) (string, error) {
 	result := db.DB.Where("provider_id = ?", pid).First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			user = User{ProviderID: pid, Name: name}
+			user = User{ProviderID: pid, Name: name, Type: db.DefaultUserType}
 			result = db.DB.Create(&user)
 		}
 	}
@@ -190,6 +192,16 @@ func SetupDB(store *BlobStorage, log *logrus.Logger) *PGDB {
 		host, port, user, password, dbname, sslmode, timezone,
 	)
 
+	dut_str := os.Getenv("DEFAULT_USER_TYPE")
+	var dut uint = UserTypeLimited
+	if dut_str != "" {
+		d, err := strconv.Atoi(dut_str)
+		dut = uint(d)
+		if err != nil {
+			log.Fatalf("Failed to parse DEFAULT_USER_TYPE: %s", dut_str)
+		}
+	}
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: gormlog{log},
 	})
@@ -213,5 +225,5 @@ func SetupDB(store *BlobStorage, log *logrus.Logger) *PGDB {
 		}).Fatal("Failed to setup DB client")
 	}
 
-	return &PGDB{DB: db, Storage: store}
+	return &PGDB{DB: db, Storage: store, DefaultUserType: dut}
 }

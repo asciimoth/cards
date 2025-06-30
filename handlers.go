@@ -85,6 +85,10 @@ func authMiddleware() gin.HandlerFunc {
 			redirect(c, "/")
 			return
 		}
+		if user.Type == UserTypeLimited {
+			redirect(c, "/")
+			return
+		}
 		c.Next()
 	}
 }

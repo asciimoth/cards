@@ -78,7 +78,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Support for more sochial links in cards
 - [ ] Card views counter
 ## Optimisation
-- [ ] Scripts loading optimisation
+- [X] Scripts loading optimisation
 - [ ] Media reencoding
 - [ ] Inmemory caching
   - [ ] Cards
