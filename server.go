@@ -71,7 +71,7 @@ func SetupServer(log *logrus.Logger, localizer func(string, string) string) (*gi
 
 	// Serve static files from local filesystem
 	// Exposes ./static directory at /static URL path
-	g.Static("/static", "./static")
+	//g.Static("/static", "./static")
 
 	// Parse and set HTML templates from local filesystem
 	tmpl := template.Must(template.New("").Funcs(template.FuncMap{

@@ -8,8 +8,10 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -195,6 +197,7 @@ func mediaFetcher(
 		}
 		if !changed {
 			c.Status(http.StatusNotModified)
+			log.Debugf("Etag not modified %s", c.Request.URL)
 			return
 		}
 		c.Header("ETag", etag)
@@ -233,6 +236,46 @@ func redirect(c *gin.Context, target string) {
 	} else {
 		c.Redirect(http.StatusFound, target)
 	}
+}
+
+func setupStatic(
+	g *gin.Engine,
+	log *logrus.Logger,
+	errorPage func(*gin.Context, int, string),
+	localize func(*gin.Context, string) string,
+) {
+	etag := fmt.Sprintf(`W/"%d"`, time.Now().Unix())
+	g.GET("/static/:file", func(c *gin.Context) {
+		filename := c.Param("file")
+
+		// Prevent directory traversal
+		if strings.Contains(filename, "..") || strings.Contains(filename, "/") {
+			errorPage(
+				c,
+				http.StatusBadRequest,
+				localize(c, "ErrMsgInvalidFileName"),
+			)
+			return
+		}
+
+		// Check If-None-Match header
+		if match := c.GetHeader("If-None-Match"); match != "" {
+			if match == etag {
+				// Client already has the latest version
+				c.Status(http.StatusNotModified)
+				log.Debugf("Etag not modified %s", c.Request.URL)
+				return
+			}
+		}
+
+		fullPath := filepath.Join("./static", filename)
+
+		// Set caching headers
+		c.Header("Etag", etag)
+
+		// Serve the file
+		c.File(fullPath)
+	})
 }
 
 func SetupRoutes(
@@ -297,6 +340,8 @@ func SetupRoutes(
 	g.NoRoute(func(c *gin.Context) {
 		errorPage(c, http.StatusNotFound, "")
 	})
+
+	setupStatic(g, log, errorPage, localize)
 
 	g.GET("/", func(c *gin.Context) {
 		execHTML(c, http.StatusOK, "page_index.html", gin.H{

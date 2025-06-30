@@ -126,6 +126,8 @@
   translation: "Card not found"
 - id: ErrMsgFailedToListUsers
   translation: "Failed to list users"
+- id: ErrMsgInvalidFileName
+  translation: "Invalid file name"
 - id: TitleMain
   translation: "Main"
 - id: TitleFaq

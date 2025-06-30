@@ -126,6 +126,8 @@
   translation: "Визитка не найдена"
 - id: ErrMsgFailedToListUsers
   translation: "Не удалось найти пользователей"
+- id: ErrMsgInvalidFileName
+  translation: "Некорректное имя файла"
 - id: TitleMain
   translation: "Главная"
 - id: TitleFaq
