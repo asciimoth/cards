@@ -51,7 +51,10 @@ func SetupServer(log *logrus.Logger, localizer func(string, string) string) (*gi
 		host = "0.0.0.0"
 	}
 	if port == "" {
-		port = "8080"
+		port = os.Getenv("PORT") // heroku case
+		if port == "" {
+			port = "8080"
+		}
 	}
 	addr := fmt.Sprintf("%s:%s", host, port)
 
