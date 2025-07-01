@@ -17,6 +17,15 @@
                 >
                     {{ T "Delete" $top.Lang }}
                 </button>
+                <button hx-post="/changeUserType/{{.ID}}/0" hx-swap="none">
+                    Make normal user (0)
+                </button>
+                <button hx-post="/changeUserType/{{.ID}}/1" hx-swap="none">
+                    Make admin (1)
+                </button>
+                <button hx-post="/changeUserType/{{.ID}}/2" hx-swap="none">
+                    Make limited (2)
+                </button>
                 <a href="/cards/{{.ID}}">Cards</a>
                 <br />
                 {{ end }}
