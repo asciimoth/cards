@@ -89,7 +89,7 @@
 - id: ErrMsgFileIsTooBig
   translation: "File %s too large"
 - id: ErrMsgUnknownMimeType
-  translation: "Content type of %s unknown"
+  translation: "Content type of %s unknown: %s"
 - id: ErrMsgFileIsNotAnImage
   translation: "%s is not an image. mime: %s"
 - id: ErrMsgBrokenFile

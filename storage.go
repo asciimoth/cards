@@ -16,23 +16,23 @@ type BlobStorage struct {
 	bucket string
 }
 
-func (s *BlobStorage) GetKey(ctx context.Context, key, etag string) (bool, int64, io.ReadCloser, string, string, error) {
+func (s *BlobStorage) GetKey(ctx context.Context, key, etag string) (bool, int64, io.ReadCloser, string, error) {
 	objInfo, err := s.client.StatObject(ctx, s.bucket, key, minio.StatObjectOptions{})
 	if err != nil {
-		return false, 0, nil, "", "", err
+		return false, 0, nil, "", err
 	}
 	if etag != "" && etag == objInfo.ETag {
-		return false, 0, nil, "", "", nil
+		return false, 0, nil, "", nil
 	}
 	obj, err := s.client.GetObject(ctx, s.bucket, key, minio.GetObjectOptions{})
 	if err != nil {
-		return false, 0, nil, "", "", err
+		return false, 0, nil, "", err
 	}
-	return true, objInfo.Size, obj, objInfo.ContentType, objInfo.ETag, nil
+	return true, objInfo.Size, obj, objInfo.ETag, nil
 }
 
-func (s *BlobStorage) WriteKey(ctx context.Context, key string, src io.Reader, size int64, mime string) error {
-	_, err := s.client.PutObject(ctx, s.bucket, key, src, size, minio.PutObjectOptions{ContentType: mime})
+func (s *BlobStorage) WriteKey(ctx context.Context, key string, src io.Reader, size int64) error {
+	_, err := s.client.PutObject(ctx, s.bucket, key, src, size, minio.PutObjectOptions{})
 	return err
 }
 

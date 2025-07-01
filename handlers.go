@@ -128,11 +128,11 @@ func uploader(
 		}
 
 		mime := avatar.Header.Get("Content-Type")
-		if mime == "image/webp" {
+		if mime != "image/webp" {
 			errorPage(
 				c,
 				http.StatusBadRequest,
-				fmt.Sprintf(localize(c, "ErrMsgUnknownMimeType"), avatar.Filename),
+				fmt.Sprintf(localize(c, "ErrMsgUnknownMimeType"), avatar.Filename, mime),
 			)
 			return false
 		}
@@ -152,7 +152,7 @@ func uploader(
 
 		defer src.Close()
 
-		err = storage.WriteKey(ctx, key, src, avatar.Size, mime)
+		err = storage.WriteKey(ctx, key, src, avatar.Size)
 		log.WithFields(logrus.Fields{
 			"key": key,
 		}).Debug("File uploaded")
@@ -180,7 +180,7 @@ func mediaFetcher(
 	localize func(*gin.Context, string) string,
 ) func(c *gin.Context, key string) {
 	return func(c *gin.Context, key string) {
-		changed, size, reader, mime, etag, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
+		changed, size, reader, etag, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
 		if reader != nil {
 			defer reader.Close()
 		}
@@ -198,19 +198,7 @@ func mediaFetcher(
 		}
 		c.Header("ETag", etag)
 		c.Header("Content-Length", fmt.Sprintf("%d", size))
-		if mime != "" {
-			c.Header("Content-Type", mime)
-		} else {
-			log.WithFields(logrus.Fields{
-				"key": key,
-			}).Error("Unknown content-type of media")
-			errorPage(
-				c,
-				http.StatusInternalServerError,
-				localize(c, "ErrMsgFailedToLoadFile"),
-			)
-			return
-		}
+		c.Header("Content-Type", "image/webp")
 		if _, err := io.Copy(c.Writer, reader); err != nil {
 			log.WithFields(logrus.Fields{
 				"key": key,
