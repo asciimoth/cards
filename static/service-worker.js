@@ -1,66 +1,73 @@
-const CACHE_NAME = 'business-card-cache-v3';
+const CACHE_NAME = "business-card-cache-v3";
 const CACHE_URLS = [
-    '/static/styles.css',
-    '/static/collapse.js',
-    '/static/default-avatar.png',
-    '/static/icon-192.png',
-    '/static/icon-512.png'
+  "/static/style.css",
+  "/static/collapse.js",
+  "/static/default-avatar.png",
+  // "/static/icon-192.png",
+  // "/static/icon-512.png",
 ];
 
 // Установка и кэширование основных ресурсов
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => cache.addAll(CACHE_URLS))
-            .then(() => self.skipWaiting())
-    );
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE_NAME)
+      .then((cache) => cache.addAll(CACHE_URLS))
+      .then(() => self.skipWaiting()),
+  );
 });
 
 // Активация - очистка старых кэшей
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cache => {
-                    if (cache !== CACHE_NAME) {
-                        return caches.delete(cache);
-                    }
-                })
-            );
-        }).then(() => self.clients.claim())
-    );
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cache) => {
+            if (cache !== CACHE_NAME) {
+              return caches.delete(cache);
+            }
+          }),
+        );
+      })
+      .then(() => self.clients.claim()),
+  );
 });
 
 // Стратегия: Network First, затем Cache с динамическим fallback
-self.addEventListener('fetch', event => {
-    // Для API и динамических данных - только сеть
-    if (event.request.url.includes('/api/')) {
-        return;
-    }
-    
-    // Для статических ресурсов: Cache First
-    if (CACHE_URLS.some(url => event.request.url.includes(url))) {
-        event.respondWith(
-            caches.match(event.request)
-                .then(cached => cached || fetch(event.request))
-        );
-        return;
-    }
-    
-    // Для HTML-страниц: Network First + динамический fallback
-    if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request)
-                .then(networkResponse => {
-                    // Обновляем кэш при успешном запросе
-                    const clone = networkResponse.clone();
-                    caches.open(CACHE_NAME)
-                        .then(cache => cache.put(event.request, clone));
-                    return networkResponse;
-                })
-                .catch(() => {
-                    // Генерируем офлайн-страницу динамически
-                    return new Response(`
+self.addEventListener("fetch", (event) => {
+  // Для API и динамических данных - только сеть
+  if (event.request.url.includes("/api/")) {
+    return;
+  }
+
+  // Для статических ресурсов: Cache First
+  if (CACHE_URLS.some((url) => event.request.url.includes(url))) {
+    event.respondWith(
+      caches
+        .match(event.request)
+        .then((cached) => cached || fetch(event.request)),
+    );
+    return;
+  }
+
+  // Для HTML-страниц: Network First + динамический fallback
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          // Обновляем кэш при успешном запросе
+          const clone = networkResponse.clone();
+          caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.put(event.request, clone));
+          return networkResponse;
+        })
+        .catch(() => {
+          // Генерируем офлайн-страницу динамически
+          return new Response(
+            `
                         <!DOCTYPE html>
                         <html>
                         <head>
@@ -92,17 +99,18 @@ self.addEventListener('fetch', event => {
                             </div>
                         </body>
                         </html>
-                    `, {
-                        headers: {'Content-Type': 'text/html'}
-                    });
-                })
-        );
-        return;
-    }
-    
-    // Для всего остального: Network First
-    event.respondWith(
-        fetch(event.request)
-            .catch(() => caches.match(event.request))
+                    `,
+            {
+              headers: { "Content-Type": "text/html" },
+            },
+          );
+        }),
     );
+    return;
+  }
+
+  // Для всего остального: Network First
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request)),
+  );
 });
