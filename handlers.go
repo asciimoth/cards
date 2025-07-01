@@ -153,7 +153,7 @@ func uploader(
 
 		defer src.Close()
 
-		err = storage.WriteKey(ctx, key, src, avatar.Size)
+		err = storage.WriteKey(ctx, key, src, avatar.Size, true)
 		log.WithFields(logrus.Fields{
 			"key": key,
 		}).Debug("File uploaded")
@@ -181,7 +181,7 @@ func mediaFetcher(
 	localize func(*gin.Context, string) string,
 ) func(c *gin.Context, key string) {
 	return func(c *gin.Context, key string) {
-		changed, size, reader, _, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
+		changed, size, reader, err := storage.GetKey(ctx, key, true)
 		if reader != nil {
 			defer reader.Close()
 		}
