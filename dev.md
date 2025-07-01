@@ -27,6 +27,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 
 # TODO
 ## Fronend
+- [ ] Setup service worker only when installing PWA
 - [ ] Make avatars square
 - [ ] Add matching svg icons to contacts in card component
 - [ ] Repalce text at buttons on cards page winth svg icons
