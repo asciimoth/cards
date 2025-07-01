@@ -2,7 +2,7 @@ const CACHE_NAME = "business-card-cache-v3";
 const CACHE_URLS = [
   "/static/style.css",
   "/static/collapse.js",
-  "/static/default-avatar.png",
+  //"/static/default-avatar.png",
   // "/static/icon-192.png",
   // "/static/icon-512.png",
 ];
