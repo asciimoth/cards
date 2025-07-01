@@ -78,13 +78,16 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Support for more sochial links in cards
 - [ ] Card views counter
 ## Optimisation
-- [X] Scripts loading optimisation
+- [ ] Scripts loading optimisation
+  - [ ] Async
 - [X] Media reencoding
-- [ ] Inmemory caching
-  - [ ] Cards
-  - [ ] S3 blobs
+- [X] Inmemory caching for S3 blobs
 - [X] Add TTL & etags for static files
-- [ ] Use HTMX buttons that replace body instead of links
+- [ ] Server push
+- [ ] Static files
+  - [ ] Cache them inmemory
+  - [ ] Minify and/or comress them
+  - [ ] Maybe use hashed names + long TTL
 ## Content
 - [ ] Fill main page with something
   - Maybe gallery of published cards
