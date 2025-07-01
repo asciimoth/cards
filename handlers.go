@@ -33,7 +33,7 @@ func langMiddleware() gin.HandlerFunc {
 	}
 }
 
-func sessionMiddleware(log *logrus.Logger, db *PGDB) gin.HandlerFunc {
+func sessionMiddleware(log *logrus.Logger, db Database) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("User", nil)
 		user := User{
@@ -274,7 +274,7 @@ func SetupRoutes(
 	g *gin.Engine,
 	ctx context.Context,
 	storage *BlobStorage,
-	db *PGDB,
+	db Database,
 	log *logrus.Logger,
 	providers []string,
 	locales []string,

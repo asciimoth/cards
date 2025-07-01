@@ -1,11 +1,38 @@
 package main
 
 import (
+	"context"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/sirupsen/logrus"
+	glog "gorm.io/gorm/logger"
 )
+
+// Custom logrus based logger for gorm
+type gormlog struct {
+	log *logrus.Logger
+}
+
+func (gl gormlog) LogMode(lvl glog.LogLevel) glog.Interface {
+	return gl
+}
+
+func (gl gormlog) Info(_ context.Context, s string, v ...any) {
+	gl.log.Infof(s, v...)
+}
+
+func (gl gormlog) Warn(_ context.Context, s string, v ...any) {
+	gl.log.Warnf(s, v...)
+}
+
+func (gl gormlog) Error(_ context.Context, s string, v ...any) {
+	gl.log.Errorf(s, v...)
+}
+
+func (gl gormlog) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
+}
 
 func SetupLogger() *logrus.Logger {
 	logger := logrus.New()

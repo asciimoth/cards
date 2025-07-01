@@ -7,12 +7,10 @@ import (
 	"os"
 	"sort"
 	"strconv"
-	"time"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	glog "gorm.io/gorm/logger"
 )
 
 const (
@@ -20,30 +18,6 @@ const (
 	UserTypeAdmin   uint = 1
 	UserTypeLimited uint = 2
 )
-
-// Custom logrus based logger for gorm
-type gormlog struct {
-	log *logrus.Logger
-}
-
-func (gl gormlog) LogMode(lvl glog.LogLevel) glog.Interface {
-	return gl
-}
-
-func (gl gormlog) Info(_ context.Context, s string, v ...any) {
-	gl.log.Infof(s, v...)
-}
-
-func (gl gormlog) Warn(_ context.Context, s string, v ...any) {
-	gl.log.Warnf(s, v...)
-}
-
-func (gl gormlog) Error(_ context.Context, s string, v ...any) {
-	gl.log.Errorf(s, v...)
-}
-
-func (gl gormlog) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
-}
 
 type CardFields struct {
 	Name        string `form:"name" binding:"required"`
@@ -66,18 +40,30 @@ type Card struct {
 	Logo   string
 }
 
-type ByID []Card
-
-func (a ByID) Len() int           { return len(a) }
-func (a ByID) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByID) Less(i, j int) bool { return a[i].ID < a[j].ID }
-
 type User struct {
 	ID         uint `gorm:"primaryKey"`
 	ProviderID string
 	Name       string
 	Type       uint
 }
+
+type Database interface {
+	SignUser(pid, name string) (string, error)
+	GetUser(user *User) error
+	DeleteUser(id uint) error
+	CreateCard(owner uint, fields CardFields) (Card, error)
+	UpdateCard(card Card) error
+	GetCard(id uint) (Card, error)
+	DeleteCard(id uint) error
+	ListCards(uid uint) ([]Card, error)
+	ListUsers() ([]User, error)
+}
+
+type ByID []Card
+
+func (a ByID) Len() int           { return len(a) }
+func (a ByID) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByID) Less(i, j int) bool { return a[i].ID < a[j].ID }
 
 type PGDB struct {
 	DB              *gorm.DB
@@ -174,7 +160,7 @@ func (db *PGDB) ListUsers() ([]User, error) {
 	return users, result.Error
 }
 
-func SetupDB(store *BlobStorage, log *logrus.Logger) *PGDB {
+func SetupDB(store *BlobStorage, log *logrus.Logger) Database {
 	host := os.Getenv("PG_HOST")
 	port := os.Getenv("PG_PORT")
 	user := os.Getenv("PG_USER")
