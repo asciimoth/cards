@@ -59,11 +59,11 @@ type CardFields struct {
 }
 
 type Card struct {
-	ID          uint `gorm:"primaryKey"`
-	Owner       uint
-	Fields      CardFields `gorm:"embedded"`
-	AvatarExist bool
-	LogoExist   bool
+	ID     uint `gorm:"primaryKey"`
+	Owner  uint
+	Fields CardFields `gorm:"embedded"`
+	Avatar string
+	Logo   string
 }
 
 type ByID []Card
@@ -153,8 +153,8 @@ func (db *PGDB) DeleteCard(id uint) error {
 	card := Card{ID: uint(id)}
 	result := db.DB.Delete(&card)
 
-	db.Storage.DelKey(context.Background(), fmt.Sprintf("media/avatar/%d", id))
-	db.Storage.DelKey(context.Background(), fmt.Sprintf("media/logo/%d", id))
+	db.Storage.DelKey(context.Background(), card.Avatar)
+	db.Storage.DelKey(context.Background(), card.Logo)
 
 	return result.Error
 }

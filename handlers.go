@@ -15,6 +15,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/markbates/goth/gothic"
 	"github.com/sirupsen/logrus"
 )
@@ -180,7 +181,7 @@ func mediaFetcher(
 	localize func(*gin.Context, string) string,
 ) func(c *gin.Context, key string) {
 	return func(c *gin.Context, key string) {
-		changed, size, reader, etag, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
+		changed, size, reader, _, err := storage.GetKey(ctx, key, c.GetHeader("If-None-Match"))
 		if reader != nil {
 			defer reader.Close()
 		}
@@ -196,9 +197,10 @@ func mediaFetcher(
 			log.Debugf("Etag not modified %s", c.Request.URL)
 			return
 		}
-		c.Header("ETag", etag)
+		//c.Header("ETag", etag)
 		c.Header("Content-Length", fmt.Sprintf("%d", size))
 		c.Header("Content-Type", "image/webp")
+		c.Header("Cache-Control", "public, max-age=31536000, immutable") // one year
 		if _, err := io.Copy(c.Writer, reader); err != nil {
 			log.WithFields(logrus.Fields{
 				"key": key,
@@ -388,6 +390,7 @@ func SetupRoutes(
 
 	g.GET("/media/:kind/:id", func(c *gin.Context) {
 		kind := c.Params.ByName("kind")
+		id := c.Params.ByName("id")
 
 		allowed := map[string]bool{
 			"logo":   true,
@@ -403,16 +406,9 @@ func SetupRoutes(
 			return
 		}
 
-		cid, err := getUintParam(c, "id")
-		if err != nil {
-			errorPage(
-				c,
-				http.StatusBadRequest,
-				localize(c, "ErrMsgIsNotFound_"+kind),
-			)
-			return
-		}
-		fetchMedia(c, fmt.Sprintf("media/%s/%d", kind, cid))
+		// TODO: Filter ID for security
+
+		fetchMedia(c, "media/"+kind+"/"+id)
 	})
 
 	// OAuth related handlers
@@ -633,10 +629,10 @@ func SetupRoutes(
 				"EditUrl":      "/new",
 				"SubmitButton": "CreateCard",
 				"Card": Card{
-					ID:          0,
-					Owner:       0,
-					AvatarExist: false,
-					LogoExist:   false,
+					ID:     0,
+					Owner:  0,
+					Avatar: "",
+					Logo:   "",
 					Fields: CardFields{
 						Name:        "",
 						Company:     "",
@@ -725,11 +721,12 @@ func SetupRoutes(
 				return
 			}
 
+			avatar := fmt.Sprintf("media/avatar/%d-%s.webp", card.ID, uuid.New().String())
 			if isFileInForm(form, "avatar") {
-				if !uploadFormFile(c, form, "avatar", fmt.Sprintf("media/avatar/%d", card.ID)) {
+				if !uploadFormFile(c, form, "avatar", avatar) {
 					return
 				}
-				card.AvatarExist = true
+				card.Avatar = avatar
 				err = db.UpdateCard(card)
 				if err != nil {
 					log.WithFields(logrus.Fields{
@@ -744,11 +741,12 @@ func SetupRoutes(
 				}
 			}
 
+			logo := fmt.Sprintf("media/logo/%d-%s.webp", card.ID, uuid.New().String())
 			if isFileInForm(form, "logo") {
-				if !uploadFormFile(c, form, "logo", fmt.Sprintf("media/logo/%d", card.ID)) {
+				if !uploadFormFile(c, form, "logo", logo) {
 					return
 				}
-				card.LogoExist = true
+				card.Logo = logo
 				err = db.UpdateCard(card)
 				if err != nil {
 					log.WithFields(logrus.Fields{
@@ -825,36 +823,54 @@ func SetupRoutes(
 				return
 			}
 
+			avatar := fmt.Sprintf("media/avatar/%d-%s.webp", card.ID, uuid.New().String())
 			if isFileInForm(form, "avatar") {
-				if !uploadFormFile(c, form, "avatar", fmt.Sprintf("media/avatar/%d", cid)) {
+				if !uploadFormFile(c, form, "avatar", avatar) {
 					return
 				}
-				if !card.AvatarExist {
-					card.AvatarExist = true
-					err = db.UpdateCard(card)
+				old_avatar := card.Avatar
+				card.Avatar = avatar
+				err = db.UpdateCard(card)
+				if err != nil {
+					log.WithFields(logrus.Fields{
+						"err": err,
+					}).Error("Failed to upload avatar")
+					errorPage(c, http.StatusInternalServerError, "Failed to upload avatar")
+					return
+				}
+				if old_avatar != "" {
+					err := storage.DelKey(ctx, old_avatar)
 					if err != nil {
 						log.WithFields(logrus.Fields{
-							"err": err,
-						}).Error("Failed to upload avatar")
-						errorPage(c, http.StatusInternalServerError, "Failed to upload avatar")
-						return
+							"err":    err,
+							"avatar": old_avatar,
+						}).Error("Failed to delete previous avatar")
 					}
 				}
 			}
 
+			logo := fmt.Sprintf("media/logo/%d-%s.webp", card.ID, uuid.New().String())
 			if isFileInForm(form, "logo") {
-				if !uploadFormFile(c, form, "logo", fmt.Sprintf("media/logo/%d", cid)) {
+				if !uploadFormFile(c, form, "logo", logo) {
 					return
 				}
-				if !card.LogoExist {
-					card.LogoExist = true
-					err = db.UpdateCard(card)
+				old_logo := card.Logo
+				card.Logo = logo
+				err = db.UpdateCard(card)
+				if err != nil {
+					log.WithFields(logrus.Fields{
+						"err": err,
+					}).Error("Failed to upload logo")
+					errorPage(c, http.StatusInternalServerError, "Failed to upload logo")
+					return
+				}
+				if old_logo != "" {
+					err := storage.DelKey(ctx, old_logo)
 					if err != nil {
 						log.WithFields(logrus.Fields{
-							"err": err,
-						}).Error("Failed to upload logo")
-						errorPage(c, http.StatusInternalServerError, "Failed to upload logo")
-						return
+							"err":  err,
+							"logo": old_logo,
+						}).Error("Failed to delete previous logo")
 					}
 				}
 			}

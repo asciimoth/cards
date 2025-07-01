@@ -8,10 +8,10 @@
         id="logo-container"
         hide-when-no-content="#card-logo"
     >
-        {{if .Card.LogoExist}}
+        {{if .Card.Logo}}
         <img
             id="card-logo"
-            src="/media/logo/{{.Card.ID}}"
+            src="/{{.Card.Logo}}"
             alt="Company logo"
             preview-for="#input-logo"
             initial-sync="no"
@@ -31,10 +31,10 @@
     <hr />
     <button>{{ T "AddToContacts" .Lang }}</button>
     <div class="avatar" hide-when-no-content="#card-image-preview">
-        {{if .Card.AvatarExist}}
+        {{if .Card.Avatar}}
         <img
             id="card-image-preview"
-            src="/media/avatar/{{.Card.ID}}"
+            src="/{{.Card.Avatar}}"
             alt="Your avatar preview"
             preview-for="#input-avatar"
             initial-sync="no"

@@ -1,7 +1,7 @@
 <div id="card-{{ .Card.ID }}" class="card-item">
-    {{if .Card.AvatarExist}}
+    {{if .Card.Avatar}}
     <div class="avatar" style="background-color: white">
-        <img src="/media/avatar/{{.Card.ID}}" />
+        <img src="/{{.Card.Avatar}}" />
     </div>
     {{else}}
     <div class="avatar"></div>
