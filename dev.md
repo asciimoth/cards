@@ -79,11 +79,12 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Card views counter
 ## Optimisation
 - [X] Scripts loading optimisation
-- [ ] Media reencoding
+- [X] Media reencoding
 - [ ] Inmemory caching
   - [ ] Cards
   - [ ] S3 blobs
-- [ ] Add TTL & etags for static files
+- [X] Add TTL & etags for static files
+- [ ] Use HTMX buttons that replace body instead of links
 ## Content
 - [ ] Fill main page with something
   - Maybe gallery of published cards
