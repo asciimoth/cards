@@ -24,7 +24,6 @@
             >
             {{ end }}
         </div>
-        {{ template "comp_qr.html" . }}
     </body>
     <script>
         // Регистрация Service Worker
@@ -90,4 +89,422 @@
             });
         }
     </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+    // Проверяем, находимся ли на странице просмотра визитки
+    const isCardViewPage = window.location.pathname.startsWith('/c/');
+    
+    if (isCardViewPage) {
+        document.addEventListener('DOMContentLoaded', async function() {
+            const cardComponent = document.getElementById('card-component');
+            const toggleBtn = document.getElementById('toggleQR');
+            const closeBtn = document.getElementById('closeQR');
+            const mainContent = document.getElementById('main-content');
+            const userQRContainer = document.getElementById('userQRContainer');
+            const vcardQRContainer = document.getElementById('vcardQRContainer');
+            
+            // Сохраняем исходную высоту карточки
+            let originalHeight = cardComponent.offsetHeight;
+            
+            // Установим минимальную высоту равной текущей высоте
+            cardComponent.style.minHeight = originalHeight + 'px';
+            
+            // Размеры для генерации изображений
+            const QR_BASE_SIZE = 800;
+            const OVERLAY_PADDING = 8;
+            
+            // Размеры наложений
+            const OVERLAY_SIZES = {
+                logo: { width: 400, height: 200 },
+                avatar: { width: 250, height: 250 },
+                default: { width: 250, height: 250 }
+            };
+            
+            let currentView = 'main';
+            
+            // Функция для получения URL и типа изображения
+            function getOverlayImageInfo() {
+                if ("{{ .Card.LogoExist }}" === "true") {
+                    return {
+                        url: "/media/logo/{{.Card.ID}}",
+                        type: "logo",
+                        ...OVERLAY_SIZES.logo
+                    };
+                } else if ("{{ .Card.AvatarExist }}" === "true") {
+                    return {
+                        url: "/media/avatar/{{.Card.ID}}",
+                        type: "avatar",
+                        ...OVERLAY_SIZES.avatar
+                    };
+                } else {
+                    return {
+                        url: "/static/default-avatar.png",
+                        type: "default",
+                        ...OVERLAY_SIZES.default
+                    };
+                }
+            }
+            
+            // Функция для создания изображения QR-кода
+            async function generateQRImage(text) {
+                return new Promise((resolve) => {
+                    // Создаем временный div для генерации QR-кода
+                    const tempDiv = document.createElement('div');
+                    tempDiv.style.position = 'absolute';
+                    tempDiv.style.left = '-9999px';
+                    document.body.appendChild(tempDiv);
+                    
+                    // Генерируем QR-код
+                    new QRCode(tempDiv, {
+                        text: text,
+                        width: QR_BASE_SIZE,
+                        height: QR_BASE_SIZE,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    
+                    // Ждем отрисовки
+                    setTimeout(async () => {
+                        const qrCanvas = tempDiv.querySelector('canvas');
+                        
+                        // Создаем новый canvas для объединения
+                        const combinedCanvas = document.createElement('canvas');
+                        combinedCanvas.width = QR_BASE_SIZE;
+                        combinedCanvas.height = QR_BASE_SIZE;
+                        const ctx = combinedCanvas.getContext('2d');
+                        
+                        // Рисуем QR-код
+                        ctx.drawImage(qrCanvas, 0, 0, QR_BASE_SIZE, QR_BASE_SIZE);
+                        
+                        // Добавляем изображение поверх
+                        await addOverlayImage(ctx);
+                        
+                        // Конвертируем в data URL
+                        const dataUrl = combinedCanvas.toDataURL('image/png');
+                        
+                        // Удаляем временный элемент
+                        document.body.removeChild(tempDiv);
+                        
+                        resolve(dataUrl);
+                    }, 100);
+                });
+            }
+            
+            // Функция для добавления изображения поверх QR-кода
+            async function addOverlayImage(ctx) {
+                const imgInfo = getOverlayImageInfo();
+                const img = await loadImage(imgInfo.url);
+                
+                // Рассчитываем размеры с сохранением пропорций
+                let drawWidth = imgInfo.width;
+                let drawHeight = imgInfo.height;
+                const ratio = img.naturalWidth / img.naturalHeight;
+                
+                if (imgInfo.type === "logo") {
+                    if (ratio > 1) {
+                        drawHeight = drawWidth / ratio;
+                    } else {
+                        drawWidth = drawHeight * ratio;
+                    }
+                }
+                
+                // Белый фон
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(
+                    (QR_BASE_SIZE - drawWidth)/2 - OVERLAY_PADDING, 
+                    (QR_BASE_SIZE - drawHeight)/2 - OVERLAY_PADDING, 
+                    drawWidth + OVERLAY_PADDING*2, 
+                    drawHeight + OVERLAY_PADDING*2
+                );
+                
+                // Рисуем изображение
+                ctx.drawImage(
+                    img, 
+                    (QR_BASE_SIZE - drawWidth)/2, 
+                    (QR_BASE_SIZE - drawHeight)/2, 
+                    drawWidth, 
+                    drawHeight
+                );
+            }
+            
+            // Функция для загрузки изображения
+            function loadImage(url) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.crossOrigin = "Anonymous";
+                    img.src = url;
+                    img.onload = () => resolve(img);
+                });
+            }
+            
+            // Функция для генерации vCard
+            function generateVCard() {
+                const cardData = {
+                    name: "{{ .Card.Fields.Name }}",
+                    position: "{{ .Card.Fields.Position }}",
+                    company: "{{ .Card.Fields.Company }}",
+                    phone: "{{ .Card.Fields.Phone }}",
+                    email: "{{ .Card.Fields.Email }}",
+                    telegram: "{{ .Card.Fields.Telegram }}",
+                    description: "{{ .Card.Fields.Description }}"
+                };
+                
+                return `BEGIN:VCARD
+VERSION:4.0
+N:;${cardData.name};;;
+FN:${cardData.name}
+ORG:${cardData.company}
+TITLE:${cardData.position}
+TEL;TYPE=work,voice:${cardData.phone}
+EMAIL:${cardData.email}
+URL:https://t.me/${cardData.telegram}
+NOTE:${cardData.description.replace(/\n/g, '\\n')}
+END:VCARD`;
+            }
+            
+            // Генерация всех QR-кодов
+            async function generateAllQRCodes() {
+                const userQRUrl = await generateQRImage(window.location.href);
+                document.getElementById('user-qr-image').src = userQRUrl;
+                
+                const vcardQRUrl = await generateQRImage(generateVCard());
+                document.getElementById('vcard-qr-image').src = vcardQRUrl;
+            }
+            
+            // Обработчик кнопки переключения
+            toggleBtn.addEventListener('click', async function() {
+                if (currentView === 'main') {
+                    currentView = 'userQR';
+                    mainContent.style.display = 'none';
+                    userQRContainer.style.display = 'block';
+                    vcardQRContainer.style.display = 'none';
+                    closeBtn.style.display = 'block';
+                    
+                    // Обновляем высоту контейнера
+                    cardComponent.style.height = 'auto';
+                } else if (currentView === 'userQR') {
+                    currentView = 'vcardQR';
+                    userQRContainer.style.display = 'none';
+                    vcardQRContainer.style.display = 'block';
+                } else {
+                    currentView = 'userQR';
+                    vcardQRContainer.style.display = 'none';
+                    userQRContainer.style.display = 'block';
+                }
+            });
+            
+            // Обработчик кнопки закрытия
+            closeBtn.addEventListener('click', function() {
+                currentView = 'main';
+                mainContent.style.display = 'block';
+                userQRContainer.style.display = 'none';
+                vcardQRContainer.style.display = 'none';
+                closeBtn.style.display = 'none';
+                
+                // Восстанавливаем исходную высоту
+                cardComponent.style.height = originalHeight + 'px';
+            });
+            
+            // Генерируем QR-коды при загрузке
+            generateAllQRCodes();
+            
+            // Обновляем высоту при изменении контента
+            new ResizeObserver(() => {
+                originalHeight = cardComponent.offsetHeight;
+                cardComponent.style.minHeight = originalHeight + 'px';
+            }).observe(cardComponent);
+        });
+    } else {
+        document.querySelector('.qr-controls').style.display = 'none';
+    }
+</script>
+
+<style>
+    /* Основные стили карточки */
+    #card-component {
+        flex: none;
+        width: 350px;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        background: var(--nav-bg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        position: relative;
+        min-height: 500px; /* Начальная минимальная высота */
+        transition: min-height 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    /* Стили для кнопок управления */
+    .qr-controls {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 5px 10px 5px;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .toggle-qr-button, .close-qr-button {
+        background: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .close-qr-button {
+        background: #ff4d4d;
+    }
+    
+    /* Стили для контейнеров QR-кодов */
+    .qr-container {
+        display: none;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        justify-content: center;
+        padding: 15px 0;
+        box-sizing: border-box;
+    }
+    
+    .qr-content {
+        text-align: center;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+    }
+    
+    .qr-content h3 {
+        margin: 0 0 15px 0;
+        color: #333;
+        font-size: 1.2rem;
+    }
+    
+    .qr-content p {
+        margin: 15px 0 0 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    /* Контейнер для QR-изображения */
+    .qr-image-container {
+        width: 100%;
+        max-width: 350px;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .qr-image {
+        width: 100%;
+        height: auto;
+        max-height: 100%;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        display: block;
+        object-fit: contain;
+    }
+    
+    /* Адаптивные стили */
+    #main-content, .qr-container {
+        width: 100%;
+        height: 100%;
+    }
+    
+    /* Стили логотипа */
+    .logo-container {
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        overflow: hidden;
+        margin-bottom: 0.5rem;
+    }
+    
+    .logo-container img {
+        border-radius: 0;
+        width: auto;
+        max-width: 120px;
+        height: auto;
+        max-height: 80px;
+        object-fit: contain;
+    }
+    
+    /* Стили аватара */
+    .avatar {
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid #777;
+        border-radius: 5px !important;
+    }
+    
+    .avatar img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        border-radius: 5px !important;
+    }
+    
+    /* Заголовки */
+    h2, div {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: break-word;
+        white-space: normal;
+        margin: 0.2rem 0;
+    }
+    
+    /* Блок описания */
+    #card-description {
+        white-space: pre-wrap;
+        word-break: break-word;
+        width: 100%;
+        max-height: 150px;
+        overflow-y: auto;
+        font-family: inherit;
+        margin: 0.5rem 0;
+    }
+    
+    /* Разделители */
+    hr {
+        width: 100%;
+    }
+    
+    /* Контактный блок */
+    .contact-block div {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin: 0.3rem 0;
+    }
+    
+    .contact-block span {
+        flex: 1;
+        word-break: break-all;
+        padding-left: 5px;
+    }
+</style>
 </html>
