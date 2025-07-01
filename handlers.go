@@ -181,7 +181,7 @@ func mediaFetcher(
 	localize func(*gin.Context, string) string,
 ) func(c *gin.Context, key string) {
 	return func(c *gin.Context, key string) {
-		changed, size, reader, err := storage.GetKey(ctx, key, true)
+		size, reader, err := storage.GetKey(ctx, key, true)
 		if reader != nil {
 			defer reader.Close()
 		}
@@ -190,11 +190,6 @@ func mediaFetcher(
 				"err": err,
 			}).Error("Error while fetching media")
 			errorPage(c, http.StatusNotFound, "")
-			return
-		}
-		if !changed {
-			c.Status(http.StatusNotModified)
-			log.Debugf("Etag not modified %s", c.Request.URL)
 			return
 		}
 		//c.Header("ETag", etag)
@@ -967,6 +962,76 @@ func SetupRoutes(
 				referrer = "/"
 			}
 			redirect(c, referrer)
+		})
+		authorized.POST("/changeUserType/:id/:typ", func(c *gin.Context) {
+			user := getUser(c)
+
+			if user.Type != UserTypeAdmin {
+				errorPage(c, http.StatusNotFound, "")
+				return
+			}
+
+			uid, err := getUintParam(c, "id")
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Wrong user id")
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgBrokenUserID"),
+				)
+				return
+			}
+
+			typ, err := getUintParam(c, "typ")
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed get user type param")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					"",
+				)
+				return
+			}
+
+			target := User{ID: uid}
+
+			err = db.GetUser(&target)
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to delete user")
+				errorPage(
+					c,
+					http.StatusNotFound,
+					"",
+				)
+				return
+			}
+
+			target.Type = typ
+
+			err = db.UpdateUser(target)
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to update user")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					"",
+				)
+				return
+			}
+
+			redirect(c, "/users")
 		})
 	}
 }

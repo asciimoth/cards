@@ -23,24 +23,24 @@ type BlobStorage struct {
 // GetKey fetches an object. If useCache==true it first tries memory.
 // Returns (exists, size, reader, err).  If served from cache, reader
 // is a bytes.Reader over the cached []byte.
-func (s *BlobStorage) GetKey(ctx context.Context, key string, useCache bool) (bool, int64, io.ReadCloser, error) {
+func (s *BlobStorage) GetKey(ctx context.Context, key string, useCache bool) (int64, io.ReadCloser, error) {
 	fullKey := s.prefix + key
 
 	if useCache {
 		// try cache
 		if data, ok := s.cache.Get(fullKey); ok {
-			return true, int64(len(data)), io.NopCloser(bytes.NewReader(data)), nil
+			return int64(len(data)), io.NopCloser(bytes.NewReader(data)), nil
 		}
 	}
 
 	// not in cache or bypass: fetch from S3
 	info, err := s.client.StatObject(ctx, s.bucket, fullKey, minio.StatObjectOptions{})
 	if err != nil {
-		return false, 0, nil, err
+		return 0, nil, err
 	}
 	obj, err := s.client.GetObject(ctx, s.bucket, fullKey, minio.GetObjectOptions{})
 	if err != nil {
-		return false, 0, nil, err
+		return 0, nil, err
 	}
 
 	if useCache {
@@ -49,29 +49,40 @@ func (s *BlobStorage) GetKey(ctx context.Context, key string, useCache bool) (bo
 		_, err := io.ReadFull(obj, buf)
 		obj.Close()
 		if err != nil {
-			return true, info.Size, io.NopCloser(bytes.NewReader(buf)), err
+			return info.Size, io.NopCloser(bytes.NewReader(buf)), err
 		}
 		s.cache.Set(fullKey, buf)
-		return true, info.Size, io.NopCloser(bytes.NewReader(buf)), nil
+		return info.Size, io.NopCloser(bytes.NewReader(buf)), nil
 	}
 
 	// bypass cache: return S3 reader directly
-	return true, info.Size, obj, nil
+	return info.Size, obj, nil
 }
 
 // WriteKey writes to S3. If useCache==true, also inserts into cache.
 func (s *BlobStorage) WriteKey(ctx context.Context, key string, src io.Reader, size int64, useCache bool) error {
 	fullKey := s.prefix + key
-	_, err := s.client.PutObject(ctx, s.bucket, fullKey, src, size, minio.PutObjectOptions{})
-	if err != nil {
-		return err
-	}
+
 	if useCache {
-		// we need the bytes to cache them; read from src is impossible now,
-		// so caller must buffer themselves if they want caching.
-		// Alternatively, you can read into a TeeReader beforehand.
+		// buffer will collect everything we send to S3
+		var buf bytes.Buffer
+		// teeReader writes to buf as it’s read by PutObject
+		tee := io.TeeReader(src, &buf)
+
+		// upload from tee, so buf ends up with the full payload
+		_, err := s.client.PutObject(ctx, s.bucket, fullKey, tee, size, minio.PutObjectOptions{})
+		if err != nil {
+			return err
+		}
+
+		// now store in cache
+		s.cache.Set(fullKey, buf.Bytes())
+		return nil
 	}
-	return nil
+
+	// bypass cache: stream directly from src
+	_, err := s.client.PutObject(ctx, s.bucket, fullKey, src, size, minio.PutObjectOptions{})
+	return err
 }
 
 // DelKey deletes from S3. If useCache==true, also evicts from cache.

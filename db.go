@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
@@ -57,6 +59,7 @@ type Database interface {
 	DeleteCard(id uint) error
 	ListCards(uid uint) ([]Card, error)
 	ListUsers() ([]User, error)
+	UpdateUser(user User) error
 }
 
 type ByID []Card
@@ -69,6 +72,7 @@ type PGDB struct {
 	DB              *gorm.DB
 	Storage         *BlobStorage
 	DefaultUserType uint
+	admins          []string
 }
 
 func (db *PGDB) SignUser(pid, name string) (string, error) {
@@ -77,7 +81,11 @@ func (db *PGDB) SignUser(pid, name string) (string, error) {
 	result := db.DB.Where("provider_id = ?", pid).First(&user)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			user = User{ProviderID: pid, Name: name, Type: db.DefaultUserType}
+			typ := db.DefaultUserType
+			if slices.Contains(db.admins, pid) {
+				typ = UserTypeAdmin
+			}
+			user = User{ProviderID: pid, Name: name, Type: typ}
 			result = db.DB.Create(&user)
 		}
 	}
@@ -129,6 +137,11 @@ func (db *PGDB) UpdateCard(card Card) error {
 	return result.Error
 }
 
+func (db *PGDB) UpdateUser(user User) error {
+	result := db.DB.Save(&user)
+	return result.Error
+}
+
 func (db *PGDB) GetCard(id uint) (Card, error) {
 	card := Card{ID: uint(id)}
 	result := db.DB.First(&card)
@@ -160,24 +173,7 @@ func (db *PGDB) ListUsers() ([]User, error) {
 	return users, result.Error
 }
 
-func SetupDB(store *BlobStorage, log *logrus.Logger) Database {
-	host := os.Getenv("PG_HOST")
-	port := os.Getenv("PG_PORT")
-	user := os.Getenv("PG_USER")
-	password := os.Getenv("PG_PASSWORD")
-	dbname := os.Getenv("PG_NAME")
-	sslmode := os.Getenv("PG_SSLMODE")
-	timezone := os.Getenv("PG_TIMEZONE")
-
-	if timezone != "" {
-		timezone = "TimeZone=" + timezone
-	}
-
-	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s %s",
-		host, port, user, password, dbname, sslmode, timezone,
-	)
-
+func SetupDB(ctx context.Context, store *BlobStorage, log *logrus.Logger) Database {
 	dut_str := os.Getenv("DEFAULT_USER_TYPE")
 	var dut uint = UserTypeLimited
 	if dut_str != "" {
@@ -187,6 +183,37 @@ func SetupDB(store *BlobStorage, log *logrus.Logger) Database {
 			log.Fatalf("Failed to parse DEFAULT_USER_TYPE: %s", dut_str)
 		}
 	}
+
+	admins := strings.Split(os.Getenv("ADMINS"), ";")
+
+	host := os.Getenv("PG_HOST")
+	port := os.Getenv("PG_PORT")
+	user := os.Getenv("PG_USER")
+	password := os.Getenv("PG_PASSWORD")
+	dbname := os.Getenv("PG_NAME")
+	sslmode := os.Getenv("PG_SSLMODE")
+	timezone := os.Getenv("PG_TIMEZONE")
+
+	if host == "" {
+		log.Warn("No config SQL DB; Using ramdb.")
+		db, err := LoadRamDb(ctx, log, store, "DB.json", dut, admins)
+		if err != nil {
+			log.WithFields(logrus.Fields{
+				"err": err,
+			}).Fatal("Failed to setup ramdb")
+		}
+		log.Debug(db)
+		return db
+	}
+
+	if timezone != "" {
+		timezone = "TimeZone=" + timezone
+	}
+
+	dsn := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s %s",
+		host, port, user, password, dbname, sslmode, timezone,
+	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: gormlog{log},
@@ -211,5 +238,10 @@ func SetupDB(store *BlobStorage, log *logrus.Logger) Database {
 		}).Fatal("Failed to setup DB client")
 	}
 
-	return &PGDB{DB: db, Storage: store, DefaultUserType: dut}
+	return &PGDB{
+		DB:              db,
+		Storage:         store,
+		DefaultUserType: dut,
+		admins:          admins,
+	}
 }

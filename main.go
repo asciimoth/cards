@@ -20,7 +20,7 @@ func main() {
 	localizer, locales := SetupLocales(log)
 
 	storage := SetupBlobStorage(log)
-	db := SetupDB(storage, log)
+	db := SetupDB(ctx, storage, log)
 	g, srv := SetupServer(log, localizer)
 	names := SetupProviders(log)
 	SetupRoutes(g, ctx, storage, db, log, names, locales, localizer)
