@@ -25,6 +25,53 @@ And change selected user type to 1
 UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 ```
 
+# Heroku
+## Creating service
+```sh
+heroku apps:create web-cards-app --region eu
+heroku open
+```
+
+## Setting env
+```sh
+heroku config:set KEY=value
+heroku config
+```
+
+## Adding custom domain
+```sh
+heroku domains:add cards.moth.contact -a web-cards-app
+heroku domains:wait 'cards.moth.contact'
+```
+
+```sh
+heroku certs:auto:enable && heroku certs:auto --wait
+heroku certs
+```
+
+## Monitoring
+```sh
+heroku ps
+heroku logs --tail
+```
+
+## Releasing
+Make shure app in consistent state
+```sh
+go mod tidy
+go get
+```
+
+Setup git (if not yet)
+```sh
+heroku git:remote -a web-cards-app
+```
+
+Publish
+```sh
+git push heroku master
+```
+
 # TODO
 ## Fronend
 - [ ] Setup service worker only when installing PWA
@@ -78,6 +125,7 @@ UPDATE users SET type=1 WHERE id=<YOUR USER ID>;
 - [ ] Add personal site block
 - [ ] Support for more sochial links in cards
 - [ ] Card views counter
+- [ ] Telegram previews
 ## Optimisation
 - [ ] Scripts loading optimisation
   - [ ] Async
