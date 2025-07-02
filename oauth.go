@@ -46,6 +46,17 @@ func SetupProviders(log *logrus.Logger) []string {
 		log.Debug("Adding discord OAuth provider")
 	}
 
+	vkClientID := os.Getenv("VK_CLIENT_ID")
+	vkClientSecret := os.Getenv("VK_CLIENT_SECRET")
+	vkClientCallbackURL := os.Getenv("VK_CLIENT_CALLBACK_URL")
+
+	if vkClientID != "" && vkClientSecret != "" && vkClientCallbackURL != "" {
+		providers = append(providers, discord.New(
+			vkClientID, vkClientSecret, vkClientCallbackURL,
+		))
+		log.Debug("Adding VK OAuth provider")
+	}
+
 	if len(providers) < 1 {
 		log.Fatal("There is no OAuth providers configured")
 	}
