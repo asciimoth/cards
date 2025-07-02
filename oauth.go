@@ -32,6 +32,7 @@ func SetupProviders(log *logrus.Logger) []string {
 		providers = append(providers, google.New(
 			googleClientID, googleClientSecret, googleClientCallbackURL,
 		))
+		log.Debug("Adding google OAuth provider")
 	}
 
 	dcClientID := os.Getenv("DISCORD_CLIENT_ID")
