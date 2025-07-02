@@ -6,6 +6,7 @@
 :root {
     --bg-dark: #2b2b2b;
     --nav-bg: #000000;
+    --cards-bg: #000000;
     --btn-bg: #444444;
     --btn-hover-bg: #777777;
     --text-light: #ffffff;
@@ -88,11 +89,11 @@ body {
     flex: none; /* Do not stretch */
 }
 .menu a:hover,
-.menu button:hover {
+ .menu button:hover {
     background-color: var(--btn-hover-bg);
-}
+    color: var(--text-light);
+ }
 
-/* Style for buttons outside of menu */
 button,
 .btn {
     background-color: var(--btn-bg);
@@ -203,9 +204,9 @@ textarea {
     font-family: inherit;
     transition: background var(--transition-speed);
 }
-button:hover {
+/* button:hover {
     background: var(--btn-hover-bg);
-}
+} */
 .actions {
     display: flex;
     gap: 0.5rem;
@@ -216,21 +217,6 @@ button:hover {
     flex: 1;
 }
 
-/* Preview card */
-#card-component {
-    flex: none;
-    width: 350px;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    background: var(--nav-bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-}
 #card-component .logo-container {
     width: auto;
     max-width: 100%;
@@ -261,36 +247,51 @@ button:hover {
   border-radius: 5px !important;
 }
 
-/* Заголовки */
-#card-component h2,
-#card-component div {
-    width: 100%; /* Занимают всю ширину */
-    overflow: hidden;
+
+#main-content h2,
+#main-content div{
+    width: 96%; 
     text-overflow: ellipsis;
-    word-break: break-word; /* Перенос по словам */
-    white-space: normal; /* Разрешить перенос строк */
-    margin: 0.2rem 0; /* Отступы для читаемости */
+    word-break: break-word; 
+    white-space: normal; 
+    margin-bottom: 0.4rem;
+    margin-top: 0;
 }
 
-/* Блок описания */
+#main-content button {
+    width: 96%; 
+    text-overflow: ellipsis;
+    word-break: break-word; 
+    white-space: normal; 
+    margin-bottom: 0.4rem;
+    margin-top: 0;
+    padding: 0.5rem;
+}
+
+.card-contacts {
+    border-radius: 5px;
+    background-color: var(--btn-bg);
+    padding: 0.5rem;
+}
+
+
 #card-component #card-description {
-    white-space: pre-wrap; /* Сохраняет переносы + перенос по словам */
+    white-space: pre-wrap; 
     word-break: break-word;
-    width: 100%;
-    max-height: 150px; /* Макс. высота с прокруткой */
-    overflow-y: auto; /* Вертикальный скролл при переполнении */
-    font-family: inherit; /* Наследовать шрифт */
-    margin: 0.5rem 0;
+    width: 96%;
+    overflow-y: auto; 
+    font-family: inherit; 
+    border-radius: 5px;
+    background-color: var(--btn-bg);
+    margin:0;
+    padding: 0 0.5rem;
+    margin-bottom: 0.4rem;
 }
 
-/* Логотип и аватар */
+
 #card-component .logo-container,
 #card-component .avatar {
-    flex-shrink: 0; /* Запрет сжатия */
-}
-
-#card-component hr {
-    width: 100%;
+    flex-shrink: 0; 
 }
 
 .contact-buttons {
@@ -306,7 +307,7 @@ button:hover {
     width: 40px;
     height: 40px;
     background: var(--btn-bg);
-    border-radius: 4px;
+    border-radius: 5px;
     color: #fff;
     text-decoration: none;
     transition: background var(--transition-speed);
@@ -341,18 +342,23 @@ button:hover {
     background: var(--nav-bg);
     color: var(--text-light);
     border: 1px solid #444;
-    border-radius: 8px;
+    border-radius: 5px;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    max-width: 427px;
+    overflow-wrap: anywhere;
 }
+
 
 .card-item h4,
 p {
     color: var(--text-light);
     margin: 0.5rem;
+    overflow-wrap: anywhere;
+    max-width: 250px;
 }
 
 .card-item .avatar {
@@ -449,7 +455,7 @@ p {
 }
 
 
-/* Контактный блок */
+
 .contact-block div {
     display: flex;
     align-items: center;
@@ -459,19 +465,21 @@ p {
 
 .contact-block span {
     flex: 1;
-    word-break: break-all; /* Агрессивный перенос для длинных строк */
+    word-break: break-all; 
     padding-left: 5px;
 }
 
-/* Limit stretching */
+
 #controls form {
     width: 100%;
     box-sizing: border-box;
 }
 
 .card {
-    display: flex;
-    justify-content: center;
+    display: block;
+    margin-left:auto;
+    margin-right:auto;
+    width: 33%;
 }
 
 .github-btn { color: #fff; background: #333; border-color: #333; }
@@ -551,6 +559,216 @@ p {
     display: none;
 }
 
+#card-component {
+    flex: none;
+    width: 350px;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background: var(--nav-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    position: relative;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll) var(--scroll-bg);
+}
+
+
+#main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+
+.qr-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 93%;
+    padding: 0 5px 10px 5px;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0;
+}
+
+.toggle-qr-button,
+.close-qr-button {
+    background: var(--btn-bg);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.close-qr-button {
+    background: #ff4d4d;
+}
+
+
+.qr-container {
+    display: none;
+    width: 100%;
+    padding: 15px 0;
+    box-sizing: border-box;
+}
+
+.qr-content {
+    text-align: center;
+    width: 100%;
+}
+
+.qr-content h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+}
+
+.qr-content p {
+    margin: 15px 0 0 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+
+.qr-image-container {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.qr-image {
+    width: 95%;
+    height: auto;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: block;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+.logo-container img {
+    border-radius: 0;
+    width: auto;
+    max-width: 120px;
+    height: auto;
+    max-height: 80px;
+    object-fit: contain;
+}
+
+/* Стили аватара */
+.avatar {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #777;
+    border-radius: 5px !important;
+}
+
+.avatar img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 5px !important;
+}
+
+/* Разделители */
+#main-content hr {
+    width: 99%;
+    margin-bottom: 0.4rem;
+    margin-bottom: 0;
+}
+
+/* Контактный блок */
+.contact-block {
+    width: 100%;
+}
+
+.contact-block div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0.3rem 0;
+}
+
+.contact-block span {
+    flex: 1;
+    word-break: break-all;
+    padding-left: 5px;
+}
+
+#main-content > button {
+    width: 100%;
+    padding: 8px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#card-name {
+    border-radius: 5px;
+    background-color: var(--btn-bg);
+    padding: 0.5rem;
+
+}
+
+#no-cards {
+  width: 26rem;
+  height: 9rem;
+  background-color: var(--btn-bg);
+  text-align: center;
+  padding-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-block .copy-icon {
+    margin-left: 8px;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: center;
+}
+
+.contact-block .copy-icon:hover {
+    opacity: 1;
+}
+
+.contact-block div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0.3rem 0;
+}
+
+.contact-block span,
+.contact-block spantemplates {
+    flex: 1;
+    word-break: break-all;
+    padding-left: 5px;
+}
+
 
 @media (max-width: 768px) {
     .burger {
@@ -592,10 +810,6 @@ p {
     #controls {
         max-width: 100%;
     }
-    #card-component {
-        width: 100%;
-        margin-top: 1rem;
-    }
 
     .editor-layout {
         flex-direction: column;
@@ -628,6 +842,11 @@ p {
     
     .nav-container #burger-toggle:checked ~ .menu {
         display: flex;
+    }
+
+    .card {
+        margin: 0 auto;
+        max-width: 350px;
     }
 
 }

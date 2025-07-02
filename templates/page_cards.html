@@ -13,6 +13,7 @@
                 "Lang" $top.Lang }} {{ template "comp_cardElement.html" $ctx }}
                 {{end}}
             </section>
+            <div id="no-cards">{{ T "NoCards" .Lang }}</div>
             <div class="add-card-container">
                 <a
                     href="/editor"
@@ -23,4 +24,45 @@
             </div>
         </main>
     </body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const cardsGrid = document.querySelector('.cards-grid');
+    const noCardsDiv = document.getElementById('no-cards');
+    
+    if (!cardsGrid || !noCardsDiv) return;
+    
+
+    function checkCardsState() {
+
+        const hasCards = cardsGrid.children.length > 0;
+        console.log(hasCards);
+        
+        
+
+        noCardsDiv.style.display = hasCards ? 'none' : 'block';
+    }
+    
+
+    checkCardsState();
+    
+
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(() => checkCardsState());
+    });
+    
+
+    observer.observe(cardsGrid, {
+        childList: true,    
+        subtree: true      
+    });
+    
+
+    if (!window.MutationObserver) {
+        setInterval(checkCardsState, 1000);
+    }
+});
+</script>
+
+
 </html>
