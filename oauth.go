@@ -43,6 +43,7 @@ func SetupProviders(log *logrus.Logger) []string {
 		providers = append(providers, discord.New(
 			dcClientID, dcClientSecret, dcClientCallbackURL,
 		))
+		log.Debug("Adding discord OAuth provider")
 	}
 
 	if len(providers) < 1 {
