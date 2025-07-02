@@ -7,6 +7,7 @@ import (
 	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/google"
+	"github.com/markbates/goth/providers/vk"
 	"github.com/sirupsen/logrus"
 )
 
@@ -44,6 +45,17 @@ func SetupProviders(log *logrus.Logger) []string {
 			dcClientID, dcClientSecret, dcClientCallbackURL,
 		))
 		log.Debug("Adding discord OAuth provider")
+	}
+
+	vkClientID := os.Getenv("VK_CLIENT_ID")
+	vkClientSecret := os.Getenv("VK_CLIENT_SECRET")
+	vkClientCallbackURL := os.Getenv("VK_CLIENT_CALLBACK_URL")
+
+	if vkClientID != "" && vkClientSecret != "" && vkClientCallbackURL != "" {
+		providers = append(providers, vk.New(
+			vkClientID, vkClientSecret, vkClientCallbackURL,
+		))
+		log.Debug("Adding VK OAuth provider")
 	}
 
 	if len(providers) < 1 {
