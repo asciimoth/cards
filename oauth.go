@@ -6,6 +6,7 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/github"
+	"github.com/markbates/goth/providers/google"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,6 +22,16 @@ func SetupProviders(log *logrus.Logger) []string {
 			ghClientID, ghClientSecret, ghClientCallbackURL,
 		))
 		log.Debug("Adding github OAuth provider")
+	}
+
+	googleClientID := os.Getenv("GOOGLE_CLIENT_ID")
+	googleClientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
+	googleClientCallbackURL := os.Getenv("GOOGLE_CLIENT_CALLBACK_URL")
+
+	if googleClientID != "" && googleClientSecret != "" && googleClientCallbackURL != "" {
+		providers = append(providers, google.New(
+			googleClientID, googleClientSecret, googleClientCallbackURL,
+		))
 	}
 
 	dcClientID := os.Getenv("DISCORD_CLIENT_ID")
