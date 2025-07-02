@@ -1,5 +1,4 @@
 <div id="card-component">
-\
     <div class="qr-controls" style="display: none">
         <button class="toggle-qr-button" id="toggleQR">
             <img src="/static/qr-code-.svg" style="scale: 0.049;">
@@ -181,34 +180,34 @@
 document.addEventListener("DOMContentLoaded", function() {
     const toggleBtn = document.getElementById("toggleQR");
     const closeBtn = document.getElementById("closeQR");
-    
+
     if (!toggleBtn || !closeBtn) return;
-    
+
 
     const toggleImg = toggleBtn.querySelector("img");
     const closeImg = closeBtn.querySelector("img");
-    
+
     if (!toggleImg || !closeImg) return;
-    
+
 
     const originalToggleSrc = "/static/qr-code-.svg";
     const originalToggleScale = "0.049";
     const newToggleSrc = "/static/contact.svg";
-    
+
     const originalCloseSrc = "/static/close.svg";
     const originalCloseScale = "0.5";
     const originalCloseMargin = "-1rem";
-    
+
 
     let isContactIcon = false;
-    
+
 
     function resetToggleButton() {
         toggleImg.src = originalToggleSrc;
         toggleImg.style.scale = originalToggleScale;
         isContactIcon = false;
     }
-    
+
 
     toggleBtn.addEventListener("click", function() {
         if (isContactIcon) {
@@ -221,19 +220,19 @@ document.addEventListener("DOMContentLoaded", function() {
             isContactIcon = true;
         }
     });
-    
+
 
     closeBtn.addEventListener("click", function() {
 
         resetToggleButton();
-        
+
 
         closeImg.src = originalCloseSrc;
         closeImg.style.scale = originalCloseScale;
         closeImg.style.margin = originalCloseMargin;
     });
     console.log('dasdadsad');
-    
+
 
     new MutationObserver(function(mutations) {
         mutations.forEach(mutation => {
@@ -255,51 +254,51 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const contactId = block.id.replace('-contact', '-span');
         let contactElement = document.getElementById(contactId);
-        
+
 
         if (!contactElement) {
             contactElement = block.querySelector('span, spantemplates');
         }
-        
+
         return contactElement;
     }
 
 
     const contactBlocks = document.querySelectorAll('.contact-block > div');
-    
+
     contactBlocks.forEach(block => {
 
         const contactElement = findContactElement(block);
         if (!contactElement) return;
-        
+
 
         const copyIcon = document.createElement('img');
         copyIcon.src = '/static/download.svg';
         copyIcon.className = 'copy-icon';
         copyIcon.title = 'Скопировать в буфер обмена';
-        
+
 
         contactElement.parentNode.insertBefore(copyIcon, contactElement.nextSibling);
-        
+
 
         copyIcon.addEventListener('click', function() {
 
             let textToCopy = contactElement.textContent;
-            
+
 
             const contactType = block.id.split('-')[0];
-            
+
 
             if (contactType === 'telegram' && textToCopy.startsWith('@')) {
                 textToCopy = textToCopy.substring(1);
             }
-            
+
 
             navigator.clipboard.writeText(textToCopy).then(() => {
 
                 const originalSrc = copyIcon.src;
                 copyIcon.src = '/static/check.svg';
-                
+
                 setTimeout(() => {
                     copyIcon.src = originalSrc;
                 }, 2000);
@@ -315,13 +314,13 @@ document.addEventListener("DOMContentLoaded", function() {
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Card height adjustment script started");
     console.log(window.innerHeight);
-    
+
 
     const cardComponent = document.getElementById("card-component");
     const cardEdit = document.getElementById("edit-link");
     if (!cardComponent) return;
 
-    
+
 
     if (!window.location.pathname.startsWith("/c/")) {
         cardEdit.style.display = "none"
@@ -329,28 +328,28 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     if (window.location.pathname.startsWith("/c/")) return;
-    
+
     function updateCardHeight() {
         // Сброс предыдущих стилей
         cardComponent.style.maxHeight = "";
         cardComponent.style.overflowY = "";
-        
+
         // Рассчет 90% высоты окна
         const maxHeight = window.innerHeight * 0.87;
-        
+
         // Если текущая высота превышает лимит - применяем скролл
         if (cardComponent.scrollHeight > maxHeight) {
             cardComponent.style.maxHeight = maxHeight + "px";
             cardComponent.style.overflowY = "auto";
         }
     }
-    
+
     // Первоначальная настройка
     updateCardHeight();
-    
+
     // Обработчики изменений
     window.addEventListener("resize", updateCardHeight);
-    
+
     // Отслеживание изменений содержимого
     const observer = new MutationObserver(updateCardHeight);
     observer.observe(cardComponent, {
@@ -358,7 +357,7 @@ document.addEventListener("DOMContentLoaded", function() {
         subtree: true,
         characterData: true
     });
-    
+
     // Для старых браузеров
     if (!window.MutationObserver) {
         setInterval(updateCardHeight, 500);
