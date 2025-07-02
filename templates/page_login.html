@@ -9,10 +9,17 @@
         <div class="login-container">
             {{ $top := . }} {{range .Providers}}
             <div class="{{.}}-container">
+                {{if eq . "vk"}}
+                <a href="/login-vk" class="provider-btn {{ . }}-btn">
+                    <img src="/static/{{.}}-logo.svg" />
+                    <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
+                </a>
+                {{else}}
                 <a href="/auth/{{.}}" class="provider-btn {{ . }}-btn">
                     <img src="/static/{{.}}-logo.svg" />
                     <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
                 </a>
+                {{ end }}
             </div>
             {{ end }}
         </div>

@@ -465,55 +465,100 @@ func SetupRoutes(
 
 			redirect(c, "/cards")
 		})
+		// Awful code
+		// TODO: Refactor
 		oauth.POST("/auth-vk", func(c *gin.Context) {
 			type VKUserInfo struct {
 				User struct {
 					UserID    string `json:"user_id"`
 					FirstName string `json:"first_name"`
 					LastName  string `json:"last_name"`
-					// …other fields if you need them
 				} `json:"user"`
 			}
 
 			accessToken := c.PostForm("access_token")
 			if accessToken == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"error": "access_token is required"})
+				redirect(c, "/login")
 				return
 			}
 
-			// Build the form data
 			form := url.Values{}
 			form.Set("client_id", os.Getenv("VK_CLIENT_ID"))
 			form.Set("access_token", accessToken)
 
-			// Perform the POST to VK
 			resp, err := http.PostForm("https://id.vk.com/oauth2/user_info", form)
+			if resp != nil && resp.Body != nil {
+				defer resp.Body.Close()
+			}
 			if err != nil {
-				log.Printf("VK request error: %v", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to contact VK"})
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to complete VK auth")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					"Failed to contact VK",
+				)
 				return
 			}
-			defer resp.Body.Close()
 
 			if resp.StatusCode != http.StatusOK {
-				log.Printf("VK returned non-200: %d", resp.StatusCode)
-				c.JSON(http.StatusBadGateway, gin.H{"error": "VK API error"})
+				log.WithFields(logrus.Fields{
+					"status": resp.StatusCode,
+				}).Error("Failed to complete VK auth")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					"VK API error",
+				)
 				return
 			}
 
 			// Decode the JSON response
 			var info VKUserInfo
 			if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
-				log.Printf("JSON decode error: %v", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "invalid JSON from VK"})
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to complete VK auth")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					"VK API error",
+				)
 				return
 			}
 
-			// Now info.User.FirstName/LastName are proper UTF‑8 strings
-			c.JSON(http.StatusOK, gin.H{
-				"first_name": info.User.FirstName,
-				"last_name":  info.User.LastName,
-			})
+			pid := "vk:" + info.User.UserID
+			name := info.User.FirstName
+			if name != "" && info.User.LastName != "" {
+				name += " "
+			}
+			name += info.User.LastName
+
+			id, err := db.SignUser(pid, name)
+
+			if err != nil {
+				log.WithFields(logrus.Fields{
+					"err": err,
+				}).Error("Failed to complete auth")
+				errorPage(
+					c,
+					http.StatusInternalServerError,
+					localize(c, "ErrMsgFailedAuth500"),
+				)
+				return
+			}
+
+			log.WithFields(logrus.Fields{
+				"pid":  pid,
+				"uid":  id,
+				"name": name,
+			}).Info("Logged in")
+			sess := sessions.Default(c)
+			sess.Set("user_id", id)
+			sess.Save()
+
+			redirect(c, "/cards")
 		})
 	}
 
