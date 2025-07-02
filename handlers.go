@@ -249,12 +249,6 @@ func setupStatic(
 			}
 		}
 
-		switch filename {
-		case "service-worker.js":
-			c.Header("Service-Worker-Allowed", "/")
-			c.Header("Content-Type", "application/javascript")
-		}
-
 		fullPath := filepath.Join("./static", filename)
 
 		// Set caching headers
