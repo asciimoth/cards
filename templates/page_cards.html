@@ -13,6 +13,7 @@
                 "Lang" $top.Lang }} {{ template "comp_cardElement.html" $ctx }}
                 {{end}}
             </section>
+            <div id="no-cards">{{ T "NoCards" .Lang }}</div>
             <div class="add-card-container">
                 <a
                     href="/editor"
@@ -23,4 +24,43 @@
             </div>
         </main>
     </body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const cardsGrid = document.querySelector('.cards-grid');
+    const noCardsDiv = document.getElementById('no-cards');
+    
+    if (!cardsGrid || !noCardsDiv) return;
+    
+    // Функция для проверки состояния
+    function checkCardsState() {
+        // Проверяем есть ли элементы внутри сетки карточек
+        const hasCards = cardsGrid.children.length > 0;
+        console.log(hasCards);
+        
+        
+        // Если карточек нет - показываем сообщение, иначе скрываем
+        noCardsDiv.style.display = hasCards ? 'none' : 'block';
+    }
+    
+    // Проверяем состояние при загрузке
+    checkCardsState();
+    
+    // Создаем наблюдатель для отслеживания изменений в сетке
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(() => checkCardsState());
+    });
+    
+    // Начинаем наблюдать за изменениями в содержимом
+    observer.observe(cardsGrid, {
+        childList: true,    // Отслеживаем добавление/удаление элементов
+        subtree: true       // Отслеживаем изменения во всех потомках
+    });
+    
+    // Для поддержки старых браузеров
+    if (!window.MutationObserver) {
+        setInterval(checkCardsState, 1000);
+    }
+});
+</script>
 </html>
