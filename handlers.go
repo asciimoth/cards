@@ -474,6 +474,11 @@ func SetupRoutes(
 				"Providers": providers,
 			})
 		})
+		us.GET("/login/vk", func(c *gin.Context) {
+			execHTML(c, http.StatusOK, "page_login_vk.html", gin.H{
+				"Title": "VK login",
+			})
+		})
 		us.POST("/logout", func(c *gin.Context) {
 			sess := sessions.Default(c)
 			sess.Clear()
