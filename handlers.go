@@ -251,6 +251,10 @@ func setupStatic(
 			}
 		}
 
+		if strings.HasSuffix(filename, ".svg") {
+			filename = filepath.Join("svg", filename)
+		}
+
 		fullPath := filepath.Join("./static", filename)
 
 		// Set caching headers
