@@ -144,3 +144,11 @@
   translation: "Редактировать"
 - id: TitleUsers
   translation: "Пользователи"
+- id: CardLinkQR
+  translation: "Ссылка На Визитку"
+- id: ScanToView
+  translation: "Отсканируйте чтобы просмотреть"
+- id: ContactQR
+  translation: "VCF Файл"
+- id: ScanToSave
+  translation: "Отсканируйте чтобы сохранить"

@@ -144,3 +144,11 @@
   translation: "Edit card"
 - id: TitleUsers
   translation: "Users"
+- id: CardLinkQR
+  translation: "Link To Card"
+- id: ScanToView
+  translation: "Scan To View"
+- id: ContactQR
+  translation: "VCF File"
+- id: ScanToSave
+  translation: "Scan To Save" 

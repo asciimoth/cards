@@ -3,15 +3,15 @@
         <button class="toggle-qr-button" id="toggleQR">
             <img src="/static/qr-code-.svg" style="scale: 0.049;">
         </button>
+        <button class="main-button" id="goMain" style="display: none">
+           <img src="/static/favicon-192.svg" style="margin: -1rem; margin-bottom: -0.4rem;">
+        </button>
         <button class="close-qr-button" id="closeQR" style="display: none">
            <img src="/static/close.svg" style="scale: 0.5; margin: -1rem;">
         </button>
     </div>
 
-    <!-- Is hidden block -->
-    {{ if .Card.Fields.IsHidden }}
-    <div class="hidden-flag">{{ T "HiddenCard" .Lang }}</div>
-    {{ end }}
+
     <div id="main-content">
     <div
         class="logo-container"
@@ -40,6 +40,10 @@
     </div>
     <hr />
     <button>{{ T "AddToContacts" .Lang }}</button>
+    <!-- Is hidden block -->
+    {{ if .Card.Fields.IsHidden }}
+    <div class="hidden-flag">{{ T "HiddenCard" .Lang }}</div>
+    {{ end }}
     <div class="avatar" hide-when-no-content="#card-image-preview">
         {{if .Card.Avatar}}
         <img
@@ -66,9 +70,7 @@
         <div preview-for="#input-position">{{ .Card.Fields.Position }}</div>
         <div preview-for="#input-company">{{ .Card.Fields.Company }}</div>
     </div>
-    <div hide-when-no-content="#card-description" id="card-description" preview-for="#input-description">
-{{ .Card.Fields.Description }}
-    </div>
+    <div hide-when-no-content="#card-description" id="card-description" preview-for="#input-description">{{ .Card.Fields.Description }}</div>
     <div class="contact-block">
         <div hide-when-no-content="#phone-span" id="phone-contact">
             {{ if .Card.Fields.Phone }}
@@ -77,7 +79,7 @@
                 title="Phone"
                 preview-for="#input-phone"
                 preview-prefix="tel:"
-                >📞</a
+                ><img src="/static/phone.svg" alt="" class="icon"></a
             >
             <span preview-for="#input-phone" id="phone-span"
                 >{{.Card.Fields.Phone}}</span
@@ -88,7 +90,7 @@
                 title="Phone"
                 preview-for="#input-phone"
                 preview-prefix=""
-                >📞</a
+                ><img src="/static//phone.svg" alt="" class="icon"></a
             >
             <span preview-for="#input-phone" id="phone-span"></span>
             {{end}}
@@ -100,7 +102,7 @@
                 title="Email"
                 preview-for="#input-email"
                 preview-prefix="mailto:"
-                >✉️</a
+                ><img src="/static/email.svg" alt="" class="icon"></a
             >
             <span preview-for="#input-email" id="email-span"
                 >{{.Card.Fields.Email}}</span
@@ -111,7 +113,7 @@
                 title="Email"
                 preview-for="#input-email"
                 preview-prefix="mailto:"
-                >✉️</a
+                ><img src="/static/email.svg" alt="" class="icon"></a
             >
             <span preview-for="#input-email" id="email-span"></span>
             {{end}}
@@ -123,7 +125,7 @@
                 title="Telegram"
                 preview-for="#input-telegram"
                 preview-prefix="https://t.me/"
-                >📨</a
+                ><img src="/static/telegram.svg" alt="" class="icon"></a
             >
             <spantemplates/comp_card copy.html
                 preview-for="#input-telegram"
@@ -137,7 +139,7 @@
                 title="Telegram"
                 preview-for="#input-telegram"
                 preview-prefix="https://t.me/"
-                >📨</a
+                ><img src="/static/telegram.svg" alt="" class="icon"></a
             >
             <span
                 preview-for="#input-telegram"
@@ -180,60 +182,77 @@
 document.addEventListener("DOMContentLoaded", function() {
     const toggleBtn = document.getElementById("toggleQR");
     const closeBtn = document.getElementById("closeQR");
-
-    if (!toggleBtn || !closeBtn) return;
-
-
+    const goMainBtn = document.getElementById("goMain");
+    
+    if (!toggleBtn || !closeBtn || !goMainBtn) return;
+    
     const toggleImg = toggleBtn.querySelector("img");
     const closeImg = closeBtn.querySelector("img");
-
-    if (!toggleImg || !closeImg) return;
-
+    const goMainImg = goMainBtn.querySelector("img");
+    
+    if (!toggleImg || !closeImg || !goMainImg) return;
+    
 
     const originalToggleSrc = "/static/qr-code-.svg";
     const originalToggleScale = "0.049";
-    const newToggleSrc = "/static/contact.svg";
-
+    const newToggleSrc = "/static/airplane.svg";
+    
     const originalCloseSrc = "/static/close.svg";
     const originalCloseScale = "0.5";
     const originalCloseMargin = "-1rem";
-
-
+    
     let isContactIcon = false;
+    
 
+    function updateButtonVisibility(isQrMode) {
+        if (isQrMode) {
+            closeBtn.style.display = "block";
+            goMainBtn.style.display = "none";
+        } else {
+            closeBtn.style.display = "none";
+            goMainBtn.style.display = "block";
+        }
+    }
+    
 
+    updateButtonVisibility(false);
+    
     function resetToggleButton() {
         toggleImg.src = originalToggleSrc;
         toggleImg.style.scale = originalToggleScale;
         isContactIcon = false;
+        updateButtonVisibility(false);
     }
-
-
+    
     toggleBtn.addEventListener("click", function() {
         if (isContactIcon) {
 
-            resetToggleButton();
+            updateButtonVisibility(true);
         } else {
 
             toggleImg.src = newToggleSrc;
             toggleImg.style.scale = originalToggleScale;
             isContactIcon = true;
+            updateButtonVisibility(true);
         }
     });
-
-
+    
     closeBtn.addEventListener("click", function() {
 
         resetToggleButton();
-
+        
 
         closeImg.src = originalCloseSrc;
         closeImg.style.scale = originalCloseScale;
         closeImg.style.margin = originalCloseMargin;
     });
-    console.log('dasdadsad');
+    
 
+    goMainBtn.addEventListener("click", function() {
 
+        window.location.href = "/";
+    });
+    
     new MutationObserver(function(mutations) {
         mutations.forEach(mutation => {
             if (mutation.attributeName === 'style') {
@@ -273,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
         const copyIcon = document.createElement('img');
-        copyIcon.src = '/static/download.svg';
+        copyIcon.src = '/static/copy.svg';
         copyIcon.className = 'copy-icon';
         copyIcon.title = 'Скопировать в буфер обмена';
 
@@ -297,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function() {
             navigator.clipboard.writeText(textToCopy).then(() => {
 
                 const originalSrc = copyIcon.src;
-                copyIcon.src = '/static/check.svg';
+                copyIcon.src = '/static/fly.svg';
 
                 setTimeout(() => {
                     copyIcon.src = originalSrc;
