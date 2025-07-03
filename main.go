@@ -5,6 +5,8 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+
+	"github.com/joho/godotenv"
 )
 
 func getStopCtx() (context.Context, context.CancelFunc) {
@@ -15,7 +17,13 @@ func main() {
 	ctx, stop := getStopCtx()
 	defer stop()
 
+	err := godotenv.Load()
+
 	log := SetupLogger()
+
+	if err != nil {
+		log.Warn("Failed to load .env file")
+	}
 
 	localizer, locales := SetupLocales(log)
 

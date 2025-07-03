@@ -6,6 +6,7 @@ require (
 	github.com/gin-contrib/sessions v1.0.4
 	github.com/gin-gonic/gin v1.10.1
 	github.com/google/uuid v1.6.0
+	github.com/joho/godotenv v1.5.1
 	github.com/markbates/goth v1.81.0
 	github.com/minio/minio-go/v7 v7.0.94
 	github.com/nicksnyder/go-i18n/v2 v2.6.0
