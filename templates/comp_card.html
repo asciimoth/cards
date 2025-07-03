@@ -181,17 +181,17 @@
 document.addEventListener("DOMContentLoaded", function() {
     const toggleBtn = document.getElementById("toggleQR");
     const closeBtn = document.getElementById("closeQR");
-    const goMainBtn = document.getElementById("goMain"); // Новая кнопка
+    const goMainBtn = document.getElementById("goMain");
     
     if (!toggleBtn || !closeBtn || !goMainBtn) return;
     
     const toggleImg = toggleBtn.querySelector("img");
     const closeImg = closeBtn.querySelector("img");
-    const goMainImg = goMainBtn.querySelector("img"); // Изображение в новой кнопке
+    const goMainImg = goMainBtn.querySelector("img");
     
     if (!toggleImg || !closeImg || !goMainImg) return;
     
-    // Сохраняем исходные параметры изображений
+
     const originalToggleSrc = "/static/qr-code-.svg";
     const originalToggleScale = "0.049";
     const newToggleSrc = "/static/airplane.svg";
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
     let isContactIcon = false;
     
-    // Функция для управления видимостью кнопок
+
     function updateButtonVisibility(isQrMode) {
         if (isQrMode) {
             closeBtn.style.display = "block";
@@ -213,7 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
     
-    // Инициализация видимости кнопок
+
     updateButtonVisibility(false);
     
     function resetToggleButton() {
@@ -225,10 +225,10 @@ document.addEventListener("DOMContentLoaded", function() {
     
     toggleBtn.addEventListener("click", function() {
         if (isContactIcon) {
-            // Возврат в основной режим
+
             updateButtonVisibility(true);
         } else {
-            // Переход в QR-режим
+
             toggleImg.src = newToggleSrc;
             toggleImg.style.scale = originalToggleScale;
             isContactIcon = true;
@@ -237,22 +237,21 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     closeBtn.addEventListener("click", function() {
-        // Возврат в основной режим
+
         resetToggleButton();
         
-        // Восстановление стилей кнопки закрытия
+
         closeImg.src = originalCloseSrc;
         closeImg.style.scale = originalCloseScale;
         closeImg.style.margin = originalCloseMargin;
     });
     
-    // Обработчик для кнопки "goMain"
+
     goMainBtn.addEventListener("click", function() {
-        // Переход на главную страницу
+
         window.location.href = "/";
     });
     
-    // Наблюдатель для автоматического сброса
     new MutationObserver(function(mutations) {
         mutations.forEach(mutation => {
             if (mutation.attributeName === 'style') {
