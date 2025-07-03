@@ -784,6 +784,12 @@ p {
     align-items: center;
 }
 
+.hidden-flag {
+    background-color: red;
+    padding: 0.5rem;
+    border-radius: 5px;
+    color: var(--nav-bg);
+}
 
 
 @media (max-width: 768px) {

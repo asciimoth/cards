@@ -11,10 +11,7 @@
         </button>
     </div>
 
-    <!-- Is hidden block -->
-    {{ if .Card.Fields.IsHidden }}
-    <div class="hidden-flag">{{ T "HiddenCard" .Lang }}</div>
-    {{ end }}
+
     <div id="main-content">
     <div
         class="logo-container"
@@ -43,6 +40,10 @@
     </div>
     <hr />
     <button>{{ T "AddToContacts" .Lang }}</button>
+    <!-- Is hidden block -->
+    {{ if .Card.Fields.IsHidden }}
+    <div class="hidden-flag">{{ T "HiddenCard" .Lang }}</div>
+    {{ end }}
     <div class="avatar" hide-when-no-content="#card-image-preview">
         {{if .Card.Avatar}}
         <img
