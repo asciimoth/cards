@@ -1,61 +1,61 @@
 <link rel="stylesheet" href="/static/nav.css" />
 <div class="nav-container nav-hidden" id="nav-horisontal">
     <a class="nav-logo" href="/">
-        <img src="/static/favicon-192.svg">
+        <img src="/static/favicon-192.svg" />
     </a>
 
-    {{if .User}}
-        {{if eq .User.Type 1}}
-            <span class="nav-name warn-txt">{{.User.Name}}</span>
-        {{else}}
-            <span class="nav-name">{{.User.Name}}</span>
-        {{end}}
-    {{end}}
+    {{if .User}} {{if eq .User.Type 1}}
+    <span class="nav-name warn-txt">{{.User.Name}}</span>
+    {{else}}
+    <span class="nav-name">{{.User.Name}}</span>
+    {{end}} {{end}}
 
     <nav class="nav">
         <span class="nav-lang-switcher">
-            <select name="lang" hx-post="/setlocale" hx-trigger="change" hx-swap="none">
+            <select
+                name="lang"
+                hx-post="/setlocale"
+                hx-trigger="change"
+                hx-swap="none"
+            >
                 <option selected>{{.Lang}}</option>
-                {{ $top := . }}
-                {{ range .Locales }}
-                    {{if ne . $top.Lang }}
-                        <option>{{.}}</option>
-                    {{end}}
-                {{end}}
+                {{ $top := . }} {{ range .Locales }} {{if ne . $top.Lang }}
+                <option>{{.}}</option>
+                {{end}} {{end}}
             </select>
         </span>
         <a class="btn" href="/tutorial" nav-wrap>{{ T "NavHowTo" .Lang }}</a>
         <a class="btn" href="/faq" nav-wrap>{{ T "NavFAQ" .Lang }}</a>
-        {{if .User}}
-            {{if eq .User.Type 1}}
-                <a class="btn warn-btn" href="/users" nav-wrap>{{ T "NavUsers" .Lang }}</a>
-            {{end}}
-            <a class="btn" href="/cards" nav-wrap>{{ T "NavCards" .Lang }}</a>
-            <a class="btn" href="/logout" nav-wrap>{{ T "NavLogout" .Lang }}</a>
-            <button
+        {{if .User}} {{if eq .User.Type 1}}
+        <a class="btn warn-btn" href="/users" nav-wrap
+            >{{ T "NavUsers" .Lang }}</a
+        >
+        {{end}}
+        <a class="btn" href="/cards" nav-wrap>{{ T "NavCards" .Lang }}</a>
+        <a class="btn" href="/logout" nav-wrap>{{ T "NavLogout" .Lang }}</a>
+        <button
             class="btn"
             hx-post="/userdel"
             hx-confirm='{{ T "WarnUserDeletion" .Lang }} {{.User.Name}}?'
             hx-swap="none"
-            nav-wrap>
-                {{ T "NavDeleteUser" .Lang }}
-            </button>
+            nav-wrap
+        >
+            {{ T "NavDeleteUser" .Lang }}
+        </button>
         {{else}}
-            <a class="btn" href="/login" nav-wrap>{{ T "NavLogin" .Lang }}</a>
+        <a class="btn" href="/login" nav-wrap>{{ T "NavLogin" .Lang }}</a>
         {{end}}
     </nav>
 </div>
 <div class="nav-container" id="nav-vertical">
     <a class="nav-logo" href="/">
-        <img src="/static/favicon-192.svg">
+        <img src="/static/favicon-192.svg" />
     </a>
-    {{if .User}}
-        {{if eq .User.Type 1}}
-            <span class="nav-name warn-txt">{{.User.Name}}</span>
-        {{else}}
-            <span class="nav-name">{{.User.Name}}</span>
-        {{end}}
-    {{end}}
+    {{if .User}} {{if eq .User.Type 1}}
+    <span class="nav-name warn-txt">{{.User.Name}}</span>
+    {{else}}
+    <span class="nav-name">{{.User.Name}}</span>
+    {{end}} {{end}}
 
     <span id="nav-toggle">&#9776;</span>
 </div>
@@ -63,37 +63,38 @@
     <nav>
         <a class="btn" href="/tutorial">{{ T "NavHowTo" .Lang }}</a>
         <a class="btn" href="/faq">{{ T "NavFAQ" .Lang }}</a>
-        {{if .User}}
-            {{if eq .User.Type 1}}
-                <a class="btn warn-btn" href="/users">{{ T "NavUsers" .Lang }}</a>
-            {{end}}
-            <a class="btn" href="/cards">{{ T "NavCards" .Lang }}</a>
-            <a class="btn" href="/logout">{{ T "NavLogout" .Lang }}</a>
-            <hr>
-            <button
+        {{if .User}} {{if eq .User.Type 1}}
+        <a class="btn warn-btn" href="/users">{{ T "NavUsers" .Lang }}</a>
+        {{end}}
+        <a class="btn" href="/cards">{{ T "NavCards" .Lang }}</a>
+        <a class="btn" href="/logout">{{ T "NavLogout" .Lang }}</a>
+        <hr />
+        <button
             class="btn"
             hx-post="/userdel"
             hx-confirm='{{ T "WarnUserDeletion" .Lang }} {{.User.Name}}?'
-            hx-swap="none">
-                {{ T "NavDeleteUser" .Lang }}
-            </button>
+            hx-swap="none"
+        >
+            {{ T "NavDeleteUser" .Lang }}
+        </button>
         {{else}}
-            <a class="btn" href="/login">{{ T "NavLogin" .Lang }}</a>
+        <a class="btn" href="/login">{{ T "NavLogin" .Lang }}</a>
         {{end}}
     </nav>
-    <hr>
+    <hr />
     <span class="nav-lang-switcher">
-        <select name="lang" hx-post="/setlocale" hx-trigger="change" hx-swap="none">
+        <select
+            name="lang"
+            hx-post="/setlocale"
+            hx-trigger="change"
+            hx-swap="none"
+        >
             <option selected>{{.Lang}}</option>
-            {{ $top := . }}
-            {{ range .Locales }}
-                {{if ne . $top.Lang }}
-                    <option>{{.}}</option>
-                {{end}}
-            {{end}}
+            {{ $top := . }} {{ range .Locales }} {{if ne . $top.Lang }}
+            <option>{{.}}</option>
+            {{end}} {{end}}
         </select>
     </span>
 </div>
 <div id="padder"></div>
 <script src="/static/nav.js"></script>
-</html>

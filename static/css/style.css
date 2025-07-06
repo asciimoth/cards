@@ -65,6 +65,12 @@ body {
     display: none;
 }
 
+#global-error-block {
+    color: var(--error-color);
+    border: 2px solid var(--error-color);
+    background-color: var(--section-bg);
+}
+
 .avatar-container {
     background-color: white;
 }
