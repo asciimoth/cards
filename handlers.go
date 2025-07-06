@@ -255,6 +255,8 @@ func setupStatic(
 			filename = filepath.Join("svg", filename)
 		} else if strings.HasSuffix(filename, ".css") {
 			filename = filepath.Join("css", filename)
+		} else if strings.HasSuffix(filename, ".js") {
+			filename = filepath.Join("js", filename)
 		}
 
 		fullPath := filepath.Join("./static", filename)
