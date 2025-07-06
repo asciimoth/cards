@@ -1,0 +1,102 @@
+.nav-container {
+    background-color: var(--block-bg);
+    position: fixed;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.nav-container .nav {
+    display: inline-block;
+}
+
+.nav-hidden {
+    position: absolute;
+    visibility: hidden;
+    top: -1000px;
+}
+
+.nav-lang-switcher select {
+    background-color: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--section-bg);
+    border-radius: 4px;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    transition: all var(--transition-speed);
+}
+
+.nav-name {
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.nav-lang-switcher select:hover {
+    background-color: var(--section-bg);
+}
+
+.nav-logo {
+    color: var(--text);
+    transition: color var(--transition-speed);
+}
+
+.nav-logo:hover {
+    color: var(--section-hover-bg);
+}
+
+.nav-logo img {
+    vertical-align: middle;
+}
+
+.nav-container img {
+    height: 20px;
+    color: var(--text);
+}
+
+#nav-toggle {
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+#vertical-nav-container {
+    position: fixed;
+    background-color: var(--block-bg);
+    top: 0;
+    right: 0;
+    min-width: 250px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+#vertical-nav-container .btn {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+#vertical-nav-container button.btn {
+    width: 100%;
+}
+
+#vertical-nav-container .nav-lang-switcher {
+    width: 100%;
+    display: block;
+}
+
+#vertical-nav-container .nav-lang-switcher select {
+    width: 100%;
+}
+
+#padder {
+    height: 60px;
+}

@@ -1,0 +1,36 @@
+.cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+.card-element {
+    background-color: var(--block-bg);
+    border: 1px solid #444;
+    padding: 1rem;
+    align-items: center;
+    max-width: 427px;
+    overflow-wrap: anywhere;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border: 1px solid #777;
+}
+
+.avatar img {
+    width: 100px;
+}
+
+.card-element h4,
+p {
+    margin: 0.5rem;
+    overflow-wrap: anywhere;
+    max-width: 250px;
+}

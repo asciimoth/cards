@@ -1,0 +1,70 @@
+/* Fonts and style unset*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+
+:root {
+    --bg: #2b2b2b;
+    --block-bg: #000000;
+    --section-bg: #444444;
+    --section-hover-bg: #777777;
+    --text: #ffffff;
+    --transition-speed: 0.3s;
+    --error-color: red;
+}
+
+body {
+    margin: 0;
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+}
+
+.btn {
+    background-color: var(--section-bg);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        background-color var(--transition-speed),
+        color var(--transition-speed);
+    white-space: nowrap;
+    outline: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: var(--section-hover-bg);
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.btn img {
+    vertical-align: middle;
+    height: 1rem;
+}
+
+.btn svg {
+    vertical-align: middle;
+    height: 1rem;
+}
+
+.warn-btn {
+    background-color: var(--error-color);
+}
+
+.warn-txt {
+    color: var(--error-color);
+}
+
+.hidden {
+    visibility: collapse;
+    display: none;
+}
+
+.avatar-container {
+    background-color: white;
+}

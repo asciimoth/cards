@@ -1,6 +1,6 @@
-<div id="card-{{ .Card.ID }}" class="card-item">
+<div class="card-element" id="card-{{ .Card.ID }}">
     {{if .Card.Avatar}}
-    <div class="avatar" style="background-color: white">
+    <div class="avatar">
         <img src="/{{.Card.Avatar}}" />
     </div>
     {{else}}
@@ -8,11 +8,19 @@
     {{end}}
 
     <h4>{{ .Card.Fields.Name }}</h4>
+    {{ if .Card.Fields.Email }}
     <p>{{ .Card.Fields.Email }}</p>
+    {{else}}
+    <p style="visibility: hidden">|</p>
+    {{end}}
 
-    <div class="actions">
-        <a href="/c/{{ .Card.ID }}">{{ T "ViewButton" .Lang }}</a>
-        <a href="/editor/{{ .Card.ID }}">{{ T "EditButton" .Lang }}</a>
+    <div>
+        <a class="btn" href="/c/{{ .Card.ID }}">
+            <img src="/static/favicon-192.svg" />
+        </a>
+        <a class="btn" href="/editor/{{ .Card.ID }}">
+            <img src="/static/favicon-192.svg" />
+        </a>
 
         <button
             hx-post="/delcard/{{ .Card.ID }}"
@@ -20,8 +28,9 @@
             hx-swap="outerHTML"
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
+            class="btn"
         >
-            {{ T "DeleteButton" .Lang }}
+            <img src="/static/favicon-192.svg" />
         </button>
 
         {{ if .Card.Fields.IsHidden }}
@@ -30,8 +39,9 @@
             hx-swap="outerHTML"
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
+            class="btn"
         >
-            {{ T "MakeVisibleButton" .Lang }}
+            <img src="/static/favicon-192.svg" />
         </button>
         {{ else }}
         <button
@@ -39,8 +49,9 @@
             hx-swap="outerHTML"
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
+            class="btn"
         >
-            {{ T "HideButton" .Lang }}
+            <img src="/static/favicon-192.svg" />
         </button>
         {{ end }}
     </div>

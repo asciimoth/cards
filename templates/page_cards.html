@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         {{ template "comp_header.html" . }}
+        <link rel="stylesheet" href="/static/cards.css" />
     </head>
     <body hx-ext="response-targets">
         <header>
@@ -9,60 +10,15 @@
         </header>
         <main>
             <section class="cards-grid">
-                {{ $top := . }} {{ range .Cards }} {{ $ctx := dict "Card" .
-                "Lang" $top.Lang }} {{ template "comp_cardElement.html" $ctx }}
+                {{ if .Cards }} {{ $top := . }} {{ range .Cards }} {{ $ctx :=
+                dict "Card" . "Lang" $top.Lang }} {{ template
+                "comp_cardElement.html" $ctx }} {{end}} {{else}}
+                <div id="no-cards">{{ T "NoCards" .Lang }}</div>
                 {{end}}
             </section>
-            <div id="no-cards">{{ T "NoCards" .Lang }}</div>
-            <div class="add-card-container">
-                <a
-                    href="/editor"
-                    class="add-card-btn"
-                    aria-label="Create new card"
-                    >+</a
-                >
+            <div>
+                <a href="/editor" aria-label="Create new card">+</a>
             </div>
         </main>
     </body>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const cardsGrid = document.querySelector('.cards-grid');
-    const noCardsDiv = document.getElementById('no-cards');
-    
-    if (!cardsGrid || !noCardsDiv) return;
-    
-
-    function checkCardsState() {
-
-        const hasCards = cardsGrid.children.length > 0;
-        console.log(hasCards);
-        
-        
-
-        noCardsDiv.style.display = hasCards ? 'none' : 'block';
-    }
-    
-
-    checkCardsState();
-    
-
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(() => checkCardsState());
-    });
-    
-
-    observer.observe(cardsGrid, {
-        childList: true,    
-        subtree: true      
-    });
-    
-
-    if (!window.MutationObserver) {
-        setInterval(checkCardsState, 1000);
-    }
-});
-</script>
-
-
 </html>

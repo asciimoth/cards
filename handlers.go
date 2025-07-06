@@ -242,7 +242,7 @@ func setupStatic(
 		}
 
 		// Check If-None-Match header
-		if match := c.GetHeader("If-None-Match"); match != "" {
+		if match := c.GetHeader("If-None-Match"); match != "" && os.Getenv("GO_ENV") != "debug" {
 			if match == etag {
 				// Client already has the latest version
 				c.Status(http.StatusNotModified)
@@ -253,12 +253,16 @@ func setupStatic(
 
 		if strings.HasSuffix(filename, ".svg") {
 			filename = filepath.Join("svg", filename)
+		} else if strings.HasSuffix(filename, ".css") {
+			filename = filepath.Join("css", filename)
 		}
 
 		fullPath := filepath.Join("./static", filename)
 
-		// Set caching headers
-		c.Header("Etag", etag)
+		if os.Getenv("GO_ENV") != "debug" {
+			// Set caching headers
+			c.Header("Etag", etag)
+		}
 
 		// Serve the file
 		c.File(fullPath)

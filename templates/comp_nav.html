@@ -1,51 +1,19 @@
-
-<div class="nav-container">
-    <a href="/" class="logo">
-        <img src="/static/logo.svg">
+<link rel="stylesheet" href="/static/nav.css" />
+<div class="nav-container nav-hidden" id="nav-horisontal">
+    <a class="nav-logo" href="/">
+        <img src="/static/favicon-192.svg">
     </a>
 
     {{if .User}}
         {{if eq .User.Type 1}}
-            <span class="user-info" style="color: red;">{{ T "Welcome" .Lang }}, {{.User.Name}}</span>
+            <span class="nav-name warn-txt">{{.User.Name}}</span>
         {{else}}
-            <span class="user-info">{{ T "Welcome" .Lang }}, {{.User.Name}}</span>
+            <span class="nav-name">{{.User.Name}}</span>
         {{end}}
     {{end}}
-    
-    <div class="nav-lang-switcher desktop-only">
-        <select name="lang" hx-post="/setlocale" hx-trigger="change" hx-swap="none">
-            <option selected>{{.Lang}}</option>
-            {{ $top := . }}
-            {{ range .Locales }}
-                {{if ne . $top.Lang }}
-                    <option>{{.}}</option>
-                {{end}}
-            {{end}}
-        </select>
-    </div>
-    
-    <input type="checkbox" id="burger-toggle" />
-    <label for="burger-toggle" class="burger">&#9776;</label>
-    <nav class="menu">
-        <a href="/tutorial">{{ T "NavHowTo" .Lang }}</a>
-        <a href="/faq">{{ T "NavFAQ" .Lang }}</a>
-        {{if .User}}
-            {{if eq .User.Type 1}}
-                <a href="/users" style="background-color: red;">{{ T "NavUsers" .Lang }}</a>
-            {{end}}
-            <a href="/cards">{{ T "NavCards" .Lang }}</a>
-            <a href="/logout">{{ T "NavLogout" .Lang }}</a>
-            <button
-            hx-post="/userdel"
-            hx-confirm='{{ T "WarnUserDeletion" .Lang }} {{.User.Name}}?'
-            hx-swap="none">
-                {{ T "NavDeleteUser" .Lang }}
-            </button>
-        {{else}}
-            <a href="/login">{{ T "NavLogin" .Lang }}</a>
-        {{end}}
-        
-        <div class="nav-lang-switcher mobile-only">
+
+    <nav class="nav">
+        <span class="nav-lang-switcher">
             <select name="lang" hx-post="/setlocale" hx-trigger="change" hx-swap="none">
                 <option selected>{{.Lang}}</option>
                 {{ $top := . }}
@@ -55,35 +23,131 @@
                     {{end}}
                 {{end}}
             </select>
-        </div>
+        </span>
+        <a class="btn" href="/tutorial" nav-wrap>{{ T "NavHowTo" .Lang }}</a>
+        <a class="btn" href="/faq" nav-wrap>{{ T "NavFAQ" .Lang }}</a>
+        {{if .User}}
+            {{if eq .User.Type 1}}
+                <a class="btn warn-btn" href="/users" nav-wrap>{{ T "NavUsers" .Lang }}</a>
+            {{end}}
+            <a class="btn" href="/cards" nav-wrap>{{ T "NavCards" .Lang }}</a>
+            <a class="btn" href="/logout" nav-wrap>{{ T "NavLogout" .Lang }}</a>
+            <button
+            class="btn"
+            hx-post="/userdel"
+            hx-confirm='{{ T "WarnUserDeletion" .Lang }} {{.User.Name}}?'
+            hx-swap="none"
+            nav-wrap>
+                {{ T "NavDeleteUser" .Lang }}
+            </button>
+        {{else}}
+            <a class="btn" href="/login" nav-wrap>{{ T "NavLogin" .Lang }}</a>
+        {{end}}
     </nav>
 </div>
+<div class="nav-container" id="nav-vertical">
+    <a class="nav-logo" href="/">
+        <img src="/static/favicon-192.svg">
+    </a>
+    {{if .User}}
+        {{if eq .User.Type 1}}
+            <span class="nav-name warn-txt">{{.User.Name}}</span>
+        {{else}}
+            <span class="nav-name">{{.User.Name}}</span>
+        {{end}}
+    {{end}}
+
+    <span id="nav-toggle">&#9776;</span>
+</div>
+<div id="vertical-nav-container" class="hidden">
+    <nav>
+        <a class="btn" href="/tutorial">{{ T "NavHowTo" .Lang }}</a>
+        <a class="btn" href="/faq">{{ T "NavFAQ" .Lang }}</a>
+        {{if .User}}
+            {{if eq .User.Type 1}}
+                <a class="btn warn-btn" href="/users">{{ T "NavUsers" .Lang }}</a>
+            {{end}}
+            <a class="btn" href="/cards">{{ T "NavCards" .Lang }}</a>
+            <a class="btn" href="/logout">{{ T "NavLogout" .Lang }}</a>
+            <hr>
+            <button
+            class="btn"
+            hx-post="/userdel"
+            hx-confirm='{{ T "WarnUserDeletion" .Lang }} {{.User.Name}}?'
+            hx-swap="none">
+                {{ T "NavDeleteUser" .Lang }}
+            </button>
+        {{else}}
+            <a class="btn" href="/login">{{ T "NavLogin" .Lang }}</a>
+        {{end}}
+    </nav>
+    <hr>
+    <span class="nav-lang-switcher">
+        <select name="lang" hx-post="/setlocale" hx-trigger="change" hx-swap="none">
+            <option selected>{{.Lang}}</option>
+            {{ $top := . }}
+            {{ range .Locales }}
+                {{if ne . $top.Lang }}
+                    <option>{{.}}</option>
+                {{end}}
+            {{end}}
+        </select>
+    </span>
+</div>
+<div id="padder"></div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const burgerToggle = document.getElementById('burger-toggle');
-    const navContainer = document.querySelector('.nav-container');
-    const menu = document.querySelector('.menu');
-
-    navContainer.addEventListener('click', e => e.stopPropagation());
-
-    document.addEventListener('click', () => {
-    if (burgerToggle.checked) burgerToggle.checked = false;
-    });
-
-    let startX = null;
-    menu.addEventListener('touchstart', e => {
-    if (!burgerToggle.checked) return;
-    startX = e.touches[0].clientX;
-    }, { passive: true });
-
-    menu.addEventListener('touchend', e => {
-    if (startX === null) return;
-    const deltaX = e.changedTouches[0].clientX - startX;
-    if (deltaX > 50) {
-        burgerToggle.checked = false;
+  const detectWrapping = (elements) => {
+    let top = null;
+    for (let i = 0; i < elements.length; i++) {
+      let t = elements[i].getBoundingClientRect().top;
+      if (top != null) {
+        if (t != top) {
+          return true;
+        }
+      }
+      top = t;
     }
-    startX = null;
+    return false;
+  };
+  window.addEventListener('load', function () {
+    const elements = document.querySelectorAll("[nav-wrap]");
+    const horisontal = document.querySelector("#nav-horisontal");
+    const vertical = document.querySelector("#nav-vertical");
+    const verticalContainer = document.querySelector("#vertical-nav-container");
+    const toggle = document.querySelector("#nav-toggle");
+    const padder = document.querySelector("#padder");
+    toggle.addEventListener("click", () => {
+      verticalContainer.classList.toggle('hidden');
     });
-});
+    let wrap = true;
+    let curentNav = vertical;
+    const adjustVericalNavHeight = () => {
+      const pad = curentNav.getBoundingClientRect().height;
+      const scroll = document.documentElement.scrollHeight-pad;
+      verticalContainer.style.height = scroll + 'px';
+      verticalContainer.style.paddingTop = pad + 'px';
+      padder.style.height = pad + 'px';
+    };
+    const updateNav = () => {
+      let w = detectWrapping(elements);
+      if (w != wrap) {
+        if (wrap) {
+          horisontal.classList.remove('nav-hidden');
+          vertical.classList.add('nav-hidden');
+          verticalContainer.classList.add('nav-hidden');
+          curentNav = horisontal;
+        } else {
+          horisontal.classList.add('nav-hidden');
+          vertical.classList.remove('nav-hidden');
+          verticalContainer.classList.remove('nav-hidden');
+          curentNav = vertical;
+        }
+      }
+      wrap = w;
+      adjustVericalNavHeight();
+    }
+    window.addEventListener("resize", updateNav);
+    updateNav();
+  });
 </script>
 </html>

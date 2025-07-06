@@ -1,12 +1,12 @@
 <div id="card-component">
-    <div class="qr-controls" style="display: none">
-        <button class="toggle-qr-button" id="toggleQR">
+    <div style="display: none">
+        <button id="toggleQR">
             <img src="/static/qr-code-.svg" style="scale: 0.049;">
         </button>
-        <button class="main-button" id="goMain" style="display: none">
+        <button id="goMain" style="display: none">
            <img src="/static/favicon-192.svg" style="margin: -1rem; margin-bottom: -0.4rem;">
         </button>
-        <button class="close-qr-button" id="closeQR" style="display: none">
+        <button id="closeQR" style="display: none">
            <img src="/static/close.svg" style="scale: 0.5; margin: -1rem;">
         </button>
     </div>
@@ -14,7 +14,7 @@
 
     <div id="main-content">
     <div
-        class="logo-container"
+       
         id="logo-container"
         hide-when-no-content="#card-logo"
     >
@@ -42,9 +42,9 @@
     <button>{{ T "AddToContacts" .Lang }}</button>
     <!-- Is hidden block -->
     {{ if .Card.Fields.IsHidden }}
-    <div class="hidden-flag">{{ T "HiddenCard" .Lang }}</div>
+    <div>{{ T "HiddenCard" .Lang }}</div>
     {{ end }}
-    <div class="avatar" hide-when-no-content="#card-image-preview">
+    <div hide-when-no-content="#card-image-preview">
         {{if .Card.Avatar}}
         <img
             id="card-image-preview"
@@ -66,12 +66,12 @@
         {{end}}
     </div>
     <h2 id="card-name" preview-for="#input-name">{{ .Card.Fields.Name }}</h2>
-    <div class="card-contacts">
+    <div>
         <div preview-for="#input-position">{{ .Card.Fields.Position }}</div>
         <div preview-for="#input-company">{{ .Card.Fields.Company }}</div>
     </div>
     <div hide-when-no-content="#card-description" id="card-description" preview-for="#input-description">{{ .Card.Fields.Description }}</div>
-    <div class="contact-block">
+    <div>
         <div hide-when-no-content="#phone-span" id="phone-contact">
             {{ if .Card.Fields.Phone }}
             <a
@@ -79,7 +79,7 @@
                 title="Phone"
                 preview-for="#input-phone"
                 preview-prefix="tel:"
-                ><img src="/static/phone.svg" alt="" class="icon"></a
+                ><img src="/static/phone.svg" alt=""></a
             >
             <span preview-for="#input-phone" id="phone-span"
                 >{{.Card.Fields.Phone}}</span
@@ -90,7 +90,7 @@
                 title="Phone"
                 preview-for="#input-phone"
                 preview-prefix=""
-                ><img src="/static//phone.svg" alt="" class="icon"></a
+                ><img src="/static//phone.svg" alt=""></a
             >
             <span preview-for="#input-phone" id="phone-span"></span>
             {{end}}
@@ -102,7 +102,7 @@
                 title="Email"
                 preview-for="#input-email"
                 preview-prefix="mailto:"
-                ><img src="/static/email.svg" alt="" class="icon"></a
+                ><img src="/static/email.svg" alt=""></a
             >
             <span preview-for="#input-email" id="email-span"
                 >{{.Card.Fields.Email}}</span
@@ -113,7 +113,7 @@
                 title="Email"
                 preview-for="#input-email"
                 preview-prefix="mailto:"
-                ><img src="/static/email.svg" alt="" class="icon"></a
+                ><img src="/static/email.svg" alt=""></a
             >
             <span preview-for="#input-email" id="email-span"></span>
             {{end}}
@@ -125,7 +125,7 @@
                 title="Telegram"
                 preview-for="#input-telegram"
                 preview-prefix="https://t.me/"
-                ><img src="/static/telegram.svg" alt="" class="icon"></a
+                ><img src="/static/telegram.svg" alt=""></a
             >
             <spantemplates/comp_card copy.html
                 preview-for="#input-telegram"
@@ -139,7 +139,7 @@
                 title="Telegram"
                 preview-for="#input-telegram"
                 preview-prefix="https://t.me/"
-                ><img src="/static/telegram.svg" alt="" class="icon"></a
+                ><img src="/static/telegram.svg" alt=""></a
             >
             <span
                 preview-for="#input-telegram"
@@ -152,21 +152,21 @@
     </div>
 
 
-    <div id="userQRContainer" class="qr-container" style="display: none">
-        <div class="qr-content">
+    <div id="userQRContainer" style="display: none">
+        <div>
             <h3>{{ T "CardLinkQR" .Lang }}</h3>
-            <div class="qr-image-container">
-                <img id="user-qr-image" class="qr-image" alt="QR Code" />
+            <div>
+                <img id="user-qr-image" alt="QR Code" />
             </div>
             <h4>{{ T "ScanToView" .Lang }}</h4>
         </div>
     </div>
 
-    <div id="vcardQRContainer" class="qr-container" style="display: none">
-        <div class="qr-content">
+    <div id="vcardQRContainer" style="display: none">
+        <div>
             <h3>{{ T "ContactQR" .Lang }}</h3>
-            <div class="qr-image-container">
-                <img id="vcard-qr-image" class="qr-image" alt="QR Code" />
+            <div>
+                <img id="vcard-qr-image" alt="QR Code" />
             </div>
             <h4>{{ T "ScanToSave" .Lang }}</h4>
         </div>

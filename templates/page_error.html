@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
     <head>{{ template "comp_header.html" . }}
-    <div class="error-container">
-      <div class="error-box">
-        <span class="err-code">{{ .Code }}</span>
-        <span class="err-text">{{ .Text }}</span>
+    <div>
+      <div>
+        <span>{{ .Code }}</span>
+        <span>{{ .Text }}</span>
       </div>
       <a href="/">{{ T "GoToMainPage" .Lang }}</a>
     </div>

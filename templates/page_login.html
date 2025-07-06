@@ -6,16 +6,16 @@
     <body>
         <header>{{ template "comp_nav.html" . }}</header>
 
-        <div class="login-container">
+        <div>
             {{ $top := . }} {{range .Providers}}
-            <div class="{{.}}-container">
+            <div>
                 {{if eq . "vk"}}
-                <a href="/login/vk" class="provider-btn {{ . }}-btn">
+                <a href="/login/vk">
                     <img src="/static/{{.}}-logo.svg" />
                     <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
                 </a>
                 {{else}}
-                <a href="/auth/{{.}}" class="provider-btn {{ . }}-btn">
+                <a href="/auth/{{.}}">
                     <img src="/static/{{.}}-logo.svg" />
                     <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
                 </a>
