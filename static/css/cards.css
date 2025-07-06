@@ -34,3 +34,42 @@ p {
     overflow-wrap: anywhere;
     max-width: 250px;
 }
+
+.add-card-container {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+}
+
+.add-card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem; /* ~48px */
+    height: 3rem;
+    background: var(--section-bg);
+    color: var(--text);
+    font-size: 1.75rem;
+    line-height: 1;
+    border-radius: 50%;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        background var(--transition-speed),
+        transform var(--transition-speed);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.add-card-btn:hover,
+.add-card-btn:focus {
+    background: var(--section-hover-bg);
+    transform: scale(1.1);
+}
+
+.cards-msg {
+    background: var(--section-bg);
+    width: 100%;
+    overflow-wrap: anywhere;
+    padding: 0.5rem;
+}

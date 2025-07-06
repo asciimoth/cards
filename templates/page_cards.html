@@ -13,11 +13,19 @@
                 {{ if .Cards }} {{ $top := . }} {{ range .Cards }} {{ $ctx :=
                 dict "Card" . "Lang" $top.Lang }} {{ template
                 "comp_cardElement.html" $ctx }} {{end}} {{else}}
-                <div id="no-cards">{{ T "NoCards" .Lang }}</div>
+                <div class="cards-msg" id="no-cards">
+                    {{ T "NoCards" .Lang
+                    }}AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+                </div>
                 {{end}}
             </section>
-            <div>
-                <a href="/editor" aria-label="Create new card">+</a>
+            <div class="add-card-container">
+                <a
+                    class="add-card-btn"
+                    href="/editor"
+                    aria-label="Create new card"
+                    >+</a
+                >
             </div>
         </main>
     </body>
