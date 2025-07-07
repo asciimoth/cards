@@ -2,6 +2,7 @@
 <html>
     <head>
         {{ template "comp_header.html" . }}
+        <link rel="stylesheet" href="/static/editor.css" />
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
@@ -11,9 +12,8 @@
     </head>
     <body>
         <header>{{ template "comp_nav.html" . }}</header>
-        <div>
-            <br />
-            <section id="controls">
+        <div class="editor-container">
+            <section class="editor-left">
                 <form
                     id="editor-form"
                     action="{{.EditUrl}}"
@@ -179,7 +179,9 @@
                     <button type="submit">{{ T .SubmitButton .Lang }}</button>
                 </form>
             </section>
-            <aside id="card-preview">{{ template "comp_card.html" . }}</aside>
+            <aside class="editor-right" id="card-preview">
+                {{ template "comp_card.html" . }}
+            </aside>
         </div>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"

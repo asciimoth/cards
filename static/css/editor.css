@@ -1,0 +1,15 @@
+.editor-container {
+    /*  */
+}
+
+.editor-right {
+    display: inline-block;
+    background-color: red;
+    vertical-align: top;
+}
+
+.editor-left {
+    display: inline-block;
+    background-color: green;
+    vertical-align: top;
+}
