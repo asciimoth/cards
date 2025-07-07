@@ -87,9 +87,20 @@
 {{ .Card.Fields.Description }}</pre
         >
         <hr />
-        <div class="element" style="background-color: blue">
+        <div class="element contact-element" style="background-color: blue">
             <img src="/static/yandex-logo.svg" />
-            AAAAAAAAAA
+            <span>AAAAAAAAAAAAAA</span>
+            <img src="/static/yandex-logo.svg" />
+        </div>
+        <div class="element contact-element" style="background-color: blue">
+            <img src="/static/yandex-logo.svg" />
+            <span>AAAAAAAAAAAAAA</span>
+            <img src="/static/yandex-logo.svg" />
+        </div>
+        <div class="element contact-element" style="background-color: blue">
+            <img src="/static/yandex-logo.svg" />
+            <span>AAAAAAAAAAAAAA</span>
+            <img src="/static/yandex-logo.svg" />
         </div>
         {{ if .Owner }} {{if .EditUrl }}
         <a class="element" href="{{.EditUrl }}">{{ T "EditCard" .Lang }}</a>
@@ -97,17 +108,38 @@
     </div>
     <div class="layer" id="qr-layer">
         <div class="inner-container">
-            <img
-                class="top-img"
-                src="/static/qr-code-.svg"
-                toggle-visibility="#qr-layer"
-            />
+        <table class="top-element">
+            <tr>
+                <td class="top-td">
+                    <img
+                        class="top-img card-img-btn"
+                        src="/static/close.svg"
+                        toggle-visibility="#qr-layer"
+                    />
+                </td>
+                <td>
+
+                </td>
+                <td class="top-td">
+                    <a href="/">
+                        <img
+                            class="top-img card-img-btn"
+                            src="/static/favicon-192.svg"
+                        />
+                    </a>
+                </td>
+            </tr>
+        </table>
             <hr />
-            <button class="element" toggle-visibility="#qr-layer">Back</button>
-            <div class="element">Name</div>
-            <div class="element">2Name</div>
+            <div class="element qr-code">Name
+                <img src="/static/qr-code-.svg" alt="">
+            </div>
+            <div class="element qr-code">Name2
+                <img src="/static/qr-code-.svg" alt="">
+            </div>
         </div>
-        <div></div>
+        <div>
+    </div>
         <style>
             :root {
                 --card-min-width: 400px;
@@ -238,6 +270,18 @@
             }
             #card-description {
                 white-space: pre-wrap;
+            }
+            .qr-code {
+                text-align: center;
+            }
+            .qr-code img {
+                width: 100%;
+            }
+            .contact-element {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0;
             }
         </style>
         <script>
