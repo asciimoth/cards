@@ -87,17 +87,17 @@
 {{ .Card.Fields.Description }}</pre
         >
         <hr />
-        <div class="element contact-element" style="background-color: blue">
+        <div class="element contact-element" >
             <img src="/static/yandex-logo.svg" />
             <span>AAAAAAAAAAAAAA</span>
             <img src="/static/yandex-logo.svg" />
         </div>
-        <div class="element contact-element" style="background-color: blue">
+        <div class="element contact-element" >
             <img src="/static/yandex-logo.svg" />
             <span>AAAAAAAAAAAAAA</span>
             <img src="/static/yandex-logo.svg" />
         </div>
-        <div class="element contact-element" style="background-color: blue">
+        <div class="element contact-element" >
             <img src="/static/yandex-logo.svg" />
             <span>AAAAAAAAAAAAAA</span>
             <img src="/static/yandex-logo.svg" />
@@ -148,9 +148,18 @@
                 --hover-text-color: white;
                 --hover-background-color: black;
                 --card-font-size: 18px;
+                --bg: #2b2b2b;
+                --block-bg: #000000;
+                --section-bg: #444444;
+                --section-hover-bg: #777777;
+                --text: #ffffff;
+                --qr-text: #2b2b2b;
+                --qr-bg: #ffffff;
+                --transition-speed: 0.3s;
+                --error-color: red;
             }
             .main-container {
-                background-color: red;
+                background-color: var(--block-bg);
                 width: var(--card-min-width);
                 padding: var(--padding-in-card);
                 position: relative;
@@ -165,10 +174,10 @@
                 }
             }
             .inner-container {
-                background-color: green;
+                background-color: var(--block-bg);
             }
             .layer {
-                background: gray;
+                background: var(--block-bg);
                 /* padding: var(--padding-in-card); */
                 position: absolute;
                 top: 0;
@@ -182,7 +191,7 @@
                 margin: var(--padding-in-card);
             }
             .top-element {
-                background-color: blue;
+                background-color: var(--block-bg);
                 margin-bottom: var(--padding-in-card);
                 width: 100%;
                 height: var(--top-height);
@@ -217,7 +226,7 @@
                 width: 100%;
             }
             .element {
-                background-color: orange;
+                background-color: var(--section-bg);
                 padding: 5px;
                 margin-bottom: var(--padding-in-card);
                 text-wrap: balance;
@@ -236,16 +245,18 @@
             button.element {
                 width: 100%;
                 font-size: var(--card-font-size);
+                color: var(--text);
             }
             button.element:hover {
-                background-color: var(--hover-background-color);
+                background-color: var(--section-hover-bg);
                 color: var(--hover-text-color);
             }
             a.element {
                 text-align: center;
+                color: var(--text);
             }
             a.element:hover {
-                background-color: var(--hover-background-color);
+                background-color: var(--section-hover-bg);
                 color: var(--hover-text-color);
             }
             pre.element {
@@ -272,6 +283,8 @@
                 white-space: pre-wrap;
             }
             .qr-code {
+                color: var(--qr-text);
+                background-color: var(--qr-bg);
                 text-align: center;
             }
             .qr-code img {
@@ -282,6 +295,10 @@
                 align-items: center;
                 justify-content: space-between;
                 padding: 0;
+                background-color: var(--section-bg);
+            }
+            .contact-element img {
+                width: 2rem;
             }
         </style>
         <script>
