@@ -10,6 +10,97 @@
 
 .editor-left {
     display: inline-block;
-    background-color: green;
     vertical-align: top;
+    background-color: var(--block-bg);
+    color: var(--text);
+    width: var(--card-min-width);
+    padding: var(--padding-in-card);
+    position: relative;
+    font-size: var(--card-font-size);
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+#editor-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.1rem;
+}
+
+#editor-form input,
+#editor-form textarea {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--section-bg);
+    border: 1px solid var(--section-bg);
+    color: var(--text);
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
+#editor-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+#editor-form hr {
+    border: none;
+    border-top: 1px solid var(--section-bg);
+    margin: 15px 0;
+}
+
+#editor-form h4 {
+    margin: 10px 0;
+    color: var(--text);
+}
+
+#preview-container {
+    display: none;
+    margin: 10px 0;
+    text-align: center;
+}
+
+#preview-container[data-has-content="true"] {
+    display: block;
+}
+
+#image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    display: block;
+    margin: 0 auto 10px;
+    border-radius: 4px;
+}
+
+.editor-left button {
+    background-color: var(--section-bg);
+    color: var(--text);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.editor-left button:hover {
+    background-color: var(--section-hover-bg);
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    background-color: var(--block-bg);
+    border: 1px solid var(--section-bg);
+    color: var(--text);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    margin-bottom: 0;
+}
+

@@ -15,11 +15,11 @@
     {{end}}
 
     <div>
-        <a class="btn" href="/c/{{ .Card.ID }}">
-            <img src="/static/favicon-192.svg" />
+        <a class="btn" href="/c/{{ .Card.ID }}" title="{{ T "ViewButton" .Lang }}">
+            <img src="/static/view.svg" />
         </a>
-        <a class="btn" href="/editor/{{ .Card.ID }}">
-            <img src="/static/favicon-192.svg" />
+        <a class="btn" href="/editor/{{ .Card.ID }}" title="Edit">
+            <img src="/static/edit.svg" />
         </a>
 
         <button
@@ -29,8 +29,9 @@
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
             class="btn"
+            title="{{ T "DeleteButton" .Lang }}"
         >
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/delete.svg" />
         </button>
 
         {{ if .Card.Fields.IsHidden }}
@@ -40,8 +41,9 @@
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
             class="btn"
+            title="{{ T "HideButton" .Lang }}"
         >
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/lock.svg" />
         </button>
         {{ else }}
         <button
@@ -50,8 +52,9 @@
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
             class="btn"
+            title="{{ T "MakeVisibleButton" .Lang }}"
         >
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/unlock.svg" />
         </button>
         {{ end }}
     </div>
