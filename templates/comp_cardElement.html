@@ -16,10 +16,10 @@
 
     <div>
         <a class="btn" href="/c/{{ .Card.ID }}">
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/view.svg" />
         </a>
         <a class="btn" href="/editor/{{ .Card.ID }}">
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/edit.svg" />
         </a>
 
         <button
@@ -30,7 +30,7 @@
             hx-target-error="#global-error-block"
             class="btn"
         >
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/delete.svg" />
         </button>
 
         {{ if .Card.Fields.IsHidden }}
@@ -41,7 +41,7 @@
             hx-target-error="#global-error-block"
             class="btn"
         >
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/lock.svg" />
         </button>
         {{ else }}
         <button
@@ -51,7 +51,7 @@
             hx-target-error="#global-error-block"
             class="btn"
         >
-            <img src="/static/favicon-192.svg" />
+            <img src="/static/unlock.svg" />
         </button>
         {{ end }}
     </div>
