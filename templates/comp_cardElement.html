@@ -15,10 +15,10 @@
     {{end}}
 
     <div>
-        <a class="btn" href="/c/{{ .Card.ID }}">
+        <a class="btn" href="/c/{{ .Card.ID }}" title="{{ T "ViewButton" .Lang }}">
             <img src="/static/view.svg" />
         </a>
-        <a class="btn" href="/editor/{{ .Card.ID }}">
+        <a class="btn" href="/editor/{{ .Card.ID }}" title="Edit">
             <img src="/static/edit.svg" />
         </a>
 
@@ -29,6 +29,7 @@
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
             class="btn"
+            title="{{ T "DeleteButton" .Lang }}"
         >
             <img src="/static/delete.svg" />
         </button>
@@ -40,6 +41,7 @@
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
             class="btn"
+            title="{{ T "HideButton" .Lang }}"
         >
             <img src="/static/lock.svg" />
         </button>
@@ -50,6 +52,7 @@
             hx-target="#card-{{ .Card.ID }}"
             hx-target-error="#global-error-block"
             class="btn"
+            title="{{ T "MakeVisibleButton" .Lang }}"
         >
             <img src="/static/unlock.svg" />
         </button>

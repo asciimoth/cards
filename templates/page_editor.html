@@ -1,5 +1,9 @@
 <!doctype html>
 <html>
+    <style>
+
+
+</style>
     <head>
         {{ template "comp_header.html" . }}
         <link rel="stylesheet" href="/static/editor.css" />
@@ -12,7 +16,8 @@
     </head>
     <body>
         <header>{{ template "comp_nav.html" . }}</header>
-        <div class="editor-container">
+        <div>
+                    <div class="editor-container">
             <section class="editor-left">
                 <form
                     id="editor-form"
@@ -23,7 +28,6 @@
                     <label for="input-name"
                         >{{ T "EditorLabelName" .Lang }}</label
                     >
-                    <br />
                     <input
                         name="name"
                         id="input-name"
@@ -31,12 +35,10 @@
                         value="{{.Card.Fields.Name}}"
                         required
                     />
-                    <br />
 
                     <label for="input-avatar-precrop"
                         >{{ T "Avatar" .Lang }}</label
                     >
-                    <br />
                     <input
                         name="avatar-precrop"
                         id="input-avatar-precrop"
@@ -52,7 +54,6 @@
                         autocomplete="off"
                         hidden
                     />
-                    <br />
                     <!-- Preview & Crop -->
                     <div
                         id="preview-container"
@@ -69,7 +70,6 @@
                     <label for="input-description"
                         >{{ T "EditorLabelSelfDescription" .Lang }}</label
                     >
-                    <br />
                     <textarea
                         name="description"
                         id="input-description"
@@ -77,21 +77,18 @@
                     >
 {{.Card.Fields.Description}}</textarea
                     >
-                    <br />
                     <hr />
                     <h4>{{ T "Work" .Lang }}</h4>
                     <hr />
                     <label for="input-company"
                         >{{ T "EditorLabelCompany" .Lang }}</label
                     >
-                    <br />
                     <input
                         name="company"
                         id="input-company"
                         type="text"
                         value="{{.Card.Fields.Company}}"
                     />
-                    <br />
 
                     <label for="input-logo-pre"
                         >{{ T "EditorLabelCompanyLogo" .Lang }}</label
@@ -182,6 +179,7 @@
             <aside class="editor-right" id="card-preview">
                 {{ template "comp_card.html" . }}
             </aside>
+        </div>
         </div>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"
