@@ -17,8 +17,9 @@
     <body>
         <header>{{ template "comp_nav.html" . }}</header>
         <div>
-                    <div class="editor-container">
+            <div class="editor-container">
             <section class="editor-left">
+                <h2 class="editor-header">Editor</h2>
                 <form
                     id="editor-form"
                     action="{{.EditUrl}}"
@@ -177,6 +178,7 @@
                 </form>
             </section>
             <aside class="editor-right" id="card-preview">
+                <h2 class="editor-header">Preview</h2>
                 {{ template "comp_card.html" . }}
             </aside>
         </div>
