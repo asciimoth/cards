@@ -1,6 +1,3 @@
-.editor-container {
-    /*  */
-}
 
 .editor-right {
     display: inline-block;
@@ -103,14 +100,29 @@ button[type="submit"] {
 }
 
 .editor-container {
-    display: table;
+    width: 805px;
     margin: 0 auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 805px) {
 
     .editor-container {
     margin: 0 auto;
+    width: 400px;
     }
 
+}
+
+@media (max-width: 450px) {
+    .editor-left {
+        width: 100%;
+    }
+    .editor-right {
+        width: 100%;
+    }
+
+    .editor-container {
+    margin: 0 auto;
+    width: 100%;
+    }
 }
