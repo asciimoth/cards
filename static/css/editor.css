@@ -1,11 +1,16 @@
 
 .editor-right {
     display: inline-block;
-    background-color: red;
     vertical-align: top;
 }
 
 .editor-left {
+    display: inline-block;
+    width: var(--card-min-width);
+    margin-right: 10px;
+}
+
+#editor-form {
     display: inline-block;
     vertical-align: top;
     background-color: var(--block-bg);
@@ -16,6 +21,7 @@
     font-size: var(--card-font-size);
     box-sizing: border-box;
 }
+
 
 #editor-form label {
     display: block;
@@ -100,11 +106,17 @@ button[type="submit"] {
 }
 
 .editor-container {
-    width: 805px;
+    width: 815px;
     margin: 0 auto;
 }
 
-@media (max-width: 805px) {
+.editor-header {
+    margin: 10px 0;
+    height: 29px;
+    text-align: center;
+}
+
+@media (max-width: 815px) {
 
     .editor-container {
     margin: 0 auto;
@@ -124,5 +136,8 @@ button[type="submit"] {
     .editor-container {
     margin: 0 auto;
     width: 100%;
+    }
+    #editor-form {
+    width: 100%;       
     }
 }
