@@ -1,4 +1,3 @@
-
 .editor-right {
     display: inline-block;
     vertical-align: top;
@@ -21,7 +20,6 @@
     font-size: var(--card-font-size);
     box-sizing: border-box;
 }
-
 
 #editor-form label {
     display: block;
@@ -117,27 +115,27 @@ button[type="submit"] {
 }
 
 @media (max-width: 815px) {
-
     .editor-container {
-    margin: 0 auto;
-    width: 400px;
+        margin: 0 auto;
+        width: 400px;
     }
-
 }
 
 @media (max-width: 450px) {
     .editor-left {
         width: 100%;
+        margin: 0;
     }
     .editor-right {
         width: 100%;
+        margin: 0;
     }
 
     .editor-container {
-    margin: 0 auto;
-    width: 100%;
+        margin: 0;
+        width: 100%;
     }
     #editor-form {
-    width: 100%;       
+        width: 100%;
     }
 }
