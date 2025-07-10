@@ -18,6 +18,7 @@
                         preview-for="#input-logo"
                         initial-sync="no"
                         preview-for="#input-logo"
+                        hide-when-no-content="#card-logo"
                     />
                     {{else}}
                     <img
@@ -27,6 +28,7 @@
                         preview-for="#input-logo"
                         initial-sync="no"
                         preview-for="#input-logo"
+                        hide-when-no-content="#card-logo"
                     />
                     {{end}}
                 </td>
@@ -73,10 +75,10 @@
         </div>
         <div
             class="element"
-            hide-when-no-content="#input-position #input-company"
+            hide-when-no-content="#card-position, #card-company"
         >
-            <div preview-for="#input-position">{{ .Card.Fields.Position }}</div>
-            <div preview-for="#input-company">{{ .Card.Fields.Company }}</div>
+            <div id="card-position" preview-for="#input-position">{{ .Card.Fields.Position }}</div>
+            <div id="card-company" preview-for="#input-company">{{ .Card.Fields.Company }}</div>
         </div>
         <pre
             class="element"
@@ -87,7 +89,7 @@
 {{ .Card.Fields.Description }}</pre
         >
         <hr />
-        <div class="element contact-element">
+        <div class="element contact-element" hide-when-no-content="#phone-span">
             {{ if .Card.Fields.Phone }}
             <a
                 href="tel:{{.Card.Fields.Phone}}"
@@ -105,13 +107,13 @@
                 title="Phone"
                 preview-for="#input-phone"
                 preview-prefix=""
-                ><img src="/static//phone.svg" alt=""
+                ><img src="/static/phone.svg" alt=""
             /></a>
             <span preview-for="#input-phone" id="phone-span"></span>
             {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element">
+        <div class="element contact-element" hide-when-no-content="#email-span">
             {{ if .Card.Fields.Email }}
             <a
                 href="mailto:{{.Card.Fields.Email}}"
@@ -135,7 +137,7 @@
             {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element">
+        <div class="element contact-element" hide-when-no-content="#telegram-span">
             {{ if .Card.Fields.Telegram }}
             <a
                 href="https://t.me/{{.Card.Fields.Telegram}}"
@@ -364,6 +366,7 @@
                 width: 2rem;
             }
         </style>
+        <script src="/static/copy.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 document
@@ -388,5 +391,6 @@
                     });
             });
         </script>
+        
     </div>
 </div>

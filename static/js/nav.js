@@ -3,7 +3,7 @@ const detectWrapping = (elements) => {
   for (let i = 0; i < elements.length; i++) {
     let t = elements[i].getBoundingClientRect().top;
     if (top != null) {
-      if (t != top) {
+      if (Math.abs(t-top) > 3) {
         return true;
       }
     }

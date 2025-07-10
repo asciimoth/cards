@@ -1,0 +1,77 @@
+
+.login-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login {
+  width: 220px;               
+  height: 60px;               
+  margin: 10px auto;          
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 60px;          
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: box-shadow .2s;
+  padding: 0 10px;
+}
+
+
+.login:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+
+.login a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.login img,
+.login span {
+  vertical-align: middle;
+}
+
+
+.login img {
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+}
+
+
+#github {
+  background-color: #333;     
+}
+
+#vk {
+  background-color: #4A76A8;  
+}
+
+#yandex {
+  background-color: #FFD500;  
+  color: #000000;
+}
+
+#discord {
+  background-color: #5865F2;  
+}
+
+#google {
+  background-color: #fff; 
+  color: #000000;
+}
+
+#github:hover   { background-color: #444; }
+#vk:hover       { background-color: #5b8ec0; }
+#yandex:hover   { background-color: #ffe066; }
+#discord:hover  { background-color: #6b7bf5; }
+#google:hover   { background-color: #e25a4b; }

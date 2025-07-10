@@ -2,17 +2,18 @@
 <html lang="en">
     <head>
         {{ template "comp_header.html" . }}
+        <link rel="stylesheet" href="/static/login.css" />
     </head>
     <body>
         <header>{{ template "comp_nav.html" . }}</header>
 
-        <div>
+        <div class="login-container">
             {{ $top := . }} {{range .Providers}}
-            <div>
+            <div id="{{.}}" class="login">
                 {{if eq . "vk"}}
                 <a href="/login/vk">
                     <img src="/static/{{.}}-logo.svg" />
-                    <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
+                    <span>{{ T "SignIn" $top.Lang }} {{ . }}/mail/ok</span>
                 </a>
                 {{else}}
                 <a href="/auth/{{.}}">

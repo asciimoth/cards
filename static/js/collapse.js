@@ -1,24 +1,29 @@
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[hide-when-no-content]").forEach((host) => {
     const selector = host.getAttribute("hide-when-no-content");
-    const target = document.querySelector(selector);
-    if (!target) {
+    const targets = document.querySelectorAll(selector);
+    if (targets.len < 1) {
       console.warn(`No element matches selector "${selector}" for`, host);
       return;
     }
 
+    console.log(host, selector, targets);
+
     // Checks “has content” and collapses host if empty
     const updateVisibility = () => {
       let hasContent = false;
-      const tag = target.tagName.toUpperCase();
 
-      if (tag === "IMG") {
-        hasContent = Boolean(target.attributes.src.value);
-      } else if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) {
-        hasContent = Boolean(target.value);
-      } else {
-        hasContent = Boolean(target.textContent);
-      }
+      targets.forEach((target) => {
+        const tag = target.tagName.toUpperCase();
+
+        if (tag === "IMG") {
+          hasContent = hasContent || Boolean(target.attributes.src.value);
+        } else if (["INPUT", "TEXTAREA", "SELECT"].includes(tag)) {
+          hasContent = hasContent || Boolean(target.value);
+        } else {
+          hasContent = hasContent || Boolean(target.textContent);
+          }
+      });
 
       host.style.visibility = hasContent ? "" : "collapse";
       host.style.display = hasContent ? "" : "none";
@@ -27,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial check
     updateVisibility();
 
+    targets.forEach((target) => {
     // 1) Listen for form-control changes
     if (
       ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName.toUpperCase())
@@ -64,4 +70,5 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
+});
 });
