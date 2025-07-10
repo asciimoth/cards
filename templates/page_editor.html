@@ -15,7 +15,7 @@
         <div>
             <div class="editor-container">
                 <section class="editor-left">
-                    <h2 class="editor-header">Editor</h2>
+                    <h2 class="editor-header">{{ T "EditorHeader" .Lang }}</h2>
                     <form
                         id="editor-form"
                         action="{{.EditUrl}}"
@@ -176,7 +176,7 @@
                     </form>
                 </section>
                 <aside class="editor-right" id="card-preview">
-                    <h2 class="editor-header">Preview</h2>
+                    <h2 class="editor-header">{{ T "PreviewHeader" .Lang }}</h2>
                     {{ template "comp_card.html" . }}
                 </aside>
             </div>

@@ -152,3 +152,7 @@
   translation: "VCF Файл"
 - id: ScanToSave
   translation: "Отсканируйте чтобы сохранить"
+- id: EditorHeader
+  translation: "Редактор"
+- id: PreviewHeader
+  translation: "Предпросмотр"
