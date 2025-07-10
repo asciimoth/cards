@@ -18,8 +18,12 @@ window.addEventListener("load", function () {
   const verticalContainer = document.querySelector("#vertical-nav-container");
   const toggle = document.querySelector("#nav-toggle");
   const padder = document.querySelector("#padder");
-  toggle.addEventListener("click", () => {
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
     verticalContainer.classList.toggle("hidden");
+  });
+  document.addEventListener("click", () => {
+    verticalContainer.classList.add("hidden");
   });
   let wrap = true;
   let curentNav = vertical;
