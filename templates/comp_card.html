@@ -18,6 +18,7 @@
                         preview-for="#input-logo"
                         initial-sync="no"
                         preview-for="#input-logo"
+                        hide-when-no-content="#card-logo"
                     />
                     {{else}}
                     <img
@@ -27,6 +28,7 @@
                         preview-for="#input-logo"
                         initial-sync="no"
                         preview-for="#input-logo"
+                        hide-when-no-content="#card-logo"
                     />
                     {{end}}
                 </td>
@@ -73,10 +75,10 @@
         </div>
         <div
             class="element"
-            hide-when-no-content="#input-position #input-company"
+            hide-when-no-content="#card-position, #card-company"
         >
-            <div preview-for="#input-position">{{ .Card.Fields.Position }}</div>
-            <div preview-for="#input-company">{{ .Card.Fields.Company }}</div>
+            <div id="card-position" preview-for="#input-position">{{ .Card.Fields.Position }}</div>
+            <div id="card-company" preview-for="#input-company">{{ .Card.Fields.Company }}</div>
         </div>
         <pre
             class="element"
