@@ -87,19 +87,83 @@
 {{ .Card.Fields.Description }}</pre
         >
         <hr />
-        <div class="element contact-element" >
-            <img src="/static/phone.svg" />
-            <span preview-for="#input-phone"></span>
+        <div class="element contact-element">
+            {{ if .Card.Fields.Phone }}
+            <a
+                href="tel:{{.Card.Fields.Phone}}"
+                title="Phone"
+                preview-for="#input-phone"
+                preview-prefix="tel:"
+                ><img src="/static/phone.svg" alt=""
+            /></a>
+            <span preview-for="#input-phone" id="phone-span"
+                >{{.Card.Fields.Phone}}</span
+            >
+            {{else}}
+            <a
+                href=""
+                title="Phone"
+                preview-for="#input-phone"
+                preview-prefix=""
+                ><img src="/static//phone.svg" alt=""
+            /></a>
+            <span preview-for="#input-phone" id="phone-span"></span>
+            {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element" >
-            <img src="/static/email.svg" />
-            <span preview-for="#input-email"></span>
+        <div class="element contact-element">
+            {{ if .Card.Fields.Email }}
+            <a
+                href="mailto:{{.Card.Fields.Email}}"
+                title="Email"
+                preview-for="#input-email"
+                preview-prefix="mailto:"
+                ><img src="/static/email.svg" alt=""
+            /></a>
+            <span preview-for="#input-email" id="email-span"
+                >{{.Card.Fields.Email}}</span
+            >
+            {{else}}
+            <a
+                href=""
+                title="Email"
+                preview-for="#input-email"
+                preview-prefix="mailto:"
+                ><img src="/static/email.svg" alt=""
+            /></a>
+            <span preview-for="#input-email" id="email-span"></span>
+            {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element" >
-            <img src="/static/telegram.svg" />
-            <span preview-for="#input-telegram"></span>
+        <div class="element contact-element">
+            {{ if .Card.Fields.Telegram }}
+            <a
+                href="https://t.me/{{.Card.Fields.Telegram}}"
+                title="Telegram"
+                preview-for="#input-telegram"
+                preview-prefix="https://t.me/"
+                ><img src="/static/telegram.svg" alt=""
+            /></a>
+            <span
+                preview-for="#input-telegram"
+                preview-prefix="@"
+                id="telegram-span"
+                >@{{.Card.Fields.Telegram}}</span
+            >
+            {{else}}
+            <a
+                href=""
+                title="Telegram"
+                preview-for="#input-telegram"
+                preview-prefix="https://t.me/"
+                ><img src="/static/telegram.svg" alt=""
+            /></a>
+            <span
+                preview-for="#input-telegram"
+                preview-prefix="@"
+                id="telegram-span"
+            ></span>
+            {{end}}
             <img src="/static/copy.svg" />
         </div>
         {{ if .Owner }} {{if .EditUrl }}
@@ -108,38 +172,37 @@
     </div>
     <div class="layer" id="qr-layer">
         <div class="inner-container">
-        <table class="top-element">
-            <tr>
-                <td class="top-td">
-                    <img
-                        class="top-img card-img-btn"
-                        src="/static/close.svg"
-                        toggle-visibility="#qr-layer"
-                    />
-                </td>
-                <td>
-
-                </td>
-                <td class="top-td">
-                    <a href="/">
+            <table class="top-element">
+                <tr>
+                    <td class="top-td">
                         <img
                             class="top-img card-img-btn"
-                            src="/static/favicon-192.svg"
+                            src="/static/close.svg"
+                            toggle-visibility="#qr-layer"
                         />
-                    </a>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                    <td></td>
+                    <td class="top-td">
+                        <a href="/">
+                            <img
+                                class="top-img card-img-btn"
+                                src="/static/favicon-192.svg"
+                            />
+                        </a>
+                    </td>
+                </tr>
+            </table>
             <hr />
-            <div class="element qr-code">Name
-                <img src="/static/qr-code-.svg" alt="">
+            <div class="element qr-code">
+                Name
+                <img src="/static/qr-code-.svg" alt="" />
             </div>
-            <div class="element qr-code">Name2
-                <img src="/static/qr-code-.svg" alt="">
+            <div class="element qr-code">
+                Name2
+                <img src="/static/qr-code-.svg" alt="" />
             </div>
         </div>
-        <div>
-    </div>
+        <div></div>
         <style>
             :root {
                 --card-min-width: 400px;
