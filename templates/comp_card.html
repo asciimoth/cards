@@ -20,6 +20,16 @@
                         preview-for="#input-logo"
                         hide-when-no-content="#card-logo"
                     />
+                    {{else}}
+                    <img
+                        id="card-logo"
+                        src=""
+                        alt="Company logo"
+                        preview-for="#input-logo"
+                        initial-sync="no"
+                        preview-for="#input-logo"
+                        hide-when-no-content="#card-logo"
+                    />
                     {{end}}
                 </td>
                 <td class="top-td">
@@ -42,6 +52,15 @@
             <img
                 id="card-image-preview"
                 src="/{{.Card.Avatar}}"
+                alt="Your avatar preview"
+                preview-for="#input-avatar"
+                initial-sync="no"
+                style="background-color: white"
+            />
+            {{else}}
+            <img
+                id="card-image-preview"
+                src=""
                 alt="Your avatar preview"
                 preview-for="#input-avatar"
                 initial-sync="no"
@@ -347,6 +366,7 @@
                 width: 2rem;
             }
         </style>
+        <script src="/static/copy.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 document
@@ -371,5 +391,6 @@
                     });
             });
         </script>
+        
     </div>
 </div>
