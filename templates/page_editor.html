@@ -57,13 +57,15 @@
                             hide-when-no-content="#input-avatar-precrop"
                         >
                             <img id="image-preview" />
-                            <button
-                                type="button"
-                                clear-inputs="#input-avatar-precrop, #input-avatar"
-                            >
-                                Rollback avatar
-                            </button>
+                            <button type="button" id="avatar-preview-ok">Ok</button>
                         </div>
+                        <button
+                            type="button"
+                            clear-inputs="#input-avatar-precrop, #input-avatar"
+                            hide-when-no-content="#input-avatar-precrop"
+                        >
+                            Cancel avatar selection
+                        </button>
                         <label for="input-description"
                             >{{ T "EditorLabelSelfDescription" .Lang }}</label
                         >
@@ -193,6 +195,8 @@
             const fileInput = document.getElementById("input-avatar-precrop");
             const croppedInput = document.getElementById("input-avatar");
             const image = document.getElementById("image-preview");
+            const container = document.getElementById("preview-container");
+            const ok = document.getElementById("avatar-preview-ok");
             let cropper;
 
             // Helper to update cropped file field
@@ -295,6 +299,11 @@
                     "image/webp",
                     0.0,
                 );
+            });
+            
+            ok.addEventListener('click', () => {
+                container.style.visibility = "collapse";
+                container.style.display = "none";
             });
         </script>
     </body>

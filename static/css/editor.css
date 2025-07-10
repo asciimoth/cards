@@ -56,13 +56,17 @@
 }
 
 #preview-container {
-    display: none;
+    /* display: none; */
     margin: 10px 0;
     text-align: center;
 }
 
 #preview-container[data-has-content="true"] {
     display: block;
+}
+
+#avatar-preview-ok {
+    background-color: var(--ok-color);
 }
 
 #image-preview {
