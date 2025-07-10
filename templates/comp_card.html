@@ -77,8 +77,12 @@
             class="element"
             hide-when-no-content="#card-position, #card-company"
         >
-            <div id="card-position" preview-for="#input-position">{{ .Card.Fields.Position }}</div>
-            <div id="card-company" preview-for="#input-company">{{ .Card.Fields.Company }}</div>
+            <div id="card-position" preview-for="#input-position">
+                {{ .Card.Fields.Position }}
+            </div>
+            <div id="card-company" preview-for="#input-company">
+                {{ .Card.Fields.Company }}
+            </div>
         </div>
         <pre
             class="element"
@@ -137,7 +141,10 @@
             {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element" hide-when-no-content="#telegram-span">
+        <div
+            class="element contact-element"
+            hide-when-no-content="#telegram-span"
+        >
             {{ if .Card.Fields.Telegram }}
             <a
                 href="https://t.me/{{.Card.Fields.Telegram}}"
@@ -197,11 +204,11 @@
             <hr />
             <div class="element qr-code">
                 Name
-                <img src="/static/qr-code-.svg" alt="" />
+                <img id="qr-code" src="/static/qr-code-.svg" alt="" />
             </div>
             <div class="element qr-code">
                 Name2
-                <img src="/static/qr-code-.svg" alt="" />
+                <img id="qr-code-offline" src="/static/qr-code-.svg" alt="" />
             </div>
         </div>
         <div></div>
@@ -367,30 +374,6 @@
             }
         </style>
         <script src="/static/copy.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                document
-                    .querySelectorAll("[toggle-visibility]")
-                    .forEach((host) => {
-                        console.log(host);
-                        const selector = host.getAttribute("toggle-visibility");
-                        const targets = document.querySelectorAll(selector);
-                        console.log(targets);
-                        host.addEventListener("click", () => {
-                            targets.forEach((target) => {
-                                console.log(target);
-                                if (target.style.visibility != "visible") {
-                                    target.style.visibility = "visible";
-                                    target.style.display = "block";
-                                } else {
-                                    target.style.visibility = "collapse";
-                                    target.style.display = "hidden";
-                                }
-                            });
-                        });
-                    });
-            });
-        </script>
-        
+        <script src="/static/card.js"></script>
     </div>
 </div>
