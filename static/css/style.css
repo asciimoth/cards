@@ -11,6 +11,7 @@
     --qr-bg: #ffffff;
     --transition-speed: 0.3s;
     --error-color: red;
+    --ok-color: green;
 }
 
 body {
