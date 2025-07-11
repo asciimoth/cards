@@ -156,3 +156,7 @@
   translation: "Редактор"
 - id: PreviewHeader
   translation: "Предпросмотр"
+- id: QRCodeOnline
+  translation: "Онлайн версия"
+- id: QRCodeOffline
+  translation: "Оффлайн версия"

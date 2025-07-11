@@ -156,3 +156,7 @@
   translation: "Editor"
 - id: PreviewHeader
   translation: "Preview"
+- id: QRCodeOnline
+  translation: "Online version"
+- id: QRCodeOffline
+  translation: "Offline version"
