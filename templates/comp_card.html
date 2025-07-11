@@ -43,7 +43,9 @@
             </tr>
         </table>
         <hr />
-        <button class="element">{{ T "AddToContacts" .Lang }}</button>
+        <button class="element" id="add-to-contacts-btn" type="button">
+            {{ T "AddToContacts" .Lang }}
+        </button>
         {{ if .Card.Fields.IsHidden }}
         <div class="element card-hidden-msg">{{ T "HiddenCard" .Lang }}</div>
         {{ end }}

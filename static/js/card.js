@@ -226,4 +226,13 @@ async function updateQRCodes() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupToggle();
+  getId("add-to-contacts-btn").addEventListener("click", () => {
+    const blob = new Blob([getVcf()], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = getCardData().name + ".vcf";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
 });
