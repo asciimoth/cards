@@ -1,9 +1,13 @@
+const isDescendant = (parent, child) => {
+  return parent !== child && parent.contains(child);
+};
+
 const detectWrapping = (elements) => {
   let top = null;
   for (let i = 0; i < elements.length; i++) {
     let t = elements[i].getBoundingClientRect().top;
     if (top != null) {
-      if (Math.abs(t-top) > 3) {
+      if (Math.abs(t - top) > 3) {
         return true;
       }
     }
@@ -22,8 +26,10 @@ window.addEventListener("load", function () {
     e.stopPropagation();
     verticalContainer.classList.toggle("hidden");
   });
-  document.addEventListener("click", () => {
-    verticalContainer.classList.add("hidden");
+  document.addEventListener("click", (e) => {
+    if (!isDescendant(verticalContainer, e.target)) {
+      verticalContainer.classList.add("hidden");
+    }
   });
   let wrap = true;
   let curentNav = vertical;
