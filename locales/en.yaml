@@ -160,3 +160,5 @@
   translation: "Online version"
 - id: QRCodeOffline
   translation: "Offline version"
+- id: NoCards
+  translation: "You haven't created any cards yet"

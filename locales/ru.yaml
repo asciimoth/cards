@@ -160,3 +160,5 @@
   translation: "Онлайн версия"
 - id: QRCodeOffline
   translation: "Оффлайн версия"
+- id: NoCards
+  translation: "Вы пока не создали ни одной визитки"

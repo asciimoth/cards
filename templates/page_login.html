@@ -8,17 +8,18 @@
         <header>{{ template "comp_nav.html" . }}</header>
 
         <div class="login-container">
-            {{ $top := . }} {{range .Providers}}
+            <div style="text-align: center">{{ T "SignIn" .Lang }}</div>
+            {{range .Providers}}
             <div id="{{.}}" class="login">
                 {{if eq . "vk"}}
                 <a href="/login/vk">
                     <img src="/static/{{.}}-logo.svg" />
-                    <span>{{ T "SignIn" $top.Lang }} {{ . }}/mail/ok</span>
+                    <span>Vk/mail/Ok</span>
                 </a>
                 {{else}}
                 <a href="/auth/{{.}}">
                     <img src="/static/{{.}}-logo.svg" />
-                    <span>{{ T "SignIn" $top.Lang }} {{ . }}</span>
+                    <span>{{ . }}</span>
                 </a>
                 {{ end }}
             </div>
