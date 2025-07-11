@@ -658,7 +658,7 @@ func SetupRoutes(
 			c.Header("Content-Type", "application/javascript")
 			// a minimal SW: cache the card’s HTML + assets
 			c.String(200, fmt.Sprintf(`
-			    const CACHE = "card-%d-v6";
+			    const CACHE = "card-%d-v7";
 			    const toCache = [
 				  "/",
 			      "/c/%d",
@@ -669,7 +669,26 @@ func SetupRoutes(
 				  "/static/collapse.js",
 				  "/static/copy.js",
 				  "/static/preview.js",
-				  "/static/*",
+				  "/static/airplane.svg",
+				  "/static/burger.svg",
+				  "/static/close.svg",
+				  "/static/contact.svg",
+				  "/static/copy.svg",
+				  "/static/copy-svgrepo-com.svg",
+				  "/static/delete.svg",
+				  "/static/edit.svg",
+				  "/static/email.svg",
+				  "/static/favicon-192.svg",
+				  "/static/fly.svg",
+				  "/static/lock.svg",
+				  "/static/logo.svg",
+				  "/static/phone.svg",
+				  "/static/qr-code-.svg",
+				  "/static/telegram.svg",
+				  "/static/unlock.svg",
+				  "/static/view.svg",
+				  "/static/vk-logo.svg",
+				  "/static/yandex-logo.svg",
 			      "/%s",
 				  "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js",
 				  "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"
