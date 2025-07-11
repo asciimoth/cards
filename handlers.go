@@ -22,6 +22,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+func headersMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Header("Service-Worker-Allowed", "/")
+		c.Next()
+	}
+}
+
 func langMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sess := sessions.Default(c)
@@ -327,6 +334,7 @@ func SetupRoutes(
 	uploadFormFile := uploader(log, storage, ctx, mus, errorPage, localize)
 	fetchMedia := mediaFetcher(log, storage, ctx, errorPage, localize)
 
+	g.Use(headersMiddleware())
 	g.Use(sessionMiddleware(log, db))
 	g.Use(langMiddleware())
 
@@ -563,6 +571,115 @@ func SetupRoutes(
 			sess.Save()
 
 			redirect(c, "/cards")
+		})
+	}
+
+	// PWA related handlers
+	{
+		pwa := g.Group("/")
+		pwa.GET("/c/:id/manifest.json", func(c *gin.Context) {
+			cid, err := getUintParam(c, "id")
+			if err != nil {
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgInvalidCardID"),
+				)
+				return
+			}
+
+			user := getUser(c)
+
+			card, err := db.GetCard(cid)
+			if err != nil {
+				execHTML(c, http.StatusNotFound, "page_cardNotFound.html", gin.H{})
+				return
+			}
+
+			is_owner := false
+
+			if user != nil {
+				is_owner = card.Owner == user.ID || user.Type == UserTypeAdmin
+			}
+			if !is_owner && card.Fields.IsHidden {
+				execHTML(c, http.StatusNotFound, "page_cardNotFound.html", gin.H{})
+				return
+			}
+			manifest := map[string]any{
+				"name":       card.Fields.Name,
+				"short_name": card.Fields.Name,
+				"start_url":  fmt.Sprintf("/c/%d", cid),
+				"scope":      fmt.Sprintf("/c/%d", cid),
+				"display":    "standalone",
+				"icons": []map[string]string{
+					{
+						"src":   "/" + card.Avatar,
+						"sizes": "192x192",
+						"type":  "image/webp",
+					},
+					{
+						"src":   "/" + card.Avatar,
+						"sizes": "512x512",
+						"type":  "image/webp",
+					},
+				},
+			}
+			c.JSON(200, manifest)
+		})
+		pwa.GET("/c/:id/sw.js", func(c *gin.Context) {
+			cid, err := getUintParam(c, "id")
+			if err != nil {
+				errorPage(
+					c,
+					http.StatusBadRequest,
+					localize(c, "ErrMsgInvalidCardID"),
+				)
+				return
+			}
+
+			user := getUser(c)
+
+			card, err := db.GetCard(cid)
+			if err != nil {
+				execHTML(c, http.StatusNotFound, "page_cardNotFound.html", gin.H{})
+				return
+			}
+
+			is_owner := false
+
+			if user != nil {
+				is_owner = card.Owner == user.ID || user.Type == UserTypeAdmin
+			}
+			if !is_owner && card.Fields.IsHidden {
+				execHTML(c, http.StatusNotFound, "page_cardNotFound.html", gin.H{})
+				return
+			}
+
+			c.Header("Content-Type", "application/javascript")
+			// a minimal SW: cache the card’s HTML + assets
+			c.String(200, fmt.Sprintf(`
+			    const CACHE = "card-%d-v5";
+			    const toCache = [
+				  "/",
+			      "/c/%d",
+				  "/c/%d/",
+			      "/static/style.css",
+				  "/static/cards.css",
+				  "/static/card.js",
+				  "/static/collapse.js",
+				  "/static/copy.js",
+				  "/static/preview.js",
+			      "/%s",
+				  "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js",
+				  "https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"
+			    ];
+			    self.addEventListener("install", e => {
+			      e.waitUntil(caches.open(CACHE).then(c => c.addAll(toCache)));
+			    });
+			    self.addEventListener("fetch", e => {
+			      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+			    });
+			`, cid, cid, cid, card.Avatar))
 		})
 	}
 

@@ -2,16 +2,17 @@
 <html lang="en">
     <head>
         {{ template "comp_header.html" . }}
-        <link rel="manifest" href="/static/manifest.json" />
         <meta name="theme-color" content="#007BFF" />
         {{ if .Card.Avatar }}
         <link rel="icon" href="/{{.Card.Avatar}}" sizes="any" />
         <link rel="apple-touch-icon" href="/{{.Card.Avatar}}" />
         {{ else }}
         <!-- fallback to a default icon -->
-        <link rel="icon" href="/static/default-avatar.png" sizes="any" />
-        <link rel="apple-touch-icon" href="/static/default-avatar.png" />
+        <link rel="icon" href="/static/favicon-192.png" sizes="any" />
+        <link rel="apple-touch-icon" href="/static/favicon-192.png" />
         {{ end }}
+        <link rel="manifest" href="/c/{{.Card.ID}}/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes" />
     </head>
 
     <body>
@@ -86,8 +87,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
     <script>
+        const getCardId = (url) => {
+            const m = url.match(/\/c\/(\d+)/);
+            return m ? Number(m[1]) : null;
+        };
         document.addEventListener("DOMContentLoaded", () => {
             setTimeout(updateQRCodes, 0);
+
+            if ("serviceWorker" in navigator) {
+                const id = getCardId(window.location.pathname);
+                navigator.serviceWorker
+                    .register(window.location.pathname + "/sw.js", {
+                        scope: window.location.pathname,
+                    })
+                    .then(() => console.log("SW registered for card", id));
+            }
         });
     </script>
 </html>
