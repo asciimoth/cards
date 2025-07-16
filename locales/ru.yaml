@@ -162,3 +162,16 @@
   translation: "Оффлайн версия"
 - id: NoCards
   translation: "Вы пока не создали ни одной визитки"
+
+- id: EditorPlaceholderName
+  translation: "Иван Иванов"
+- id: EditorPlaceholderCompany
+  translation: "ООО 'Компания'"
+- id: EditorPlaceholderPosition
+  translation: "Менеджер"
+- id: EditorPlaceholderPhone
+  translation: "+790300000000"
+- id: EditorPlaceholderEmail
+  translation: "ivan@example.com"
+- id: EditorPlaceholderTg
+  translation: "ivan"

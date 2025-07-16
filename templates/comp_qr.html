@@ -1,132 +1,136 @@
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  // 1) Build a data map from all preview-for elements on the page
-  const dataMap = {};
-  document.querySelectorAll('[preview-for]').forEach(previewEl => {
-    const key = previewEl.id;           // e.g. "card-name", "phone-span", etc.
-    let val = '';
-    // if it's an <a>, use href minus prefix
-    if (previewEl.tagName === 'A') {
-      val = previewEl.getAttribute('href') || '';
-    } else {
-      val = previewEl.textContent.trim();
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1) Build a data map from all preview-for elements on the page
+    const dataMap = {};
+    document.querySelectorAll('[preview-for]').forEach(previewEl => {
+      const key = previewEl.id;           // e.g. "card-name", "phone-span", etc.
+      let val = '';
+      // if it's an <a>, use href minus prefix
+      if (previewEl.tagName === 'A') {
+        val = previewEl.getAttribute('href') || '';
+      } else {
+        val = previewEl.textContent.trim();
+      }
+      dataMap[key] = val;
+    });
+
+    // 2) Get the current page URL for the link QR
+    const cardUrl = window.location.href;
+
+    // 3) Determine avatar overlay src (if any)
+    const avatarPreview = document.querySelector('[preview-for="#input-avatar"]');
+    const avatarSrc = avatarPreview && avatarPreview.src || '';
+
+    // 4) Generate the "view card" QR
+    new QRCode(document.getElementById("qr-card-link"), {
+      text: cardUrl,
+      width: 180, height: 180,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    if (avatarSrc) {
+      const wrapper = document.getElementById("qr-card-link");
+      const img = document.createElement('img');
+      img.src = avatarSrc;
+      img.className = 'qr-overlay';
+      wrapper.appendChild(img);
     }
-    dataMap[key] = val;
-  });
 
-  // 2) Get the current page URL for the link QR
-  const cardUrl = window.location.href;
+    // 5) Build the vCard string dynamically
+    const fieldsOrder = [
+      {id: 'card-name', prefix: 'FN:'},
+      {id: 'card-company', prefix: 'ORG:'},
+      {id: 'card-position', prefix: 'TITLE:'},
+      {id: 'phone-span', prefix: 'TEL;TYPE=work,voice:'},
+      {id: 'email-span', prefix: 'EMAIL:'},
+      {id: 'telegram-span', prefix: 'URL:'},
+      {id: 'card-description', prefix: 'NOTE:'}
+    ];
+    let vcardLines = ['BEGIN:VCARD', 'VERSION:4.0'];
+    fieldsOrder.forEach(({id, prefix}) => {
+      const value = dataMap[id] || '';
+      if (value) {
+        vcardLines.push(prefix + value);
+      }
+    });
+    vcardLines.push('END:VCARD');
+    const vcardText = vcardLines.join('\n');
 
-  // 3) Determine avatar overlay src (if any)
-  const avatarPreview = document.querySelector('[preview-for="#input-avatar"]');
-  const avatarSrc = avatarPreview && avatarPreview.src || '';
-
-  // 4) Generate the "view card" QR
-  new QRCode(document.getElementById("qr-card-link"), {
-    text: cardUrl,
-    width: 180, height: 180,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-  });
-  if (avatarSrc) {
-    const wrapper = document.getElementById("qr-card-link");
-    const img = document.createElement('img');
-    img.src = avatarSrc;
-    img.className = 'qr-overlay';
-    wrapper.appendChild(img);
-  }
-
-  // 5) Build the vCard string dynamically
-  const fieldsOrder = [
-    { id: 'card-name',   prefix: 'FN:'    },
-    { id: 'card-company',prefix: 'ORG:'   },
-    { id: 'card-position',prefix: 'TITLE:' },
-    { id: 'phone-span',   prefix: 'TEL;TYPE=work,voice:' },
-    { id: 'email-span',   prefix: 'EMAIL:' },
-    { id: 'telegram-span',prefix: 'URL:'   },
-    { id: 'card-description', prefix: 'NOTE:' }
-  ];
-  let vcardLines = ['BEGIN:VCARD','VERSION:4.0'];
-  fieldsOrder.forEach(({id,prefix}) => {
-    const value = dataMap[id] || '';
-    if (value) {
-      vcardLines.push(prefix + value);
+    // 6) Generate the vCard QR
+    new QRCode(document.getElementById("qr-vcard"), {
+      text: vcardText,
+      width: 180, height: 180,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+    if (avatarSrc) {
+      const wrapper2 = document.getElementById("qr-vcard");
+      const img2 = document.createElement('img');
+      img2.src = avatarSrc;
+      img2.className = 'qr-overlay';
+      wrapper2.appendChild(img2);
     }
   });
-  vcardLines.push('END:VCARD');
-  const vcardText = vcardLines.join('\n');
-
-  // 6) Generate the vCard QR
-  new QRCode(document.getElementById("qr-vcard"), {
-    text: vcardText,
-    width: 180, height: 180,
-    colorDark : "#000000",
-    colorLight : "#ffffff",
-    correctLevel : QRCode.CorrectLevel.H
-  });
-  if (avatarSrc) {
-    const wrapper2 = document.getElementById("qr-vcard");
-    const img2 = document.createElement('img');
-    img2.src = avatarSrc;
-    img2.className = 'qr-overlay';
-    wrapper2.appendChild(img2);
-  }
-});
 </script>
 
 <style>
-.qr-code { position: relative; }
-.qr-overlay {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 50px; height: 50px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #fff;
-  background: #fff;
-}
+  .qr-code {
+    position: relative;
+  }
+
+  .qr-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    background: #fff;
+  }
 </style>
 
 
 <style>
-    .qr-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 30px;
-        margin: 20px 0;
-    }
-    
-    .qr-section {
-        text-align: center;
-        padding: 15px;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        min-width: 220px;
-    }
-    
-    .qr-code {
-        display: inline-block;
-        margin: 10px auto;
-        padding: 10px;
-        background: white;
-        border-radius: 8px;
-    }
-    
-    .qr-section h3 {
-        margin: 0 0 10px 0;
-        color: #333;
-        font-size: 1.1rem;
-    }
-    
-    .qr-section p {
-        margin: 10px 0 0 0;
-        color: #666;
-        font-size: 0.9rem;
-    }
+  .qr-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0;
+  }
+
+  .qr-section {
+    text-align: center;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    min-width: 220px;
+  }
+
+  .qr-code {
+    display: inline-block;
+    margin: 10px auto;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+  }
+
+  .qr-section h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1rem;
+  }
+
+  .qr-section p {
+    margin: 10px 0 0 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
 </style>

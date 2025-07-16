@@ -162,3 +162,16 @@
   translation: "Offline version"
 - id: NoCards
   translation: "You haven't created any cards yet"
+- id: EditorPlaceholderName
+  translation: "John Doe"
+- id: EditorPlaceholderCompany
+  translation: "Company.inc"
+- id: EditorPlaceholderPosition
+  translation: "Manager"
+- id: EditorPlaceholderPhone
+  translation: "+790300000000"
+- id: EditorPlaceholderEmail
+  translation: "john.doe@example.com"
+- id: EditorPlaceholderTg
+  translation: "johndoe"
+

@@ -1,161 +1,82 @@
 <!doctype html>
 <html>
-    <head>
-        {{ template "comp_header.html" . }}
-        <link rel="stylesheet" href="/static/editor.css" />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        />
-    </head>
-    <body>
-        <header>{{ template "comp_nav.html" . }}</header>
-        <div>
-            <div class="editor-container">
-                <section class="editor-left">
-                    <h2 class="editor-header">{{ T "EditorHeader" .Lang }}</h2>
-                    <form
-                        id="editor-form"
-                        action="{{.EditUrl}}"
-                        method="post"
-                        enctype="multipart/form-data"
-                    >
-                        <label for="input-name"
-                            >{{ T "EditorLabelName" .Lang }}</label
-                        >
-                        <input
-                            name="name"
-                            id="input-name"
-                            type="text"
-                            value="{{.Card.Fields.Name}}"
-                            required
-                        />
 
-                        <label for="input-avatar-precrop"
-                            >{{ T "Avatar" .Lang }}</label
-                        >
-                        <input
-                            name="avatar-precrop"
-                            id="input-avatar-precrop"
-                            type="file"
-                            accept="image/*"
-                            autocomplete="off"
-                        />
-                        <input
-                            name="avatar"
-                            id="input-avatar"
-                            type="file"
-                            accept="image/webp"
-                            autocomplete="off"
-                            hidden
-                        />
-                        <!-- Preview & Crop -->
-                        <div
-                            id="preview-container"
-                            hide-when-no-content="#input-avatar-precrop"
-                        >
-                            <img id="image-preview" />
-                            <button type="button" id="avatar-preview-ok">Ok</button>
-                        </div>
-                        <button
-                            type="button"
-                            clear-inputs="#input-avatar-precrop, #input-avatar"
-                            hide-when-no-content="#input-avatar-precrop"
-                        >
-                            Cancel avatar selection
+<head>
+    {{ template "comp_header.html" . }}
+    <link rel="stylesheet" href="/static/editor.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <header>{{ template "comp_nav.html" . }}</header>
+    <div>
+        <div class="editor-container">
+            <section class="editor-left">
+                <h2 class="editor-header">{{ T "EditorHeader" .Lang }}</h2>
+                <form id="editor-form" action="{{.EditUrl}}" method="post" enctype="multipart/form-data">
+                    <label for="input-name">{{ T "EditorLabelName" .Lang }}</label>
+                    <input name="name" id="input-name" type="text" value="{{.Card.Fields.Name}}"
+                        placeholder='{{ T "EditorPlaceholderName" .Lang }}' required />
+
+                    <label for="input-avatar-precrop">{{ T "Avatar" .Lang }}</label>
+                    <input name="avatar-precrop" id="input-avatar-precrop" type="file" accept="image/*"
+                        autocomplete="off" />
+                    <input name="avatar" id="input-avatar" type="file" accept="image/webp" autocomplete="off" hidden />
+                    <!-- Preview & Crop -->
+                    <div id="preview-container" hide-when-no-content="#input-avatar-precrop">
+                        <img id="image-preview" />
+                        <button type="button" id="avatar-preview-ok">Ok</button>
+                    </div>
+                    <button type="button" clear-inputs="#input-avatar-precrop, #input-avatar"
+                        hide-when-no-content="#input-avatar-precrop">
+                        Cancel avatar selection
+                    </button>
+                    <label for="input-description">{{ T "EditorLabelSelfDescription" .Lang }}</label>
+                    <textarea name="description" id="input-description" rows="5">{{.Card.Fields.Description}}</textarea>
+                    <hr />
+                    <h4>{{ T "Work" .Lang }}</h4>
+                    <hr />
+                    <label for="input-company">{{ T "EditorLabelCompany" .Lang }}</label>
+                    <input name="company" id="input-company" type="text" value="{{.Card.Fields.Company}}"
+                        placeholder='{{ T "EditorPlaceholderCompany" .Lang }}' />
+
+                    <label for="input-logo-pre">{{ T "EditorLabelCompanyLogo" .Lang }}</label>
+                    <br />
+                    <input id="input-logo-pre" type="file" accept="image/*" autocomplete="off" />
+                    <input name="logo" id="input-logo" type="file" accept="image/webp" autocomplete="off" hidden />
+                    <br />
+                    <div hide-when-no-content="#input-logo">
+                        <button type="button" clear-inputs="#input-logo">
+                            {{ T "EditorLabelCancelLogo" .Lang }}
                         </button>
-                        <label for="input-description"
-                            >{{ T "EditorLabelSelfDescription" .Lang }}</label
-                        >
-                        <textarea
-                            name="description"
-                            id="input-description"
-                            rows="5"
-                        >
-{{.Card.Fields.Description}}</textarea
-                        >
-                        <hr />
-                        <h4>{{ T "Work" .Lang }}</h4>
-                        <hr />
-                        <label for="input-company"
-                            >{{ T "EditorLabelCompany" .Lang }}</label
-                        >
-                        <input
-                            name="company"
-                            id="input-company"
-                            type="text"
-                            value="{{.Card.Fields.Company}}"
-                        />
+                    </div>
 
-                        <label for="input-logo-pre"
-                            >{{ T "EditorLabelCompanyLogo" .Lang }}</label
-                        >
-                        <br />
-                        <input
-                            id="input-logo-pre"
-                            type="file"
-                            accept="image/*"
-                            autocomplete="off"
-                        />
-                        <input
-                            name="logo"
-                            id="input-logo"
-                            type="file"
-                            accept="image/webp"
-                            autocomplete="off"
-                            hidden
-                        />
-                        <br />
-                        <div hide-when-no-content="#input-logo">
-                            <button type="button" clear-inputs="#input-logo">
-                                {{ T "EditorLabelCancelLogo" .Lang }}
-                            </button>
-                        </div>
+                    <label for="input-position">{{ T "EditorLabelPosition" .Lang }}</label>
+                    <br />
+                    <input name="position" id="input-position" type="text" value="{{.Card.Fields.Position}}"
+                        placeholder='{{ T "EditorPlaceholderPosition" .Lang }}' />
+                    <br />
 
-                        <label for="input-position"
-                            >{{ T "EditorLabelPosition" .Lang }}</label
-                        >
-                        <br />
-                        <input
-                            name="position"
-                            id="input-position"
-                            type="text"
-                            value="{{.Card.Fields.Position}}"
-                        />
-                        <br />
+                    <hr />
+                    <h4>{{ T "Contacts" .Lang }}</h4>
+                    <hr />
+                    <label for="input-phone">{{ T "Phone" .Lang }}</label>
+                    <br />
+                    <input name="phone" id="input-phone" type="tel" value="{{.Card.Fields.Phone}}"
+                        placeholder='{{ T "EditorPlaceholderPhone" .Lang }}' />
+                    <br />
 
-                        <hr />
-                        <h4>{{ T "Contacts" .Lang }}</h4>
-                        <hr />
-                        <label for="input-phone">{{ T "Phone" .Lang }}</label>
-                        <br />
-                        <input
-                            name="phone"
-                            id="input-phone"
-                            type="tel"
-                            value="{{.Card.Fields.Phone}}"
-                        />
-                        <br />
+                    <label for="input-email">Email</label> <br />
+                    <input name="email" id="input-email" type="email" value="{{.Card.Fields.Email}}"
+                        placeholder='{{ T "EditorPlaceholderEmail" .Lang }}' />
+                    <br />
 
-                        <label for="input-email">Email</label> <br />
-                        <input
-                            name="email"
-                            id="input-email"
-                            type="email"
-                            value="{{.Card.Fields.Email}}"
-                        />
-                        <br />
-
-                        <label for="input-telegram">Telegram ID</label> <br />
-                        <input
-                            name="telegram"
-                            id="input-telegram"
-                            value="{{.Card.Fields.Telegram}}"
-                        />
-                        <br />
-                        <!--
+                    <label for="input-telegram">Telegram ID</label> <br />
+                    <input name="telegram" id="input-telegram" value="{{.Card.Fields.Telegram}}"
+                        placeholder='{{ T "EditorPlaceholderTg" .Lang }}' />
+                    <br />
+                    <!--
                     <label for="input-whatsapp">WhatsApp URL</label> <br />
                     <input
                         name="whatsapp"
@@ -172,139 +93,137 @@
                     />
                     <br /> -->
 
-                        <button type="submit">
-                            {{ T .SubmitButton .Lang }}
-                        </button>
-                    </form>
-                </section>
-                <aside class="editor-right" id="card-preview">
-                    <h2 class="editor-header">{{ T "PreviewHeader" .Lang }}</h2>
-                    {{ template "comp_card.html" . }}
-                </aside>
-            </div>
+                    <button type="submit">
+                        {{ T .SubmitButton .Lang }}
+                    </button>
+                </form>
+            </section>
+            <aside class="editor-right" id="card-preview">
+                <h2 class="editor-header">{{ T "PreviewHeader" .Lang }}</h2>
+                {{ template "comp_card.html" . }}
+            </aside>
         </div>
-        <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-        ></script>
-        <script src="/static/preview.js"></script>
-        <script src="/static/collapse.js"></script>
-        <script src="/static/clearInput.js"></script>
-        <script>
-            const fileInput = document.getElementById("input-avatar-precrop");
-            const croppedInput = document.getElementById("input-avatar");
-            const image = document.getElementById("image-preview");
-            const container = document.getElementById("preview-container");
-            const ok = document.getElementById("avatar-preview-ok");
-            let cropper;
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+    <script src="/static/preview.js"></script>
+    <script src="/static/collapse.js"></script>
+    <script src="/static/clearInput.js"></script>
+    <script>
+        const fileInput = document.getElementById("input-avatar-precrop");
+        const croppedInput = document.getElementById("input-avatar");
+        const image = document.getElementById("image-preview");
+        const container = document.getElementById("preview-container");
+        const ok = document.getElementById("avatar-preview-ok");
+        let cropper;
 
-            // Helper to update cropped file field
-            function updateCroppedFile() {
-                if (!cropper) return;
-                let canvas = cropper.getCroppedCanvas();
-                canvas.toBlob(
-                    (blob) => {
-                        // Derive base name, swap extension to .webp
-                        const origName =
-                            fileInput.files[0]?.name || "cropped.png";
-                        const baseName = origName.replace(/\.\w+$/, "");
-                        const webpName = `${baseName}.webp`;
+        // Helper to update cropped file field
+        function updateCroppedFile() {
+            if (!cropper) return;
+            let canvas = cropper.getCroppedCanvas();
+            canvas.toBlob(
+                (blob) => {
+                    // Derive base name, swap extension to .webp
+                    const origName =
+                        fileInput.files[0]?.name || "cropped.png";
+                    const baseName = origName.replace(/\.\w+$/, "");
+                    const webpName = `${baseName}.webp`;
 
-                        // Create the new File with MIME type image/webp
-                        const croppedFile = new File([blob], webpName, {
-                            type: "image/webp",
-                        });
+                    // Create the new File with MIME type image/webp
+                    const croppedFile = new File([blob], webpName, {
+                        type: "image/webp",
+                    });
 
-                        // Stick it into the hidden input
-                        const dt = new DataTransfer();
-                        dt.items.add(croppedFile);
-                        croppedInput.files = dt.files;
+                    // Stick it into the hidden input
+                    const dt = new DataTransfer();
+                    dt.items.add(croppedFile);
+                    croppedInput.files = dt.files;
 
-                        // If you have any listeners on the input, trigger them
-                        const ev = new Event("change", {
+                    // If you have any listeners on the input, trigger them
+                    const ev = new Event("change", {
+                        bubbles: true,
+                        cancelable: true,
+                    });
+                    croppedInput.dispatchEvent(ev);
+                },
+                "image/webp",
+                0.5,
+            );
+        }
+
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+
+            image.src = url;
+            image.style.display = "block";
+
+            if (cropper) cropper.destroy();
+            cropper = new Cropper(image, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCrop: true,
+                autoCropArea: 0.8,
+                cropend: updateCroppedFile,
+                ready: updateCroppedFile,
+            });
+        });
+
+        const logoPre = document.getElementById("input-logo-pre");
+        const logoDest = document.getElementById("input-logo");
+
+        logoPre.addEventListener("change", async () => {
+            const file = logoPre.files[0];
+            if (!file) return;
+
+            // 1) Load into an Image object
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            await img.decode();
+
+            // 2) Draw to a temporary canvas
+            const canvas = document.createElement("canvas");
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            canvas.getContext("2d").drawImage(img, 0, 0);
+
+            // 3) Export as WebP @80% quality
+            canvas.toBlob(
+                (blob) => {
+                    // Build new filename with .webp extension
+                    const base = file.name.replace(/\.\w+$/, "");
+                    const webpName = `${base}.webp`;
+
+                    // Create the WebP File and stuff it into the destination input
+                    const webpFile = new File([blob], webpName, {
+                        type: "image/webp",
+                    });
+                    const dt = new DataTransfer();
+                    dt.items.add(webpFile);
+                    logoDest.files = dt.files;
+
+                    // Trigger any change listeners downstream
+                    logoDest.dispatchEvent(
+                        new Event("change", {
                             bubbles: true,
                             cancelable: true,
-                        });
-                        croppedInput.dispatchEvent(ev);
-                    },
-                    "image/webp",
-                    0.5,
-                );
-            }
+                        }),
+                    );
 
-            fileInput.addEventListener("change", (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const url = URL.createObjectURL(file);
+                    // Clean up
+                    URL.revokeObjectURL(img.src);
+                },
+                "image/webp",
+                0.0,
+            );
+        });
 
-                image.src = url;
-                image.style.display = "block";
+        ok.addEventListener('click', () => {
+            container.style.visibility = "collapse";
+            container.style.display = "none";
+        });
+    </script>
+</body>
 
-                if (cropper) cropper.destroy();
-                cropper = new Cropper(image, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    autoCrop: true,
-                    autoCropArea: 0.8,
-                    cropend: updateCroppedFile,
-                    ready: updateCroppedFile,
-                });
-            });
-
-            const logoPre = document.getElementById("input-logo-pre");
-            const logoDest = document.getElementById("input-logo");
-
-            logoPre.addEventListener("change", async () => {
-                const file = logoPre.files[0];
-                if (!file) return;
-
-                // 1) Load into an Image object
-                const img = new Image();
-                img.src = URL.createObjectURL(file);
-                await img.decode();
-
-                // 2) Draw to a temporary canvas
-                const canvas = document.createElement("canvas");
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
-                canvas.getContext("2d").drawImage(img, 0, 0);
-
-                // 3) Export as WebP @80% quality
-                canvas.toBlob(
-                    (blob) => {
-                        // Build new filename with .webp extension
-                        const base = file.name.replace(/\.\w+$/, "");
-                        const webpName = `${base}.webp`;
-
-                        // Create the WebP File and stuff it into the destination input
-                        const webpFile = new File([blob], webpName, {
-                            type: "image/webp",
-                        });
-                        const dt = new DataTransfer();
-                        dt.items.add(webpFile);
-                        logoDest.files = dt.files;
-
-                        // Trigger any change listeners downstream
-                        logoDest.dispatchEvent(
-                            new Event("change", {
-                                bubbles: true,
-                                cancelable: true,
-                            }),
-                        );
-
-                        // Clean up
-                        URL.revokeObjectURL(img.src);
-                    },
-                    "image/webp",
-                    0.0,
-                );
-            });
-            
-            ok.addEventListener('click', () => {
-                container.style.visibility = "collapse";
-                container.style.display = "none";
-            });
-        </script>
-    </body>
 </html>
