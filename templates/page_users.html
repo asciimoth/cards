@@ -1,35 +1,34 @@
 <!doctype html>
 <html>
-    <head>
-        {{ template "comp_header.html" . }}
-    </head>
-    <body>
-        <header>
-            {{ template "comp_nav.html" . }} {{ template "comp_error.html" . }}
-        </header>
-        <main>
-            <section>
-                {{ $top := . }} {{ range .Users }} {{.}}
-                <button
-                    hx-post="/userdel/{{.ID}}"
-                    hx-confirm='{{ T "DeleteConf" $top.Lang }} {{.Name}}?'
-                    hx-swap="none"
-                >
-                    {{ T "Delete" $top.Lang }}
-                </button>
-                <button hx-post="/changeUserType/{{.ID}}/0" hx-swap="none">
-                    Make normal user (0)
-                </button>
-                <button hx-post="/changeUserType/{{.ID}}/1" hx-swap="none">
-                    Make admin (1)
-                </button>
-                <button hx-post="/changeUserType/{{.ID}}/2" hx-swap="none">
-                    Make limited (2)
-                </button>
-                <a href="/cards/{{.ID}}">Cards</a>
-                <br />
-                {{ end }}
-            </section>
-        </main>
-    </body>
+
+<head>
+    {{ template "comp_header.html" . }}
+</head>
+
+<body>
+    <header>
+        {{ template "comp_nav.html" . }} {{ template "comp_error.html" . }}
+    </header>
+    <main>
+        <section>
+            {{ $top := . }} {{ range .Users }} {{.}}
+            <button hx-post="/userdel/{{.ID}}" hx-confirm='{{ T "DeleteConf" $top.Lang }} {{.Name}}?' hx-swap="none">
+                {{ T "Delete" $top.Lang }}
+            </button>
+            <button hx-post="/changeUserType/{{.ID}}/0" hx-swap="none">
+                Make normal user (0)
+            </button>
+            <button hx-post="/changeUserType/{{.ID}}/1" hx-swap="none">
+                Make admin (1)
+            </button>
+            <button hx-post="/changeUserType/{{.ID}}/2" hx-swap="none">
+                Make limited (2)
+            </button>
+            <a href="/cards/{{.ID}}">Cards</a>
+            <br />
+            {{ end }}
+        </section>
+    </main>
+</body>
+
 </html>
