@@ -658,13 +658,14 @@ func SetupRoutes(
 			c.Header("Content-Type", "application/javascript")
 			// a minimal SW: cache the card’s HTML + assets
 			c.String(200, fmt.Sprintf(`
-			    const CACHE = "card-%d-v7";
+			    const CACHE = "card-%d-v8";
 			    const toCache = [
 				  "/",
 			      "/c/%d",
 				  "/c/%d/",
 			      "/static/style.css",
 				  "/static/cards.css",
+				  "/static/card.css",
 				  "/static/card.js",
 				  "/static/collapse.js",
 				  "/static/copy.js",
@@ -696,9 +697,26 @@ func SetupRoutes(
 			    self.addEventListener("install", e => {
 			      e.waitUntil(caches.open(CACHE).then(c => c.addAll(toCache)));
 			    });
-			    self.addEventListener("fetch", e => {
-			      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-			    });
+					self.addEventListener("activate", e => {
+						e.waitUntil(self.clients.claim());
+					});
+					self.addEventListener("fetch", ev => {
+						ev.respondWith(
+							fetch(ev.request)
+								.then(networkRes => {
+									// If valid response, clone & store it in cache
+									if (networkRes.ok) {
+										const copy = networkRes.clone();
+										caches.open(CACHE).then(cache => cache.put(ev.request, copy));
+									}
+									return networkRes;
+								})
+								.catch(() => {
+									// Network failed (offline?), fall back to cache
+									return caches.match(ev.request);
+								})
+						);
+					});
 			`, cid, cid, cid, card.Avatar))
 		})
 	}
