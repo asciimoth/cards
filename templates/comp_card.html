@@ -29,7 +29,7 @@
         {{ if .Card.Fields.IsHidden }}
         <div class="element card-hidden-msg">{{ T "HiddenCard" .Lang }}</div>
         {{ end }}
-        <div class="avatar" hide-when-no-content="#card-image-preview">
+        <div class="avatar hidden" hide-when-no-content="#card-image-preview">
             {{if .Card.Avatar}}
             <img id="card-image-preview" src="/{{.Card.Avatar}}" alt="Your avatar preview" preview-for="#input-avatar"
                 initial-sync="no" style="background-color: white" />
@@ -43,7 +43,7 @@
                 {{ .Card.Fields.Name }}
             </h2>
         </div>
-        <div class="element" hide-when-no-content="#card-position, #card-company">
+        <div class="element hidden" hide-when-no-content="#card-position, #card-company">
             <div id="card-position" preview-for="#input-position">
                 {{ .Card.Fields.Position }}
             </div>
@@ -51,10 +51,10 @@
                 {{ .Card.Fields.Company }}
             </div>
         </div>
-        <pre class="element" hide-when-no-content="#card-description" id="card-description"
+        <pre class="element hidden" hide-when-no-content="#card-description" id="card-description"
             preview-for="#input-description">{{ .Card.Fields.Description }}</pre>
         <hr />
-        <div class="element contact-element" hide-when-no-content="#phone-span">
+        <div class="element contact-element hidden" hide-when-no-content="#phone-span">
             {{ if .Card.Fields.Phone }}
             <a href="tel:{{.Card.Fields.Phone}}" title="Phone" preview-for="#input-phone" preview-prefix="tel:"><img
                     src="/static/phone.svg" alt="" /></a>
@@ -66,7 +66,7 @@
             {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element" hide-when-no-content="#email-span">
+        <div class="element contact-element hidden" hide-when-no-content="#email-span">
             {{ if .Card.Fields.Email }}
             <a href="mailto:{{.Card.Fields.Email}}" title="Email" preview-for="#input-email"
                 preview-prefix="mailto:"><img src="/static/email.svg" alt="" /></a>
@@ -78,7 +78,7 @@
             {{end}}
             <img src="/static/copy.svg" />
         </div>
-        <div class="element contact-element" hide-when-no-content="#telegram-span">
+        <div class="element contact-element hidden" hide-when-no-content="#telegram-span">
             {{ if .Card.Fields.Telegram }}
             <a href="https://t.me/{{.Card.Fields.Telegram}}" title="Telegram" preview-for="#input-telegram"
                 preview-prefix="https://t.me/"><img src="/static/telegram.svg" alt="" /></a>

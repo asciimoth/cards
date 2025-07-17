@@ -25,8 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
           }
       });
 
-      host.style.visibility = hasContent ? "" : "collapse";
-      host.style.display = hasContent ? "" : "none";
+      if (hasContent) {
+        host.classList.remove("hidden");
+      } else {
+        host.classList.add("hidden");
+      }
+      // host.style.visibility = hasContent ? "" : "collapse";
+      // host.style.display = hasContent ? "" : "none";
     };
 
     // Initial check

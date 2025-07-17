@@ -65,8 +65,8 @@ body {
 }
 
 .hidden {
-    visibility: collapse;
-    display: none;
+    visibility: collapse !important;
+    display: none !important;
 }
 
 #global-error-block {
