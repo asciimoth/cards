@@ -135,9 +135,22 @@ a.element:hover {
     color: var(--hover-text-color);
 }
 
-pre.element {
+.element pre {
     font-family: inherit;
     font: inherit;
+    padding: 0px;
+    margin: 0px;
+
+
+    background-color: var(--section-bg);
+    text-wrap: balance;
+    word-break: break-word;
+    display: block;
+    border: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    block-size: fit-content;
+    height: fit-content;
 }
 
 .element:last-child {
