@@ -74,10 +74,10 @@ git push heroku master
 
 # TODO
 ## Fronend
-- [ ] Setup service worker only when installing PWA
-- [ ] Make avatars square
-- [ ] Add matching svg icons to contacts in card component
-- [ ] Repalce text at buttons on cards page winth svg icons
+- [X] Setup service worker only when installing PWA
+- [X] Make avatars square
+- [X] Add matching svg icons to contacts in card component
+- [X] Repalce text at buttons on cards page winth svg icons
 - [X] Place name of logged in user somewhere
 - [X] Nav
   - [X] Same paddings for buttons in side nav
@@ -86,46 +86,47 @@ git push heroku master
   - [X] Remove main page button
   - [X] Use SVG logo instead of just text
 - [ ] Style cards page
-  - [ ] If there is no cards, add text block about it
+  - [X] If there is no cards, add text block about it
   - [X] Add cards grid
   - [X] Replace "create new card" link button with `+` sign
-- [ ] Style editor page
-  - [ ] Add absolute position for preview
+- [X] Style editor page
+  - [X] Add absolute position for preview
   - [X] Add live preview
   - [X] Make crop widget not so fucking big
   - [X] Style inputs (file inputs including)
-- [ ] Style card page
-- [ ] Style card not found page
-- [ ] Style login page
+- [X] Style card page
+- [X] Style card not found page
+- [X] Style login page
   - [X] Block with list of "sign with" buttons
   - [X] Each button themed in related service colors and with logo
-- [ ] Implement VCF file generation
-- [ ] QR codes
-  - [ ] Implement QR code with user provided logo generation
-  - [ ] Generate two QR codes: one with link to card page and one with full VCF file (for offline usage)
+- [X] Implement VCF file generation
+- [X] QR codes
+  - [X] Implement QR code with user provided logo generation
+  - [X] Generate two QR codes: one with link to card page and one with full VCF file (for offline usage)
 - [ ] Favicon
   - [ ] Add default one
   - [X] For cards use avatar as favicon
-- [ ] PWA
+- [X] PWA
 - [ ] Add footer
 ## Backend
+- [ ] Assume default locale by GeoIP & HTTP headers
 - [ ] Add rate limiting
   - [ ] Check if file can exists via DB before going to S3
-- [ ] Assume default locale by GeoIP & HTTP headers
 - [X] Add localisation system
 - [ ] Add VIP accounts system
-- [ ] Payment systems integration
 - [ ] Paid features
   - [ ] Custom names
   - [ ] More cards
   - [ ] More fancy QR codes
   - [ ] Offline mode
+- [ ] Payment systems integration
 ## Features
+- [ ] Login providers
+  - [ ] Telegram
+  - [ ] Yandex
 - [ ] Avatar & logo deletion
 - [ ] Add personal site block
 - [ ] Support for more sochial links in cards
-- [ ] Card views counter
-- [ ] Telegram previews
 ## Optimisation
 - [ ] Scripts loading optimisation
   - [ ] Async
@@ -142,10 +143,12 @@ git push heroku master
   - Maybe gallery of published cards
 - [ ] FAQ
 - [ ] Tutorials
+  - [ ] How to install PWA on android/iphone
 ## DevOps
-- [ ] Add Heroku publishing helpers
+- [X] Add Heroku publishing helpers
 - [ ] Add GH actions bases on nix
 ## Pr
 - [ ] Add video demostration to readme
 ## Etc
 - [ ] GDPR and simmilar rules compliance
+
