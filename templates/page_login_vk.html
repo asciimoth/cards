@@ -1,73 +1,77 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        {{ template "comp_header.html" . }}
-    </head>
-    <body>
-        <header>{{ template "comp_nav.html" . }}</header>
-        <div>
-            <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
-            <script type="text/javascript">
-                function redirectWithPost(path, params) {
-                    const form = document.createElement("form");
-                    form.method = "POST";
-                    form.action = path;
-                    // Add each field as a hidden input
-                    for (const [key, value] of Object.entries(params)) {
-                        const input = document.createElement("input");
-                        input.type = "hidden";
-                        input.name = key;
-                        input.value = value;
-                        form.appendChild(input);
-                    }
-                    document.body.appendChild(form);
-                    form.submit();
+
+<head>
+    {{ template "comp_header.html" . }}
+</head>
+
+<body>
+    <header>{{ template "comp_nav.html" . }}</header>
+    <label id="vkapp" style="visibility: collapse; display: none;">{{ .vkapp }}</label>
+    <label id="vkredirect" style="visibility: collapse; display: none;">{{ .vkredirect }}</label>
+    <div>
+        <script src="https://unpkg.com/@vkid/sdk@<3.0.0/dist-sdk/umd/index.js"></script>
+        <script type="text/javascript">
+            function redirectWithPost(path, params) {
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = path;
+                // Add each field as a hidden input
+                for (const [key, value] of Object.entries(params)) {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = key;
+                    input.value = value;
+                    form.appendChild(input);
                 }
+                document.body.appendChild(form);
+                form.submit();
+            }
 
-                if ("VKIDSDK" in window) {
-                    const VKID = window.VKIDSDK;
+            if ("VKIDSDK" in window) {
+                const VKID = window.VKIDSDK;
 
-                    VKID.Config.init({
-                        app: 53847971,
-                        redirectUrl:
-                            "https://cards.moth.contact/auth/vk/callback",
-                        responseMode: VKID.ConfigResponseMode.Callback,
-                        source: VKID.ConfigSource.LOWCODE,
-                        scope: "", // Заполните нужными доступами по необходимости
+                VKID.Config.init({
+                    app: parseInt(document.getElementById('vkapp').textContent),
+                    redirectUrl: document.getElementById('vkredirect').textContent,
+                    responseMode: VKID.ConfigResponseMode.Callback,
+                    source: VKID.ConfigSource.LOWCODE,
+                    scope: "",
+                });
+
+                const oneTap = new VKID.OneTap();
+
+                oneTap
+                    .render({
+                        container: document.currentScript.parentElement,
+                        showAlternativeLogin: true,
+                        oauthList: ["ok_ru", "mail_ru"],
+                    })
+                    .on(VKID.WidgetEvents.ERROR, vkidOnError)
+                    .on(
+                        VKID.OneTapInternalEvents.LOGIN_SUCCESS,
+                        function (payload) {
+                            const code = payload.code;
+                            const deviceId = payload.device_id;
+
+                            VKID.Auth.exchangeCode(code, deviceId)
+                                .then(vkidOnSuccess)
+                                .catch(vkidOnError);
+                        },
+                    );
+
+                function vkidOnSuccess(data) {
+                    redirectWithPost("/auth-vk", {
+                        access_token: data.access_token,
                     });
-
-                    const oneTap = new VKID.OneTap();
-
-                    oneTap
-                        .render({
-                            container: document.currentScript.parentElement,
-                            showAlternativeLogin: true,
-                            oauthList: ["ok_ru", "mail_ru"],
-                        })
-                        .on(VKID.WidgetEvents.ERROR, vkidOnError)
-                        .on(
-                            VKID.OneTapInternalEvents.LOGIN_SUCCESS,
-                            function (payload) {
-                                const code = payload.code;
-                                const deviceId = payload.device_id;
-
-                                VKID.Auth.exchangeCode(code, deviceId)
-                                    .then(vkidOnSuccess)
-                                    .catch(vkidOnError);
-                            },
-                        );
-
-                    function vkidOnSuccess(data) {
-                        redirectWithPost("/auth-vk", {
-                            access_token: data.access_token,
-                        });
-                    }
-
-                    function vkidOnError(error) {
-                        console.log(error);
-                    }
                 }
-            </script>
-        </div>
-    </body>
+
+                function vkidOnError(error) {
+                    console.log(error);
+                }
+            }
+        </script>
+    </div>
+</body>
+
 </html>

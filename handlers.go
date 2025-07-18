@@ -732,7 +732,9 @@ func SetupRoutes(
 		})
 		us.GET("/login/vk", func(c *gin.Context) {
 			execHTML(c, http.StatusOK, "page_login_vk.html", gin.H{
-				"Title": "VK login",
+				"Title":      "VK login",
+				"vkapp":      os.Getenv("VK_CLIENT_ID"),
+				"vkredirect": os.Getenv("VK_CLIENT_CALLBACK_URL"),
 			})
 		})
 		us.POST("/logout", func(c *gin.Context) {
