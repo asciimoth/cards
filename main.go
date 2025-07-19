@@ -31,7 +31,7 @@ func main() {
 	db := SetupDB(ctx, storage, log)
 	g, srv := SetupServer(log, localizer)
 	names := SetupProviders(log)
-	SetupRoutes(g, ctx, storage, db, log, names, locales, localizer)
+	SetupHandler(g, ctx, storage, db, log, names, locales, localizer)
 
 	var wg sync.WaitGroup
 	RunServer(srv, &wg, ctx, log)
