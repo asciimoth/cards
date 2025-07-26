@@ -568,6 +568,7 @@ func checkTelegramAuthorization(params map[string]string) (map[string]string, er
 }
 
 func (h *Handler) authTgRoute(c *gin.Context) {
+	h.log.Warn("Start tg login")
 	// Collect GET parameters
 	query := c.Request.URL.Query()
 	params := make(map[string]string)
@@ -580,11 +581,12 @@ func (h *Handler) authTgRoute(c *gin.Context) {
 	// Verify Telegram authorization data
 	authData, err := checkTelegramAuthorization(params)
 	if err != nil {
+		h.log.Warnf("%v\n", err)
 		c.String(http.StatusUnauthorized, err.Error())
 		return
 	}
 
-	fmt.Printf("%v\n", authData)
+	h.log.Warnf("%v\n", authData)
 }
 
 func (h *Handler) authVkRoute(c *gin.Context) {
