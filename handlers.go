@@ -123,6 +123,7 @@ func (h *Handler) setupRoutes() {
 		us := h.g.Group("/")
 		us.GET("/login", h.loginRoute)
 		us.GET("/login/vk", h.loginVkRoute)
+		us.GET("/login/vk", h.loginTgRoute)
 		us.GET("/logout", h.logoutRoute)
 		us.POST("/logout", h.logoutRoute)
 	}
@@ -539,7 +540,7 @@ func checkTelegramAuthorization(params map[string]string) (map[string]string, er
 	dataCheckString := strings.Join(dataCheckArr, "\n")
 
 	// Compute secret key
-	secretKey := sha256.Sum256([]byte(os.Getenv("TG_BOT_TOKEN")))
+	secretKey := sha256.Sum256([]byte(os.Getenv("TG_CLIENT_SECRET")))
 
 	// Compute HMAC-SHA256 of data_check_string
 	h := hmac.New(sha256.New, secretKey[:])
@@ -871,6 +872,14 @@ func (h *Handler) loginVkRoute(c *gin.Context) {
 		"Title":      "VK login",
 		"vkapp":      os.Getenv("VK_CLIENT_ID"),
 		"vkredirect": os.Getenv("VK_CLIENT_CALLBACK_URL"),
+	})
+}
+
+func (h *Handler) loginTgRoute(c *gin.Context) {
+	h.execHTML(c, http.StatusOK, "page_login_tg.html", gin.H{
+		"Title":    "VK login",
+		"botname":  os.Getenv("TG_CLIENT_ID"),
+		"callback": os.Getenv("TG_CLIENT_CALLBACK_URL"),
 	})
 }
 

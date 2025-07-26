@@ -47,11 +47,14 @@ func SetupProviders(log *logrus.Logger) []string {
 		log.Debug("Adding discord OAuth provider")
 	}
 
-	vkClientID := os.Getenv("VK_CLIENT_ID")
-
-	if vkClientID != "" {
+	if os.Getenv("VK_CLIENT_ID") != "" {
 		names = append(names, "vk")
 		log.Debug("Adding VK OAuth provider")
+	}
+
+	if os.Getenv("TG_CLIENT_ID") != "" {
+		names = append(names, "telegram")
+		log.Debug("Adding Tg OAuth provider")
 	}
 
 	if len(providers) < 1 {
