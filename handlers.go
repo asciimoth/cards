@@ -123,7 +123,7 @@ func (h *Handler) setupRoutes() {
 		us := h.g.Group("/")
 		us.GET("/login", h.loginRoute)
 		us.GET("/login/vk", h.loginVkRoute)
-		us.GET("/login/vk", h.loginTgRoute)
+		us.GET("/login/tg", h.loginTgRoute)
 		us.GET("/logout", h.logoutRoute)
 		us.POST("/logout", h.logoutRoute)
 	}
