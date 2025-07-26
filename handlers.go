@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -11,6 +14,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -103,7 +107,7 @@ func (h *Handler) setupRoutes() {
 		oauth.GET("/auth/:provider", h.authProviderRoute)
 		oauth.GET("/auth/:provider/callback", h.authCallbackRoute)
 		// Telegram is not supported by goth so we handling it individually
-		oauth.POST("/auth-tg", h.authTgRoute)
+		oauth.GET("/auth-tg", h.authTgRoute)
 		// Vk is tecnically supported by goth, but seems like it support
 		// only old Vk OAuth system
 		oauth.POST("/auth-vk", h.authVkRoute)
@@ -518,15 +522,69 @@ func (h *Handler) authCallbackRoute(c *gin.Context) {
 	redirect(c, "/cards")
 }
 
+func checkTelegramAuthorization(params map[string]string) (map[string]string, error) {
+	// Extract and remove hash
+	checkHash, ok := params["hash"]
+	if !ok {
+		return nil, fmt.Errorf("hash parameter missing")
+	}
+	delete(params, "hash")
+
+	// Build data check string
+	var dataCheckArr []string
+	for key, value := range params {
+		dataCheckArr = append(dataCheckArr, key+"="+value)
+	}
+	sort.Strings(dataCheckArr)
+	dataCheckString := strings.Join(dataCheckArr, "\n")
+
+	// Compute secret key
+	secretKey := sha256.Sum256([]byte(os.Getenv("TG_BOT_TOKEN")))
+
+	// Compute HMAC-SHA256 of data_check_string
+	h := hmac.New(sha256.New, secretKey[:])
+	h.Write([]byte(dataCheckString))
+	computedHash := hex.EncodeToString(h.Sum(nil))
+
+	// Compare hashes
+	if !hmac.Equal([]byte(computedHash), []byte(checkHash)) {
+		return nil, fmt.Errorf("data is NOT from Telegram")
+	}
+
+	// Check auth_date
+	authDateStr, ok := params["auth_date"]
+	if !ok {
+		return nil, fmt.Errorf("auth_date parameter missing")
+	}
+	authDateInt, err := strconv.ParseInt(authDateStr, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("invalid auth_date: %v", err)
+	}
+	if time.Now().Unix()-authDateInt > 86400 {
+		return nil, fmt.Errorf("data is outdated")
+	}
+
+	return params, nil
+}
+
 func (h *Handler) authTgRoute(c *gin.Context) {
+	// Collect GET parameters
 	query := c.Request.URL.Query()
-	// params := make(map[string]string)
+	params := make(map[string]string)
 	for key, values := range query {
 		if len(values) > 0 {
-			// params[key] = values[0]
-			h.log.Warnf("%s: %v", key, values)
+			params[key] = values[0]
 		}
 	}
+
+	// Verify Telegram authorization data
+	authData, err := checkTelegramAuthorization(params)
+	if err != nil {
+		c.String(http.StatusUnauthorized, err.Error())
+		return
+	}
+
+	fmt.Printf("%v\n", authData)
 }
 
 func (h *Handler) authVkRoute(c *gin.Context) {
