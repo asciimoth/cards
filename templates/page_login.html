@@ -8,15 +8,16 @@
 
 <body>
     <header>{{ template "comp_nav.html" . }}</header>
-    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="cardsappbot"
-        data-size="large" data-userpic="false" data-radius="0"
-        data-auth-url="https://cards.moth.contact/auth-tg"></script>
-    <!-- <div onclick="return TWidgetLogin.auth();"> -->
-    <!--     Login with tg -->
-    <!-- </div> -->
-    <!-- <script src="https://telegram.org/js/widget-frame.js?65"></script> -->
-    <!-- <script>TWidgetLogin.init('widget_login', 8376224696, {"origin": "https:\/\/cards.moth.contact", "embed": 1, "return_to": "https:\/\/cards.moth.contact\/login"}, false); -->
-    <!-- </script> -->
+    <!-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="cardsappbot" -->
+    <!--     data-size="large" data-userpic="false" data-radius="0" -->
+    <!--     data-auth-url="https://cards.moth.contact/auth-tg"></script> -->
+    <script>TBaseUrl = '/';</script>
+    <div onclick="return TWidgetLogin.auth();">
+        Login with tg
+    </div>
+    <script src="https://telegram.org/js/widget-frame.js?65"></script>
+    <script>TWidgetLogin.init('widget_login', 8376224696, {"origin": "https:\/\/cards.moth.contact", "embed": 1, "return_to": "https:\/\/cards.moth.contact\/login"}, false);
+    </script>
     <div class="login-container">
         <div style="text-align: center">{{ T "SignIn" .Lang }}</div>
         {{range .Providers}}
