@@ -97,12 +97,18 @@ func (h *Handler) setupRoutes() {
 	h.g.GET("/tutorial", h.tutorialRoute)
 	h.g.GET("/c/:id", h.cardRoute)
 	h.g.GET("/media/:kind/:id", h.mediaRoute)
+	// OAuth related routes
 	{
 		oauth := h.g.Group("/")
 		oauth.GET("/auth/:provider", h.authProviderRoute)
 		oauth.GET("/auth/:provider/callback", h.authCallbackRoute)
+		// Telegram is not supported by goth so we handling it individually
+		oauth.POST("/auth-tg", h.authTgRoute)
+		// Vk is tecnically supported by goth, but seems like it support
+		// only old Vk OAuth system
 		oauth.POST("/auth-vk", h.authVkRoute)
 	}
+	// PWA related routes
 	{
 		pwa := h.g.Group("/")
 		pwa.GET("/c/:id/manifest.json", h.cardManifestRoute)
@@ -116,6 +122,7 @@ func (h *Handler) setupRoutes() {
 		us.GET("/logout", h.logoutRoute)
 		us.POST("/logout", h.logoutRoute)
 	}
+	// Other routes
 	{
 		authorized := h.g.Group("/")
 		authorized.Use(h.authMiddleware)
@@ -509,6 +516,17 @@ func (h *Handler) authCallbackRoute(c *gin.Context) {
 	sess.Save()
 
 	redirect(c, "/cards")
+}
+
+func (h *Handler) authTgRoute(c *gin.Context) {
+	query := c.Request.URL.Query()
+	// params := make(map[string]string)
+	for key, values := range query {
+		if len(values) > 0 {
+			// params[key] = values[0]
+			h.log.Warnf("%s: %v", key, values)
+		}
+	}
 }
 
 func (h *Handler) authVkRoute(c *gin.Context) {

@@ -1,29 +1,34 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        {{ template "comp_header.html" . }}
-        <link rel="stylesheet" href="/static/login.css" />
-    </head>
-    <body>
-        <header>{{ template "comp_nav.html" . }}</header>
 
-        <div class="login-container">
-            <div style="text-align: center">{{ T "SignIn" .Lang }}</div>
-            {{range .Providers}}
-            <div id="{{.}}" class="login">
-                {{if eq . "vk"}}
-                <a href="/login/vk">
-                    <img src="/static/{{.}}-logo.svg" />
-                    <span>Vk/mail/Ok</span>
-                </a>
-                {{else}}
-                <a href="/auth/{{.}}">
-                    <img src="/static/{{.}}-logo.svg" />
-                    <span>{{ . }}</span>
-                </a>
-                {{ end }}
-            </div>
+<head>
+    {{ template "comp_header.html" . }}
+    <link rel="stylesheet" href="/static/login.css" />
+</head>
+
+<body>
+    <header>{{ template "comp_nav.html" . }}</header>
+    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="cardsappbot"
+        data-size="large" data-userpic="false" data-radius="0"
+        data-auth-url="https://cards.moth.contact/users/auth-tg"></script>
+    <div class="login-container">
+        <div style="text-align: center">{{ T "SignIn" .Lang }}</div>
+        {{range .Providers}}
+        <div id="{{.}}" class="login">
+            {{if eq . "vk"}}
+            <a href="/login/vk">
+                <img src="/static/{{.}}-logo.svg" />
+                <span>Vk/mail/Ok</span>
+            </a>
+            {{else}}
+            <a href="/auth/{{.}}">
+                <img src="/static/{{.}}-logo.svg" />
+                <span>{{ . }}</span>
+            </a>
             {{ end }}
         </div>
-    </body>
+        {{ end }}
+    </div>
+</body>
+
 </html>
