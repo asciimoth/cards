@@ -581,12 +581,44 @@ func (h *Handler) authTgRoute(c *gin.Context) {
 	// Verify Telegram authorization data
 	authData, err := checkTelegramAuthorization(params)
 	if err != nil {
-		h.log.Warnf("%v\n", err)
-		c.String(http.StatusUnauthorized, err.Error())
+		h.log.WithFields(logrus.Fields{
+			"err": err,
+		}).Error("Failed to complete Tg auth")
+		h.errorPage(
+			c,
+			http.StatusUnauthorized,
+			"Failed to complete Tg auth",
+		)
 		return
 	}
 
-	h.log.Warnf("%v\n", authData)
+	pid := "tg:" + authData["id"]
+	name := authData["first_name"]
+
+	id, err := h.db.SignUser(pid, name)
+
+	if err != nil {
+		h.log.WithFields(logrus.Fields{
+			"err": err,
+		}).Error("Failed to complete auth")
+		h.errorPage(
+			c,
+			http.StatusInternalServerError,
+			h.localize(c, "ErrMsgFailedAuth500"),
+		)
+		return
+	}
+
+	h.log.WithFields(logrus.Fields{
+		"pid":  pid,
+		"uid":  id,
+		"name": name,
+	}).Info("Logged in")
+	sess := sessions.Default(c)
+	sess.Set("user_id", id)
+	sess.Save()
+
+	redirect(c, "/cards")
 }
 
 func (h *Handler) authVkRoute(c *gin.Context) {
