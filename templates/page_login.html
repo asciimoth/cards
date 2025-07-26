@@ -17,7 +17,7 @@
                 <img src="/static/{{.}}-logo.svg" />
                 <span>Vk/mail/Ok</span>
             </a>
-            {{else if "telegram"}}
+            {{else if eq . "telegram"}}
             <a href="/login/tg">
                 <img src="/static/{{.}}-logo.svg" />
                 <span>Telegram</span>
