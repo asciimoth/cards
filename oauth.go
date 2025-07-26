@@ -7,6 +7,7 @@ import (
 	"github.com/markbates/goth/providers/discord"
 	"github.com/markbates/goth/providers/github"
 	"github.com/markbates/goth/providers/google"
+	"github.com/markbates/goth/providers/yandex"
 	"github.com/sirupsen/logrus"
 )
 
@@ -45,6 +46,17 @@ func SetupProviders(log *logrus.Logger) []string {
 			dcClientID, dcClientSecret, dcClientCallbackURL,
 		))
 		log.Debug("Adding discord OAuth provider")
+	}
+
+	yandexClientID := os.Getenv("YANDEX_CLIENT_ID")
+	yandexClientSecret := os.Getenv("YANDEX_CLIENT_SECRET")
+	yandexClientCallbackURL := os.Getenv("YANDEX_CLIENT_CALLBACK_URL")
+
+	if yandexClientID != "" && yandexClientSecret != "" && yandexClientCallbackURL != "" {
+		providers = append(providers, yandex.New(
+			yandexClientID, yandexClientSecret, yandexClientCallbackURL,
+		))
+		log.Debug("Adding yandex OAuth provider")
 	}
 
 	if os.Getenv("VK_CLIENT_ID") != "" {
